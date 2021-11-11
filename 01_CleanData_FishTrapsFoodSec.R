@@ -27,7 +27,7 @@ rm(list = ls())
 
 
 
-##### 1.1 Load Packages and Data
+##### 1.1 Load Packages and Data #####
 
 # Load packages
 library(readxl)
@@ -126,7 +126,7 @@ for (i in 1:length(TrapData$`TRAP NO.`)){
 
 
 
-
+##### 1.3
 
 
 
