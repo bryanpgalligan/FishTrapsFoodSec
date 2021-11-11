@@ -123,7 +123,9 @@ for (i in 1:length(TrapData$`TRAP NO.`)){
   
 }
 
-
+# All the values in the "TRAP NO." column now use consistent labels and, if there was no value AND
+#   information could be obtained from the "Gap Size (Cms)" or "Gap Size 3/2 (Cms)" columns, a value
+#   has been added.
 
 
 ##### 1.3
