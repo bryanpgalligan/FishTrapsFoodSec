@@ -3,3 +3,4 @@
 .Rdata
 .httr-oauth
 .DS_Store
+~$* # ignore temporary MS office files
