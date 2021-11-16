@@ -19,6 +19,9 @@
 ## Table of Contents
 ##    1.1 Load Packages and Data
 ##    1.2 "TRAP NO." Column
+##    1.3 "Site" Column
+##    1.4 "SPECIES" Column
+##    1.5 Add a column for FunGr_Diet
 
 
 # First, clean the environment
@@ -32,6 +35,7 @@ rm(list = ls())
 # Load packages
 library(readxl)
 library(data.table)
+library(stringr)
 
 # Load WCS combined gated trap data for 2010-2019
 TrapData <- read_excel("00_RawData/CombinedTrapData_2010_2019.xlsx")
@@ -123,12 +127,54 @@ for (i in 1:length(TrapData$`TRAP NO.`)){
   
 }
 
-# All the values in the "TRAP NO." column now use consistent labels and, if there was no value AND
+# All the values in the "TRAP NO." column now use consistent labels. If there was no value and
 #   information could be obtained from the "Gap Size (Cms)" or "Gap Size 3/2 (Cms)" columns, a value
 #   has been added.
+  
+# NEXT STEP: Use the "TRAP TYPE" column to fill in the rest of the NA's if possible (there are 1735).
 
 
-##### 1.3
+
+
+##### 1.3 "Site" Column #####
+
+# Put all elements in the "Site" column into title case
+TrapData$Site <- str_to_title(TrapData$Site)
+
+
+
+
+##### 1.4 "SPECIES" Column #####
+
+table(TrapData$SPECIES, useNA = "ifany")
+
+# Clean the "SPECIES" Column of the TrapData data frame
+
+# Remove excess whites space
+TrapData$SPECIES <- str_squish(TrapData$SPECIES)
+
+# Set capitalization to Genus species
+TrapData$SPECIES <- str_to_sentence(TrapData$SPECIES)
+
+# Make a separate data frame to proofread "SPECIES" column for typos
+Unique_Species <- unique(TrapData$SPECIES)
+
+# Sort alphabetically
+Unique_Species <- sort(Unique_Species)
+
+# Save list of species to a *.csv file
+write.csv(Unique_Species, file = "01_CleanData_Temp/Species_List.csv")
+
+
+
+
+##### 1.5 Add a column for FunGr_Diet #####
+
+# Create an empty column in TrapData for Fun.Diet
+TrapData$FunGr_Diet <- NA
+
+
+
 
 
 
