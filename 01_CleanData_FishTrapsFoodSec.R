@@ -150,22 +150,30 @@ table(TrapData$SPECIES, useNA = "ifany")
 
 # Clean the "SPECIES" Column of the TrapData data frame
 
-# Remove excess whites space
-TrapData$SPECIES <- str_squish(TrapData$SPECIES)
+# Fix formatting
 
-# Set capitalization to Genus species
-TrapData$SPECIES <- str_to_sentence(TrapData$SPECIES)
+  # Remove excess white space
+  TrapData$SPECIES <- str_squish(TrapData$SPECIES)
+  
+  # Set capitalization to Genus species
+  TrapData$SPECIES <- str_to_sentence(TrapData$SPECIES)
 
-# Make a separate data frame to proofread "SPECIES" column for typos
-Unique_Species <- unique(TrapData$SPECIES)
+# Check for typos
 
-# Sort alphabetically
-Unique_Species <- sort(Unique_Species)
-
-# Save list of species to a *.csv file
-write.csv(Unique_Species, file = "01_CleanData_Temp/Species_List.csv")
-
-
+  # Make a separate data frame to proofread "SPECIES" column for typos
+  Unique_Species <- unique(TrapData$SPECIES)
+  
+  # Sort alphabetically
+  Unique_Species <- sort(Unique_Species)
+  
+  # Save list of species to a *.csv file
+  write.csv(Unique_Species, file = "01_CleanData_Temp/Species_List.csv")
+  
+# Correct typos (based on reading the printed list of species)
+  
+  # Genus Monotaxis was incorrectly replaced by family ('Monotaxinae') in the SPECIES column.
+  TrapData$SPECIES <- gsub("Monotaxinae", "Monotaxis", TrapData$SPECIES)
+  
 
 
 ##### 1.5 Add a column for FunGr_Diet #####
