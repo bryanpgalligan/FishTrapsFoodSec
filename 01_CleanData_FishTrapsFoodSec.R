@@ -36,6 +36,9 @@ rm(list = ls())
 library(readxl)
 library(data.table)
 library(stringr)
+library(taxize)
+  library(dplyr)
+  library(magrittr)
 
 # Load WCS combined gated trap data for 2010-2019
 TrapData <- read_excel("00_RawData/CombinedTrapData_2010_2019.xlsx")
@@ -146,8 +149,6 @@ TrapData$Site <- str_to_title(TrapData$Site)
 
 ##### 1.4 "SPECIES" Column #####
 
-table(TrapData$SPECIES, useNA = "ifany")
-
 # Clean the "SPECIES" Column of the TrapData data frame
 
 # Fix formatting
@@ -159,22 +160,54 @@ table(TrapData$SPECIES, useNA = "ifany")
   TrapData$SPECIES <- str_to_sentence(TrapData$SPECIES)
 
 # Check for typos
-
-  # Make a separate data frame to proofread "SPECIES" column for typos
-  Unique_Species <- unique(TrapData$SPECIES)
   
-  # Sort alphabetically
+  # Make a unique list of species names, sorted alphabetically
+  Unique_Species <- unique(TrapData$SPECIES)
   Unique_Species <- sort(Unique_Species)
   
-  # Save list of species to a *.csv file
-  write.csv(Unique_Species, file = "01_CleanData_Temp/Species_List.csv")
+  # Save Unique_Species as a *.csv file
+  write.csv(Unique_Species, file = "01_CleanData_Temp/Unique_Species.csv",
+    row.names = FALSE)
   
-# Correct typos (based on reading the printed list of species)
+  # After reviewing the list manually, I found the following errors:
+    # Monotaxinae grandoculus was listed as a species name. Genus should be Monotaxis.
+    # Parapeneus cyclostomus was listed. Genus should be Parupeneus.
+    # Parupeneaus indicus was listed. Genus should be Parupeneus.
+    # Plectohinchus cryterinus was listed. It should be Plectorhinchus gaterinus.
   
-  # Genus Monotaxis was incorrectly replaced by family ('Monotaxinae') in the SPECIES column.
+  # The Parupeneas spp. are fixed by taxize::gnr_resolve() so do not need to be done manually.
+  
+  # Replace Monotaxinae grandoculus with Monotaxis grandoculus.
   TrapData$SPECIES <- gsub("Monotaxinae", "Monotaxis", TrapData$SPECIES)
   
+  # Replace P. cryterinus with P. gaterinus.
+  TrapData$SPECIES <- gsub("Plectohinchus cryterinus", "Plectorhinchus gaterinus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Update Unique_Species to reflect the removal of Monotaxinae
+  Unique_Species <- unique(TrapData$SPECIES)
+  
+  # Obtain accurate scientific names using the taxize package
+  CanonicalTaxa <- gnr_resolve(Unique_Species, best_match_only = TRUE, canonical = TRUE)
+  
+# Replace misspelled scientific names with the accurate ones.
+  
+  # Delete all rows of species_names that did not find misspellings.
+  CanonicalTaxa <- subset(CanonicalTaxa,
+    CanonicalTaxa$user_supplied_name != CanonicalTaxa$matched_name2)
+  
+  # We found 30 misspellings!
+  
+  # Replace misspelled species names in TrapData with the correct names from species_names
+  for (i in 1:length(CanonicalTaxa$user_supplied_name)){
+    
+    TrapData$SPECIES <- gsub(CanonicalTaxa$user_supplied_name[i], CanonicalTaxa$matched_name2[i],
+      TrapData$SPECIES, fixed = TRUE)
+    
+  }
 
+    
+ 
 
 ##### 1.5 Add a column for FunGr_Diet #####
 
