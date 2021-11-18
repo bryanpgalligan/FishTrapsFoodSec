@@ -217,7 +217,52 @@ TrapData$Site <- str_to_title(TrapData$Site)
 
 ##### 1.5 Add a column for FunGr_Diet #####
 
+<<<<<<< HEAD
 # First, using the key from Condy et al. 2015  
+=======
+# Delete the empty first row from Condy's functional group key
+FunGrKey_Condy <- FunGrKey_Condy[-1,]
+
+# Create an empty column in TrapData for FunGr_Diet
+TrapData$FunGr_Diet <- NA
+
+# Fill in FunGr_Diet column to the extent possible with Condy's key
+for(i in 1:length(TrapData$FunGr_Diet)){
+  
+  # Test whether this observation in TrapData corresponds to one of the species included
+  #   in Condy's table.
+  if(TrapData$SPECIES[i] %in% FunGrKey_Condy$Species){
+    
+    # Find the index of the species match
+    a <- str_which(FunGrKey_Condy$Species, TrapData$SPECIES[i])
+    
+    # Fill in the FunGr_Diet column at i
+    TrapData$FunGr_Diet[i] <- FunGrKey_Condy$`Functional Group`[a]
+    
+  }
+  
+}
+
+# Create a list of species included in TrapData but not in Condy's key
+Species_NewFunGrKey <- unique(
+  subset(TrapData$SPECIES, !(TrapData$SPECIES %in% FunGrKey_Condy$Species)))
+
+# Query FishBase for the first species' food items
+diet_items(Species_NewFunGrKey[1])
+
+# Possible next step: write a script that will automatically query FishBase and classify species
+#   into the diet based functional groups, which are:
+
+#   Browser
+#   Detritivore
+#   Grazer
+#   Invert-Macro
+#   Invert-Micro
+#   Pisc-Macro-Invert
+#   Piscivore
+#   Planktivore
+#   Scrapers/Excavators
+>>>>>>> 9928dee3851174a07958754e1a98d562d97368b1
 
   # Delete the empty first row from Condy's functional group key
   FunGrKey_Condy <- FunGrKey_Condy[-1,]
