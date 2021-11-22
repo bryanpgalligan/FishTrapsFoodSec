@@ -11,7 +11,7 @@
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 17 Nov 21
+## Last update: 22 Nov 21
 
 
 
@@ -21,7 +21,7 @@
 ##    1.2 "TRAP NO." Column
 ##    1.3 "Site" Column
 ##    1.4 "SPECIES" Column
-##    1.5 Add a column for FunGr_Diet
+##    1.5 "FunGr_Diet" Column
 
 
 # First, clean the environment
@@ -52,7 +52,7 @@ FunGrKey_Condy <- read_excel("00_RawData/FunctionalGroupKey_DietBased_Condy2015.
 
 ##### 1.2 "TRAP NO." Column #####
 
-# Make the "TRAP NO." column uniform. Rows with mesh sizePossible values will be:
+# Make the "TRAP NO." column uniform. Possible values will be:
 #     G2
 #     G2/3
 #     G3
@@ -188,13 +188,13 @@ TrapData$Site <- str_to_title(TrapData$Site)
   TrapData$SPECIES <- gsub("Plectohinchus cryterinus", "Plectorhinchus gaterinus",
     TrapData$SPECIES, fixed = TRUE)
   
-  # Update Unique_Species to reflect the removal of Monotaxinae
+  # Update Unique_Species to reflect the above changes
   Unique_Species <- unique(TrapData$SPECIES)
   
   # Obtain accurate scientific names using the taxize package
   CanonicalTaxa <- gnr_resolve(Unique_Species, best_match_only = TRUE, canonical = TRUE)
   
-  # CanonicalTaxa successfully identified 224 of 225 species names. The last one is NA.
+  # CanonicalTaxa successfully identified all species names (224 species plus NA).
   
 # Replace misspelled scientific names with the accurate ones.
   
@@ -215,7 +215,7 @@ TrapData$Site <- str_to_title(TrapData$Site)
     
  
 
-##### 1.5 Add a column for FunGr_Diet #####
+##### 1.5 FunGr_Diet Column #####
 
 # First, using the key from Condy et al. 2015  
 
