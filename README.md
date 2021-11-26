@@ -14,11 +14,11 @@
 
 This repository is the data management and analysis workflow of a research project investigating the ecosystem and food security benefits of adding escape gaps to traditional African fish traps. It includes 10 years of landings data from artisanal fishers operating in the inshore waters of Kenya and Tanzania. Our hypotheses correspond to the FAO's food security framework (Stability, Availability, Access, and Utilization) (FAO et al., 2021):
 
--    Modified fish traps contribute to the **stability** of coastal East African food systems, enhancing coral reef resilience...
+-   Modified fish traps contribute to the **stability** of coastal East African food systems, enhancing coral reef resilience...
 
     -   ...by generating less functionally diverse catches.
 
-    -   ...by catching fewer herbivorous reef fish.
+    -   ...by catching fewer herbivorous fish.
 
 -   Modified fish traps contribute to the **availability** of food, enhancing stock status...
 
