@@ -40,7 +40,7 @@ This repository is the data management and analysis workflow of a research proje
 
 ## Instructions
 
-R scripts should be run in numeric order, beginning with `01_CleanData_FishTrapsFoodSec.R`. Each script has two corresponding folders in the repository, one called "temp" and one called "out." The "temp" folder contains temporary output files that are not needed for further analysis or reference. The "out" folder contains output files that will be used by subsequent scripts, kept for future reference, or formatted as data tables for publication.
+R scripts should be run in numeric order, beginning with `01_CleanData_FishTrapsFoodSec.R`. Each script has two corresponding folders in the repository, one called `temp` and one called `out`. The `temp` folder contains temporary output files that are not needed for further analysis or reference. The `out` folder contains output files that will be used by subsequent scripts, kept for future reference, or formatted as data tables for publication.
 
 ## Repository Files
 
