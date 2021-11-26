@@ -11,7 +11,7 @@
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 22 Nov 21
+## Last update: 26 Nov 21
 
 
 
@@ -19,9 +19,13 @@
 ## Table of Contents
 ##    1.1 Load Packages and Data
 ##    1.2 "TRAP NO." Column
-##    1.3 "Site" Column
-##    1.4 "SPECIES" Column
-##    1.5 "FunGr_Diet" Column
+##    1.3 "Trap Type" & "Gap Size (Cms)" Columns
+##    1.4 "Site" Column
+##    1.5 "SPECIES" Column
+##    1.6 "FunGr_Diet" Column
+##    1.7 Lat/Lon Columns
+##    1.8 FD/HC Column
+##    1.9 Trim and Rename Columns
 
 
 # First, clean the environment
@@ -34,6 +38,7 @@ rm(list = ls())
 
 # Load packages
 library(readxl)
+library(readr)
 library(data.table)
 library(stringr)
 library(taxize)
@@ -42,7 +47,7 @@ library(taxize)
 library(rfishbase)
 
 # Load WCS combined gated trap data for 2010-2019
-TrapData <- read_excel("00_RawData/CombinedTrapData_2010_2019.xlsx")
+TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")
 
 # Load Condy's key for diet based functional groups
 FunGrKey_Condy <- read_excel("00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx")
@@ -99,16 +104,20 @@ for (i in 1:length(TrapData$`TRAP NO.`)){
     }
     
     # ...and the Trap Type is TM, traditional, or Traditional,
-    if (TrapData$`TRAP TYPE`[i] == "TM" || TrapData$`TRAP TYPE`[i] == "traditional" || TrapData$`TRAP TYPE`[i] == "Traditional"){
-      
-      # save T as b
-      b <- "T"
-      
-    } else{
-      
-      # save G as b if it's a gated trap
-      b <- "G"
-      
+    if (is.na(TrapData$`TRAP TYPE`[i]) == FALSE){
+    
+      if (TrapData$`TRAP TYPE`[i] == "TM" || TrapData$`TRAP TYPE`[i] == "traditional" || TrapData$`TRAP TYPE`[i] == "Traditional"){
+        
+        # save T as b
+        b <- "T"
+        
+      } else{
+        
+        # save G as b if it's a gated trap
+        b <- "G"
+        
+      }
+    
     }
     
     # If b and a don't disagree and it's a traditional trap...
@@ -137,13 +146,103 @@ for (i in 1:length(TrapData$`TRAP NO.`)){
 # All the values in the "TRAP NO." column now use consistent labels. If there was no value and
 #   information could be obtained from the "Gap Size (Cms)" or "Gap Size 3/2 (Cms)" columns, a value
 #   has been added.
+
   
-# NEXT STEP: Use the "TRAP TYPE" column to fill in the rest of the NA's if possible (there are 1735).
+  
+  
+##### 1.3 "Trap Type" & "Gap Size (Cms)" Columns #####
 
+# Make everything in "Trap Type" be either "Traditional" or "Gated"
+for (i in 1:length(TrapData$`TRAP TYPE`)){
+  
+  # If trap type is either MM or Modern...
+  if(TrapData$`TRAP TYPE`[i] == "MM" || TrapData$`TRAP TYPE`[i] == "Modern"){
+    
+    # Save as Gated
+    TrapData$`TRAP TYPE`[i] <- "Gated"
+    
+  }
+  
+  # If trap type is TM or traditional...
+  if(TrapData$`TRAP TYPE`[i] == "TM" || TrapData$`TRAP TYPE`[i] == "traditional"){
+    
+    # Save as Traditional
+    TrapData$`TRAP TYPE`[i] <- "Traditional"
+    
+  }
+  
+}
 
+# Fill in NA's in Gap Size column based on Trap No if possible
+for (i in 1:length(TrapData$`Gap size (Cms)`)){
+  
+  # If Gap Size is NA and there is a value for Trap No...
+  if (is.na(TrapData$`Gap size (Cms)`[i]) == TRUE && is.na(TrapData$`TRAP NO.`[i]) == FALSE){
+    
+    # Fill in Gap Size = 0
+    if (TrapData$`TRAP TYPE`[i] == "Traditional"){
+      
+      # Save as 0
+      TrapData$`Gap size (Cms)`[i] <- 0
+      
+    }
+    
+    # Fill in Gap Size = 2
+    if (TrapData$`TRAP NO.`[i] == "G2"){
+      
+      # Save as 2
+      TrapData$`Gap size (Cms)`[i] <- 2
+      
+    }
+    
+    # Fill in Gap Size for 2/3
+    if (TrapData$`TRAP NO.`[i] == "G2/3"){
+      
+      # Save as 2.5
+      TrapData$`Gap size (Cms)`[i] <- 2.5
+      
+    }
+    
+    # Fill in Gap Size = 3
+    if (TrapData$`TRAP NO.`[i] == "G3"){
+      
+      # Save as 3
+      TrapData$`Gap size (Cms)`[i] <- 3
+      
+    }
+    
+    # Fill in Gap Size = 4
+    if (TrapData$`TRAP NO.`[i] == "G4"){
+      
+      # Save as 4
+      TrapData$`Gap size (Cms)`[i] <- 4
+      
+    }
+    
+    # Fill in Gap Size = 6
+    if (TrapData$`TRAP NO.`[i] == "G6"){
+      
+      # Save as 6
+      TrapData$`Gap size (Cms)`[i] <- 6
+      
+    }
+    
+    # Fill in Gap Size = 8
+    if (TrapData$`TRAP NO.`[i] == "G8"){
+      
+      # Save as 8
+      TrapData$`Gap size (Cms)`[i] <- 8
+      
+    }
+    
+  }
+  
+}
 
-
-##### 1.3 "Site" Column #####
+  
+  
+  
+##### 1.4 "Site" Column #####
 
 # Put all elements in the "Site" column into title case
 TrapData$Site <- str_to_title(TrapData$Site)
@@ -151,7 +250,7 @@ TrapData$Site <- str_to_title(TrapData$Site)
 
 
 
-##### 1.4 "SPECIES" Column #####
+##### 1.5 "SPECIES" Column #####
 
 # Clean the "SPECIES" Column of the TrapData data frame
 
@@ -215,7 +314,7 @@ TrapData$Site <- str_to_title(TrapData$Site)
     
  
 
-##### 1.5 FunGr_Diet Column #####
+##### 1.6 FunGr_Diet Column #####
 
 # First, using the key from Condy et al. 2015  
 
@@ -233,7 +332,7 @@ TrapData$Site <- str_to_title(TrapData$Site)
     if(TrapData$SPECIES[i] %in% FunGrKey_Condy$Species){
       
       # Find the index of the species match
-      a <- str_which(FunGrKey_Condy$Species, TrapData$SPECIES[i])
+      a <- which(FunGrKey_Condy$Species == TrapData$SPECIES[i])
       
       # Fill in the FunGr_Diet column at i
       TrapData$FunGr_Diet[i] <- FunGrKey_Condy$`Functional Group`[a]
@@ -318,7 +417,7 @@ for(i in 1:length(TrapData$FunGr_Diet)){
     if(TrapData$SPECIES[i] %in% FunGrKey_New$Species){
       
       # Find the index of the species in FunGrKey_New
-      a <- str_which(FunGrKey_New$Species, TrapData$SPECIES[i])
+      a <- which(FunGrKey_New$Species == TrapData$SPECIES[i])
       
       # Save the feeding type from FunGrKey_New to TrapData
       TrapData$FunGr_Diet[i] <- FunGrKey_New$FeedingType[a]
@@ -332,3 +431,141 @@ for(i in 1:length(TrapData$FunGr_Diet)){
 # We just went from 3639 NA's in the TrapData$FunGr_Diet column to 1371!
 
   
+  
+  
+##### 1.7 Lat/Lon Columns #####
+
+# Add columns for latitude and longitude
+TrapData$Latitude <- str_split_fixed(TrapData$`GPS (0)`, ", ", 2)[,1]
+TrapData$Longitude <- str_split_fixed(TrapData$`GPS (0)`, ", ", 2)[,2]
+
+# Remove S from latitude column
+TrapData$Latitude <- as.numeric(gsub("S", "", TrapData$Latitude))
+
+# Make all latitudes negative
+TrapData$Latitude <- -1*TrapData$Latitude
+
+# Remove E from longitude column
+TrapData$Longitude <- as.numeric(gsub("E", "", TrapData$Longitude))
+
+
+
+ 
+##### 1.8 FD/HC Column #####
+
+# Make possible values for FD/HC be FD and HC
+for(i in 1:length(TrapData$`FD/HC`)){
+  
+  # If there is a value and it is not HC...
+  if(is.na(TrapData$`FD/HC`[i]) == FALSE && TrapData$`FD/HC`[i] != "HC"){
+    
+    # Replace "Discarded" with NA
+    if (TrapData$`FD/HC`[i] == "Discarded"){
+      TrapData$`FD/HC`[i] <- NA
+    } else{
+      
+      # Replace everything else with FD
+      TrapData$`FD/HC`[i] <- "FD"
+      
+    }
+
+  }
+  
+}
+
+
+
+
+##### 1.9 Trim and Rename Columns #####
+
+# Make column names usable and delete unnecessary or corrupted columns
+
+# Make all column names Title Case
+colnames(TrapData) <- str_to_title(colnames(TrapData))
+
+# Remove all spaces from column names
+colnames(TrapData) <- str_replace_all(colnames(TrapData), " ", "")
+
+# Rename Trap No. to GateCode
+colnames(TrapData)[8] <- "GateCode"
+
+# Rename SoakTime(Days) to SoakTime_Days
+colnames(TrapData)[10] <- "SoakTime_Days"
+
+# Delete DaySet Column
+TrapData <- select(TrapData, -DaySet)
+
+# Delete MeshSize Column
+TrapData <- select(TrapData, -MeshSize)
+
+# Rename GapSize(Cms) to GapSize_cm
+colnames(TrapData)[11] <- "GapSize_cm"
+
+# Delete GapSize3/2(Cms) Column
+TrapData <- select(TrapData, -`GapSize3/2(Cm)`)
+
+# Rename Fisherman as Fisher
+colnames(TrapData)[12] <- "Fisher"
+
+# Rename NumberOfFishers to TotalCrew
+colnames(TrapData)[13] <- "TotalCrew"
+
+# Rename NoOfTraps to TrapsOwned
+colnames(TrapData)[14] <- "TrapsOwned"
+
+# Rename TrapFished to TrapsFished
+colnames(TrapData)[15] <- "TrapsFished"
+
+# Delete Gps(0) column
+TrapData <- select(TrapData, -`Gps(0)`)
+
+# Rename TotalCatchG to TotalCatch_g
+colnames(TrapData)[16] <- "TotalCatch_g"
+
+# Delete DistanceFromPark(M) column
+TrapData <- select(TrapData, -`DistanceFromPark(M)`)
+
+# Rename ByCatch to Bycatch
+colnames(TrapData)[23] <- "Bycatch"
+
+# Rename Fd/Hc to FD_HC
+colnames(TrapData)[24] <- "FD_HC"
+
+# Rename Length(Cm) to Length_cm
+colnames(TrapData)[25] <- "Length_cm"
+
+# Rename Depth(M) to Depth_m
+colnames(TrapData)[26] <- "Depth_m"
+
+# Delete Depth(Cm) column
+TrapData <- select(TrapData, -`Depth(Cm)`)
+
+# Delete Width(Cm) column
+TrapData <- select(TrapData, -`Width(Cm)`)
+
+# Delete Weight(Kg) column
+TrapData <- select(TrapData, -`Weight(Kg)`)
+
+# Rename Weight(G) to Weight_g
+colnames(TrapData)[27] <- "Weight_g"
+
+# Delete PricePerGrade column
+TrapData <- select(TrapData, -PricePerGrade)
+
+# Delete PriceOfFish(Ksh) column
+TrapData <- select(TrapData, -`PriceOfFish(Ksh)`)
+
+# Delete Survey, Sea State, Trophic Level, and ID columns
+TrapData <- select(TrapData, -c(Survey, SeaState, TrophicLevel, Id))
+
+# Rename FishPrice_final as Price_KSH/kg
+colnames(TrapData)[28] <- "Price_KSH/kg"
+
+# Rename Fungr_diet to FunGr_Diet
+colnames(TrapData)[29] <- "FunGr_Diet"
+
+# Save TrapData
+write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = FALSE)
+
+
+
