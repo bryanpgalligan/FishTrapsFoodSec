@@ -25,7 +25,8 @@
 ##    1.6 "FunGr_Diet" Column
 ##    1.7 Lat/Lon Columns
 ##    1.8 FD/HC Column
-##    1.9 Trim and Rename Columns
+##    1.9 Price Column
+##    1.10 Trim and Rename Columns
 
 
 # First, clean the environment
@@ -476,7 +477,28 @@ for(i in 1:length(TrapData$`FD/HC`)){
 
 
 
-##### 1.9 Trim and Rename Columns #####
+##### 1.9 Price Column #####
+
+# Some values in the Price column are still a little suspicious.
+
+# First, subset these values to share with Austin. The table with fish values
+#   only lists 200, 120, 160, 80, and 0 as possible prices in KES/kg. Subset
+#   all rows that have other values.
+
+FishPrice_Suspicious <- subset(TrapData,
+  TrapData$`Fish price_final` != 200 &
+    TrapData$`Fish price_final` != 120 &
+    TrapData$`Fish price_final` != 160 &
+    TrapData$`Fish price_final` != 80 &
+    TrapData$`Fish price_final` != 0)
+
+# Save data frame
+write.csv(FishPrice_Suspicious, file = "01_CleanData_Temp/SuspiciousPrices.csv")
+
+
+
+
+##### 1.10 Trim and Rename Columns #####
 
 # Make column names usable and delete unnecessary or corrupted columns
 
