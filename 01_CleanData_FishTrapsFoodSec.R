@@ -46,6 +46,7 @@ library(taxize)
   library(dplyr)
   library(magrittr)
 library(rfishbase)
+library(lubridate)
 
 # Load WCS combined gated trap data for 2010-2019
 TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")
@@ -496,6 +497,24 @@ FishPrice_Suspicious <- subset(TrapData,
 write.csv(FishPrice_Suspicious, file = "01_CleanData_Temp/SuspiciousPrices.csv")
 
 
+
+
+##### 1.10 Date Column #####
+
+# Make date column include full dates
+TrapData$DATE <- paste(TrapData$YEAR, TrapData$MONTH, TrapData$DATE, sep = "-")
+
+# Make date column a date object (not character)
+TrapData$DATE <- as.Date(TrapData$DATE, format = "%Y-%m-%d")
+
+# Delete month and year columns
+TrapData <- select(TrapData, -MONTH)
+TrapData <- select(TrapData, -YEAR)
+
+
+
+
+##### 1.11 Trip ID Column #####
 
 
 ##### 1.10 Trim and Rename Columns #####
