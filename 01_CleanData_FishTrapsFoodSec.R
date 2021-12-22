@@ -251,6 +251,9 @@ for (i in 1:length(TrapData$`Gap size (Cms)`)){
 # Put all elements in the "Site" column into title case
 TrapData$Site <- str_to_title(TrapData$Site)
 
+# Delete the site called "Reef"
+TrapData <- subset(TrapData, TrapData$Site != "Reef")
+
 
 
 
