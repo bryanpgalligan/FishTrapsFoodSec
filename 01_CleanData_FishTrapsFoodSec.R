@@ -11,7 +11,7 @@
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 26 Nov 21
+## Last update: 22 Dec 21
 
 
 
@@ -26,7 +26,9 @@
 ##    1.7 Lat/Lon Columns
 ##    1.8 FD/HC Column
 ##    1.9 Price Column
-##    1.10 Trim and Rename Columns
+##    1.10 Date Column
+##    1.11 Trip ID Column
+##    1.12 Trim and Rename Columns
 
 
 # First, clean the environment
@@ -516,8 +518,52 @@ TrapData <- select(TrapData, -YEAR)
 
 ##### 1.11 Trip ID Column #####
 
+# An ID code for each unique combination of fisher/crew and date
 
-##### 1.10 Trim and Rename Columns #####
+# Create empty column
+TrapData$TripID <- NA
+
+# Create a vector that combines dates and fisher ID's (temporary Trip ID)
+a <- paste(as.character(TrapData$DATE), TrapData$Fisherman, sep = "")
+
+# Add your temporary Trip ID to the data frame
+TrapData$TripID <- a
+
+# Create a list of unique combinations of dates and fishers
+a <- unique(a)
+
+# We have 2746 unique fishing trips!
+
+# Make your list of trips a data frame
+a <- as.data.frame(a)
+
+# Add an empty column to the temporary data frame for the new ID numbers
+a$TripID <- NA
+
+# A function to generate random alphanumeric strings
+myFun <- function(n = 5000) {
+  b <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
+  paste0(b, sprintf("%04d", sample(9999, n, TRUE)), sample(LETTERS, n, TRUE))
+}
+
+# List of alphanumeric codes for each fisher
+a$TripID <- myFun(length(a))
+
+# Add Trip ID's to TrapData
+for(i in 1:length(TrapData$TripID)){
+  
+  # Find index of temporary Trip ID in temporary data frame
+  b <- which(a$a == TrapData$TripID[i])
+  
+  # Replace temporary Trip ID with the new one
+  TrapData$TripID[i] <- a$TripID[b]
+  
+}
+
+
+
+
+##### 1.12 Trim and Rename Columns #####
 
 # Make column names usable and delete unnecessary or corrupted columns
 
@@ -528,10 +574,10 @@ colnames(TrapData) <- str_to_title(colnames(TrapData))
 colnames(TrapData) <- str_replace_all(colnames(TrapData), " ", "")
 
 # Rename Trap No. to GateCode
-colnames(TrapData)[8] <- "GateCode"
+colnames(TrapData)[6] <- "GateCode"
 
 # Rename SoakTime(Days) to SoakTime_Days
-colnames(TrapData)[10] <- "SoakTime_Days"
+colnames(TrapData)[8] <- "SoakTime_Days"
 
 # Delete DaySet Column
 TrapData <- select(TrapData, -DaySet)
@@ -540,43 +586,43 @@ TrapData <- select(TrapData, -DaySet)
 TrapData <- select(TrapData, -MeshSize)
 
 # Rename GapSize(Cms) to GapSize_cm
-colnames(TrapData)[11] <- "GapSize_cm"
+colnames(TrapData)[9] <- "GapSize_cm"
 
 # Delete GapSize3/2(Cms) Column
 TrapData <- select(TrapData, -`GapSize3/2(Cm)`)
 
 # Rename Fisherman as Fisher
-colnames(TrapData)[12] <- "Fisher"
+colnames(TrapData)[10] <- "Fisher"
 
 # Rename NumberOfFishers to TotalCrew
-colnames(TrapData)[13] <- "TotalCrew"
+colnames(TrapData)[11] <- "TotalCrew"
 
 # Rename NoOfTraps to TrapsOwned
-colnames(TrapData)[14] <- "TrapsOwned"
+colnames(TrapData)[12] <- "TrapsOwned"
 
 # Rename TrapFished to TrapsFished
-colnames(TrapData)[15] <- "TrapsFished"
+colnames(TrapData)[13] <- "TrapsFished"
 
 # Delete Gps(0) column
 TrapData <- select(TrapData, -`Gps(0)`)
 
 # Rename TotalCatchG to TotalCatch_g
-colnames(TrapData)[16] <- "TotalCatch_g"
+colnames(TrapData)[14] <- "TotalCatch_g"
 
 # Delete DistanceFromPark(M) column
 TrapData <- select(TrapData, -`DistanceFromPark(M)`)
 
 # Rename ByCatch to Bycatch
-colnames(TrapData)[23] <- "Bycatch"
+colnames(TrapData)[21] <- "Bycatch"
 
 # Rename Fd/Hc to FD_HC
-colnames(TrapData)[24] <- "FD_HC"
+colnames(TrapData)[22] <- "FD_HC"
 
 # Rename Length(Cm) to Length_cm
-colnames(TrapData)[25] <- "Length_cm"
+colnames(TrapData)[23] <- "Length_cm"
 
 # Rename Depth(M) to Depth_m
-colnames(TrapData)[26] <- "Depth_m"
+colnames(TrapData)[24] <- "Depth_m"
 
 # Delete Depth(Cm) column
 TrapData <- select(TrapData, -`Depth(Cm)`)
@@ -588,7 +634,7 @@ TrapData <- select(TrapData, -`Width(Cm)`)
 TrapData <- select(TrapData, -`Weight(Kg)`)
 
 # Rename Weight(G) to Weight_g
-colnames(TrapData)[27] <- "Weight_g"
+colnames(TrapData)[25] <- "Weight_g"
 
 # Delete PricePerGrade column
 TrapData <- select(TrapData, -PricePerGrade)
@@ -600,10 +646,13 @@ TrapData <- select(TrapData, -`PriceOfFish(Ksh)`)
 TrapData <- select(TrapData, -c(Survey, SeaState, TrophicLevel, Id))
 
 # Rename FishPrice_final as Price_KSH/kg
-colnames(TrapData)[28] <- "Price_KSH/kg"
+colnames(TrapData)[26] <- "Price_KSH/kg"
 
 # Rename Fungr_diet to FunGr_Diet
-colnames(TrapData)[29] <- "FunGr_Diet"
+colnames(TrapData)[27] <- "FunGr_Diet"
+
+# Rename Tripid to TripID
+colnames(TrapData)[30] <- "TripID"
 
 # Save TrapData
 write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = FALSE)
