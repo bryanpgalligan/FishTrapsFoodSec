@@ -20,6 +20,8 @@
 ## Table of Contents
 #     2.1 Load Packages and Data
 #     2.2 FunGr_Diet
+#     2.2.1 Data Manipulation
+#     2.2.2 Analysis
 
 
 
@@ -36,6 +38,7 @@ rm(list = ls())
 library(readr)
 library(tidyr)
 library(dplyr)
+library(AICcmodavg)
 
 # Load Trap Data
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
@@ -55,7 +58,9 @@ TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
 ##    Site (categorical, 20 levels)
 
 ## Dependent variable:
-##    Functional group
+##    Catch composition
+
+##### 2.2.1 Data Manipulation #####
 
 # Delete all rows with NA for FunGr_Diet
 TrapData_FunGrDiet <- TrapData[!is.na(TrapData$FunGr_Diet),]
@@ -208,6 +213,129 @@ AOV_FunGrDiet$KeyHerbivoreMassRatio <- AOV_FunGrDiet$KeyHerbivoreMass_g / AOV_Fu
 AOV_FunGrDiet <- subset(AOV_FunGrDiet, AOV_FunGrDiet$TotalMass_g > 0)
 
 
+
+
+
+##### 2.2.2 Analysis #####
+
+## Catch Composition using count ratio (no. of key herbivores)
+
+# Variables interacting, blocking variable included
+CatchComposition_DietCt_InteractingBlocking <- aov(KeyHerbivoreCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+
+# Variables interacting, no blocking variable
+CatchComposition_DietCt_Interacting <- aov(KeyHerbivoreCtRatio ~ TrapType * Site, data = AOV_FunGrDiet)
+
+# Variables not interacting
+CatchComposition_DietCt_NonInteracting <- aov(KeyHerbivoreCtRatio ~ TrapType + Site, data = AOV_FunGrDiet)
+
+# GateCode instead of TrapType
+CatchComposition_DietCt_GateCode <- aov(KeyHerbivoreCtRatio ~ GateCode + Site, data = AOV_FunGrDiet)
+
+## Compare four ANOVA's using AIC
+
+# List of models
+model.list <- list(CatchComposition_DietCt_InteractingBlocking, CatchComposition_DietCt_Interacting,
+  CatchComposition_DietCt_NonInteracting, CatchComposition_DietCt_GateCode)
+
+# Model names
+model.names <- c("IntBlock", "Int", "NonInt", "GateCode")
+
+# Compare using AIC
+CatchComposition_DietCt_ModelComparison <- aictab(model.list, modnames = model.names)
+
+# The favored model uses TrapType (not GateCode), non-interacting and no blocking variable!
+
+# Save model comparison results
+write.csv(CatchComposition_DietCt_ModelComparison, file = "02_Stability_Out/CatchComposition_DietCt_ModelComparison.csv")
+
+# Save model results
+CatchComposition_DietCt_Results <- summary(CatchComposition_DietCt_NonInteracting)
+CatchComposition_DietCt_Results
+write.csv(CatchComposition_DietCt_Results[[1]], file = "02_Stability_Out/CatchComposition_DietCt_Results.csv")
+
+# We find a significant relationship between site and catch composition but not between TrapType and composition!
+
+
+## Catch composition using mass ratio (mass of key herbivores)
+
+# Variables interacting, blocking variable included
+CatchComposition_DietMass_InteractingBlocking <- aov(KeyHerbivoreMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+
+# Variables interacting, no blocking variable
+CatchComposition_DietMass_Interacting <- aov(KeyHerbivoreMassRatio ~ TrapType * Site, data = AOV_FunGrDiet)
+
+# Variables not interacting
+CatchComposition_DietMass_NonInteracting <- aov(KeyHerbivoreMassRatio ~ TrapType + Site, data = AOV_FunGrDiet)
+
+# GateCode instead of TrapType
+CatchComposition_DietMass_GateCode <- aov(KeyHerbivoreMassRatio ~ GateCode + Site, data = AOV_FunGrDiet)
+
+
+## Compare four ANOVA's using AIC
+
+# List of models
+model.list <- list(CatchComposition_DietMass_InteractingBlocking, CatchComposition_DietMass_Interacting,
+  CatchComposition_DietMass_NonInteracting, CatchComposition_DietMass_GateCode)
+
+# Model names
+model.names <- c("IntBlock", "Int", "NonInt", "GateCode")
+
+# Compare using AIC
+CatchComposition_DietMass_ModelComparison <- aictab(model.list, modnames = model.names)
+
+# Again, the favored model uses TrapType (not GateCode), non-interacting and no blocking variable!
+
+# Save model comparison results
+write.csv(CatchComposition_DietMass_ModelComparison, file = "02_Stability_Out/CatchComposition_DietMass_ModelComparison.csv")
+
+# Save model results
+CatchComposition_DietMass_Results <- summary(CatchComposition_DietMass_NonInteracting)
+CatchComposition_DietMass_Results
+write.csv(CatchComposition_DietMass_Results[[1]], file = "02_Stability_Out/CatchComposition_DietMass_Results.csv")
+
+# Again, we find a significant effect of site, but not of trap type!
+
+
+## Now, test the catch composition : count ratio across all sites
+
+# A list of sites
+site.list <- unique(AOV_FunGrDiet$Site)
+
+
+
+# A data frame to hold sites and p-values
+site.anovas <- as.data.frame(site.list)
+site.anovas$p.ctratio <- NA
+site.anovas$p.massratio <- NA
+
+# Run the favored model structure on each site
+for (i in 1:length(site.list)){
+  
+  # Temporary data frame for this site's data
+  a <- subset(AOV_FunGrDiet, AOV_FunGrDiet$Site == site.list[i])
+    
+  # Run the ct ratio ANOVA
+  b <- t.test(KeyHerbivoreCtRatio ~ TrapType, data = a)
+  
+  # Run the mass ratio ANOVA
+  c <- t.test(KeyHerbivoreMassRatio ~ TrapType, data = a)
+  
+  # Ct ANOVA results
+  d <- summary(b)
+  
+  # Mass ANOVA results
+  e <- summary(c)
+  
+  # Extract the p-values
+  p.ct <- d[[1]]$`Pr(>F)`[1]
+  p.mass <- e[[1]]$`Pr(>F)`[1]
+  
+  # Save p-values to dataframe
+  site.anovas$p.ctratio[i] <- p.ct
+  site.anovas$p.massratio[i] <- p.mass
+  
+}
 
 
 
