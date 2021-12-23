@@ -535,7 +535,7 @@ TrapData$TripID <- a
 # Create a list of unique combinations of dates and fishers
 a <- unique(a)
 
-# We have 2746 unique fishing trips!
+# We have 2744 unique fishing trips!
 
 # Make your list of trips a data frame
 a <- as.data.frame(a)
@@ -550,7 +550,7 @@ myFun <- function(n = 5000) {
 }
 
 # List of alphanumeric codes for each fisher
-a$TripID <- myFun(length(a))
+a$TripID <- myFun(length(a$a))
 
 # Add Trip ID's to TrapData
 for(i in 1:length(TrapData$TripID)){
