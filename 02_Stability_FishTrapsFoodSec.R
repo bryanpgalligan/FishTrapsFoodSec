@@ -65,7 +65,7 @@ TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
 # Delete all rows with NA for FunGr_Diet
 TrapData_FunGrDiet <- TrapData[!is.na(TrapData$FunGr_Diet),]
 
-# Delete all rows with NA for GateCode
+# Delete all rows with NA for GateCode (almost 2,000 rows)
 TrapData_FunGrDiet <- TrapData_FunGrDiet[!is.na(TrapData_FunGrDiet$GateCode),]
 
 # Bin all non-browsers/scrapers/grazers into one functional group ("Other")
@@ -109,12 +109,26 @@ for(i in 1:length(TrapData_FunGrDiet$FunGr_Diet)){
   
 }
 
-# Preliminary data frame of unique variable combinations for ANOVA
+# List of unique combos of Trip ID and gate code
+TripID <- unique(TrapData_FunGrDiet$TripID)
 GateCode <- unique(TrapData_FunGrDiet$GateCode)
-Site <- unique(TrapData_FunGrDiet$Site)
-AOV_FunGrDiet <- expand_grid(GateCode, Site)
 
-# Add columns to data AOV Data Frame
+# Preliminary data frame
+AOV_FunGrDiet <- expand_grid(TripID, GateCode)
+AOV_FunGrDiet$Site <- NA
+
+# Fill in site column
+for (i in 1:length(AOV_FunGrDiet$TripID)){
+  
+  # Locate index for first match of TripID in TrapData_FunGrDiet
+  a <- match(AOV_FunGrDiet$TripID[i], TrapData_FunGrDiet$TripID)
+  
+  # Fill in site column
+  AOV_FunGrDiet$Site[i] <- TrapData_FunGrDiet$Site[a]
+  
+}
+
+# Add columns to AOV Data Frame
 AOV_FunGrDiet$TrapType <- NA
 AOV_FunGrDiet$BrowserCt <- NA
 AOV_FunGrDiet$BrowserMass_g <- NA
@@ -155,19 +169,19 @@ for (i in 1:length(AOV_FunGrDiet$GateCode)){
   
   # Subset data applicable to this row
   a <- subset(TrapData_FunGrDiet, 
-    GateCode == AOV_FunGrDiet$GateCode[i] & Site == AOV_FunGrDiet$Site[i])
+    GateCode == AOV_FunGrDiet$GateCode[i] & Site == AOV_FunGrDiet$Site[i] & TripID == AOV_FunGrDiet$TripID[i])
   
   # Calculate BrowserCt
-  AOV_FunGrDiet$BrowserCt[i] <- sum(a$FunGr_Diet == "Browser")
+  AOV_FunGrDiet$BrowserCt[i] <- sum(a$FunGr_Diet == "Browser", na.rm = TRUE)
   
   # Calculate GrazerCt
-  AOV_FunGrDiet$GrazerCt[i] <- sum(a$FunGr_Diet == "Grazer")
+  AOV_FunGrDiet$GrazerCt[i] <- sum(a$FunGr_Diet == "Grazer", na.rm = TRUE)
   
   # Calculate ScraperCt
-  AOV_FunGrDiet$ScraperCt[i] <- sum(a$FunGr_Diet == "Scrapers/Excavators")
+  AOV_FunGrDiet$ScraperCt[i] <- sum(a$FunGr_Diet == "Scrapers/Excavators", na.rm = TRUE)
   
   # Calculate OtherCt
-  AOV_FunGrDiet$OtherCt[i] <- sum(a$FunGr_Diet == "Other")
+  AOV_FunGrDiet$OtherCt[i] <- sum(a$FunGr_Diet == "Other", na.rm = TRUE)
   
   # Calculate TotalCt
   AOV_FunGrDiet$TotalCt[i] <- length(a$FunGr_Diet)
@@ -244,17 +258,17 @@ model.names <- c("IntBlock", "Int", "NonInt", "GateCode")
 # Compare using AIC
 CatchComposition_DietCt_ModelComparison <- aictab(model.list, modnames = model.names)
 
-# The favored model uses TrapType (not GateCode), non-interacting and no blocking variable!
+# The favored model is interacting with the blocking variable.
 
 # Save model comparison results
 write.csv(CatchComposition_DietCt_ModelComparison, file = "02_Stability_Out/CatchComposition_DietCt_ModelComparison.csv")
 
 # Save model results
-CatchComposition_DietCt_Results <- summary(CatchComposition_DietCt_NonInteracting)
+CatchComposition_DietCt_Results <- summary(CatchComposition_DietCt_InteractingBlocking)
 CatchComposition_DietCt_Results
 write.csv(CatchComposition_DietCt_Results[[1]], file = "02_Stability_Out/CatchComposition_DietCt_Results.csv")
 
-# We find a significant relationship between site and catch composition but not between TrapType and composition!
+# We find significant relationships for all independent variables!
 
 
 ## Catch composition using mass ratio (mass of key herbivores)
@@ -284,58 +298,19 @@ model.names <- c("IntBlock", "Int", "NonInt", "GateCode")
 # Compare using AIC
 CatchComposition_DietMass_ModelComparison <- aictab(model.list, modnames = model.names)
 
-# Again, the favored model uses TrapType (not GateCode), non-interacting and no blocking variable!
+# Again, the favored model is interacting and blocking!
 
 # Save model comparison results
 write.csv(CatchComposition_DietMass_ModelComparison, file = "02_Stability_Out/CatchComposition_DietMass_ModelComparison.csv")
 
 # Save model results
-CatchComposition_DietMass_Results <- summary(CatchComposition_DietMass_NonInteracting)
+CatchComposition_DietMass_Results <- summary(CatchComposition_DietMass_InteractingBlocking)
 CatchComposition_DietMass_Results
 write.csv(CatchComposition_DietMass_Results[[1]], file = "02_Stability_Out/CatchComposition_DietMass_Results.csv")
 
-# Again, we find a significant effect of site, but not of trap type!
+# Now we find significant effects of Site, GateCode, and TrapType:Site, but NOT for TrapType!
 
 
-## Now, test the catch composition : count ratio across all sites
-
-# A list of sites
-site.list <- unique(AOV_FunGrDiet$Site)
-
-
-
-# A data frame to hold sites and p-values
-site.anovas <- as.data.frame(site.list)
-site.anovas$p.ctratio <- NA
-site.anovas$p.massratio <- NA
-
-# Run the favored model structure on each site
-for (i in 1:length(site.list)){
-  
-  # Temporary data frame for this site's data
-  a <- subset(AOV_FunGrDiet, AOV_FunGrDiet$Site == site.list[i])
-    
-  # Run the ct ratio ANOVA
-  b <- t.test(KeyHerbivoreCtRatio ~ TrapType, data = a)
-  
-  # Run the mass ratio ANOVA
-  c <- t.test(KeyHerbivoreMassRatio ~ TrapType, data = a)
-  
-  # Ct ANOVA results
-  d <- summary(b)
-  
-  # Mass ANOVA results
-  e <- summary(c)
-  
-  # Extract the p-values
-  p.ct <- d[[1]]$`Pr(>F)`[1]
-  p.mass <- e[[1]]$`Pr(>F)`[1]
-  
-  # Save p-values to dataframe
-  site.anovas$p.ctratio[i] <- p.ct
-  site.anovas$p.massratio[i] <- p.mass
-  
-}
 
 
 
