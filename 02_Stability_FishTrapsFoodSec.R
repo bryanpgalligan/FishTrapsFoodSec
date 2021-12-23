@@ -226,6 +226,8 @@ AOV_FunGrDiet$KeyHerbivoreMassRatio <- AOV_FunGrDiet$KeyHerbivoreMass_g / AOV_Fu
 # Remove rows of AOV data frame where mass = 0 g
 AOV_FunGrDiet <- subset(AOV_FunGrDiet, AOV_FunGrDiet$TotalMass_g > 0)
 
+# Save AOV_FunGrDiet
+write.csv(AOV_FunGrDiet, file = "02_Stability_Out/CatchComposition_FunGrDiet_Data.csv")
 
 
 
