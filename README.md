@@ -134,6 +134,8 @@ Number of **observations**: 27793
 
 -   The following R packages:
 
+    -   `AICcmodavg`
+
     -   `data.table`
 
     -   `dplyr`
@@ -149,6 +151,8 @@ Number of **observations**: 27793
     -   `stringr`
 
     -   `taxize`
+
+    -   `tidyr`
 
 ## Links
 
