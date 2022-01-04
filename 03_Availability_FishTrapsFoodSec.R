@@ -9,11 +9,13 @@
 ##    01 Data Cleaning
 ##    02 Stability
 ##    03 Availability
+##    04 Access
+##    06 Tables and Figures
 
 ## Script Title:
 ##    03 Availability
 
-## Last update: 23 Dec 21
+## Last update: 4 Jan 22
 
 
 
@@ -21,6 +23,8 @@
 ## Table of Contents
 #     3.1 Load Packages and Data
 #     3.2 Life History Parameters
+#
+#     3.x Median length
 
 
 
@@ -35,6 +39,7 @@ rm(list = ls())
 # Load packages
 library(readr)
 library(rfishbase)
+library(AICcmodavg)
 
 # Load TrapData
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv", 
@@ -58,6 +63,55 @@ life.hx.params$Linf <- NA
 
 # NB: these params are mentioned for three species in Hicks & McClanahan (2012). They recalculated them based
 # on Linf (or L max if that's a different thing?).
+
+
+
+
+##### 3.x Length #####
+
+## Test the effect of trap type on median length
+
+# Remove all rows with no length observation
+LengthData <- TrapData[!is.na(TrapData$Length_cm),]
+
+## Create four ANOVA models to compare
+
+# Variables interacting, blocking variable included
+Length_IntBlock <- aov(Length_cm ~ TrapType * Site + GateCode, data = LengthData)
+
+# Variables interacting, no blocking variable
+Length_Int <- aov(Length_cm ~ TrapType * Site, data = LengthData)
+
+# Variables not interacting, no blocking variable
+Length_NoInt <- aov(Length_cm ~ TrapType + Site, data = LengthData)
+
+# GateCode instead of TrapType
+Length_GateCode <- aov(Length_cm ~ GateCode + Site, data = LengthData)
+
+## Compare four ANOVA's using AIC
+
+# List of models
+model.list <- list(Length_IntBlock, Length_Int, Length_NoInt, Length_GateCode)
+
+# Model names
+model.names <- c("IntBlock", "Int", "NonInt", "GateCode")
+
+# Compare using AIC
+Length_ModelComparison <- aictab(model.list, modnames = model.names)
+
+# The favored model is Interacting and Blocking!
+
+# Save model comparison results
+write.csv(Length_ModelComparison, file = "03_Availability_Out/LengthAOV_ModelComparison.csv")
+
+# Save model results
+LengthAOV_Results <- summary(Length_IntBlock)
+LengthAOV_Results
+write.csv(LengthAOV_Results[[1]], file = "03_Availability_Out/LengthAOV_Results.csv")
+
+# We got super small p-values for all independent variables!
+
+
 
 
 

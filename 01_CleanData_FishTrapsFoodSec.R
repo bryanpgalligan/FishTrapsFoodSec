@@ -9,6 +9,8 @@
 ##    01 Data Cleaning
 ##    02 Stability
 ##    03 Availability
+##    04 Access
+##    06 Tables and Figures
 
 ## Script Title:
 ##    01 Data Cleaning
