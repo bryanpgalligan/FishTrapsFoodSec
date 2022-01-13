@@ -148,6 +148,9 @@ ggsave(filename = "06_TabsFigs_Out/Length.jpeg", device = "jpeg",
 
 ##### 6.x CPUE by Trap Type #####
 
+# First, remove Bogowa because it only has gated traps
+CPUE_Data <- subset(CPUE_Data, CPUE_Data$Site != "Bogowa")
+
 # Set sites in order from least to greatest CPUE
 
 # Data frame of median CPUE by site
