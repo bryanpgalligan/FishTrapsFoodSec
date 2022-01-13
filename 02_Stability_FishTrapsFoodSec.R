@@ -15,7 +15,7 @@
 ## Script Title:
 ##    02 Stability
 
-## Last update: 23 Dec 21
+## Last update: 13 Jan 22
 
 
 
@@ -25,6 +25,10 @@
 #     2.2 FunGr_Diet
 #     2.2.1 Data Manipulation
 #     2.2.2 Analysis
+#     2.2.2.1 Key Herbivore Count Ratio
+#     2.2.2.2 Key Herbivore Mass Ratio
+#     2.2.2.3 Browser, Scraper, Grazer Count Ratio
+#     2.2.2.4 Broser, Scraper, Grazer Mass Ratio
 
 
 
@@ -237,6 +241,10 @@ write.csv(AOV_FunGrDiet, file = "02_Stability_Out/CatchComposition_FunGrDiet_Dat
 
 ##### 2.2.2 Analysis #####
 
+
+
+##### 2.2.2.1 Key Herbivore Count Ratio #####
+
 ## Catch Composition using count ratio (no. of key herbivores)
 
 # Variables interacting, blocking variable included
@@ -275,6 +283,7 @@ write.csv(CatchComposition_DietCt_Results[[1]], file = "02_Stability_Out/CatchCo
 
 # We find significant relationships for all independent variables!
 
+##### 2.2.2.2 Key Herbivore Mass Ratio #####
 
 ## Catch composition using mass ratio (mass of key herbivores)
 
@@ -315,6 +324,47 @@ write.csv(CatchComposition_DietMass_Results[[1]], file = "02_Stability_Out/Catch
 
 # Now we find significant effects of Site, GateCode, and TrapType:Site, but NOT for TrapType!
 
+
+
+
+##### 2.2.2.3 Browser, Scraper, Grazer Count Ratio #####
+
+## Test for changes in catch of each herbivore type
+
+## These ANOVAs follow the structure favored by the previous AIC comparison.
+
+# Test for browsers by count ratio and save results
+Browser_CtRatio <- aov(BrowserCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Browser_CtRatio)[[1]], file = "02_Stability_Out/Browser_CtRatio_Results.csv")
+
+# Test for scrapers by count ratio and save results
+Scraper_CtRatio <- aov(ScraperCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Scraper_CtRatio)[[1]], file = "02_Stability_Out/Scraper_CtRatio_Results.csv")
+
+# Test for grazers by count ratio and save results
+Grazer_CtRatio <- aov(GrazerCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Grazer_CtRatio)[[1]], file = "02_Stability_Out/Grazer_CtRatio_Results.csv")
+
+
+
+
+##### 2.2.2.4 Browser, Scraper, Grazer Mass Ratio #####
+
+## Test for changes in catch of each herbivore type
+
+## These ANOVAs follow the structure favored by the previous AIC comparison
+
+# Test for browsers by mass ratio and save results
+Browser_MassRatio <- aov(BrowserMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Browser_MassRatio)[[1]], file = "02_Stability_Out/Browser_MassRatio_Results.csv")
+
+# Test for scrapers by mass ratio and save results
+Scraper_MassRatio <- aov(ScraperMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Scraper_MassRatio)[[1]], file = "02_Stability_Out/Scraper_MassRatio_Results.csv")
+
+# Test for grazers by count ratio and save results
+Grazer_MassRatio <- aov(GrazerMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRatio_Results.csv")
 
 
 
