@@ -53,6 +53,8 @@ CatchComposition <- read_csv("02_Stability_Out/CatchComposition_FunGrDiet_Data.c
 # Load CPUE_Data
 CPUE_Data <- read_csv("04_Access_Out/CPUE_Data.csv", 
     col_types = cols(...1 = col_skip()))
+CPUEBySite_p <- read_csv("04_Access_Out/CPUEBySite_pvalues.csv",
+  col_types = cols(...1 = col_skip()))
 
 
 
@@ -115,15 +117,12 @@ ggsave(filename = "06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg", device = "jpeg
 
 ##### 6.x Length by Trap Type #####
 
-# Define p-value annotation
-p <- expression("p ="~3.88~"*"~10^-225)
-
 a <- ggplot(data = TrapData, mapping = aes(x = TrapType, y = Length_cm)) +
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
   theme(panel.background = element_blank(),
         axis.line = element_line()) +
-  annotate(geom = "text", x = "Traditional", y = 24, label = p) +
+  annotate(geom = "text", x = "Traditional", y = 24, label = "p = 0.000") +
   ylab("Length (cm)") +
   xlab("Trap Type")
 
@@ -146,22 +145,85 @@ ggsave(filename = "06_TabsFigs_Out/Length.jpeg", device = "jpeg",
 
 ##### 6.x CPUE by Trap Type #####
 
+# Set sites in order from least to greatest CPUE
+
+# Data frame of median CPUE by site
+CPUE_BySite <- as.data.frame(unique(CPUE_Data$Site))
+colnames(CPUE_BySite) <- "Site"
+CPUE_BySite$CPUE_median <- NA
+
+# Fill in median CPUE for each site
+for(i in 1:length(CPUE_BySite$Site)){
+  
+  # Save site
+  a <- CPUE_BySite$Site[i]
+  
+  # Subset CPUE data for this site only
+  b <- subset(CPUE_Data, CPUE_Data$Site == a)
+  
+  # Save the median
+  CPUE_BySite$CPUE_median[i] <- median(b$CPUE)
+  
+}
+
+# Sort data frame by CPUE in ascending order
+CPUE_BySite <- CPUE_BySite[order(CPUE_BySite$CPUE_median),]
+
+# Set CPUE_Data factors in the same order
+CPUE_Data$Site <- factor(CPUE_Data$Site, levels = CPUE_BySite$Site)
+
+# Round values in CPUEBySite_p
+
+# A rounding function that always rounds .5 up to the nearest integer. (The normal
+# round() function rounds .5 to the nearest even number.)
+round2 <- function(x, digits = 0) {  # Function to always round 0.5 up
+  posneg <- sign(x)
+  z <- abs(x) * 10^digits
+  z <- z + 0.5
+  z <- trunc(z)
+  z <- z / 10^digits
+  z * posneg
+}
+
+# Round p-values
+CPUEBySite_p$p.value <- round2(CPUEBySite_p$p.value, digits = 3)
+
+# Put sites in order as a factor
+CPUEBySite_p$Site <- factor(CPUEBySite_p$Site, levels = CPUE_BySite$Site)
+
+# Prepare p-value annotations
+p <- CPUEBySite_p
+for (i in 1:nrow(p)){
+  p$p.value[i] <- paste("p = ", p$p.value[i], sep="")
+}
+
+# Main CPUE plot
 a <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
-  stat_summary(fun = mean, geom = "point") +
-  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.02)) +
+  geom_boxplot(outlier.alpha = 0.1) +
   theme(panel.background = element_blank(),
-    axis.line = element_line())
+    axis.line = element_line()) +
+  ylab("Catch per Unit Effort (kg / trap)") +
+  xlab("")
 
-b <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE, group = Site)) +
-  stat_summary(fun = mean, geom = "point") +
-  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.02)) +
-  facet_wrap(facets = vars(Site)) +
-  theme_bw()
+# CPUE by site
+b <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
+  geom_boxplot(outlier.alpha = 0.1) +
+  facet_wrap(facets = vars(Site), scales = "free") +
+  theme_bw() +
+  ylab("") +
+  xlab("") +
+  geom_text(data = p,
+    aes(x = Inf, y = Inf, label = p.value),
+    hjust = 1.1, vjust = 1.5)
 
+# Combine plots
 ggarrange(a, b, nrow = 1, widths = c(0.5, 1))
 
+# Save plots
 ggsave(filename = "06_TabsFigs_Out/CPUE.jpeg", device = "jpeg",
   width = 500, height = 200, units = "mm")
+
+
 
 
 

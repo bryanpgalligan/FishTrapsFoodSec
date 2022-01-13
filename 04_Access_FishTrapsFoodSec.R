@@ -15,7 +15,7 @@
 ## Script Title:
 ##    04 Access
 
-## Last update: 4 Jan 22
+## Last update: 13 Jan 22
 
 
 
@@ -24,6 +24,8 @@
 #     4.1 Load Packages and Data
 #     4.2 Clean Data
 #     4.3 Total Catch (Mass)
+#     4.3.1 CPUE
+#     4.3.2 CPUE By Site
 
 
 
@@ -81,12 +83,15 @@ for(i in 1:length(unique.trips)){
 
 ## Does trap type influence CPUE (kg/trap)?
 
+##### 4.3.1 CPUE #####
+
 # Create data frame for this question
 CPUE_Data <- data.frame(trips.sametrap)
 colnames(CPUE_Data) <- "TripID"
 CPUE_Data$TrapType <- NA
 CPUE_Data$GateCode <- NA
 CPUE_Data$Site <- NA
+CPUE_Data$Catch_g <- NA
 CPUE_Data$Catch_kg <- NA
 CPUE_Data$Effort_traps <- NA
 CPUE_Data$CPUE <- NA
@@ -106,13 +111,16 @@ for(i in 1:length(CPUE_Data$TripID)){
   # Site
   CPUE_Data$Site[i] <- a$Site[1]
   
-  # Catch (kg)
-  CPUE_Data$Catch_kg[i] <- sum(a$Weight_g)
+  # Catch (g)
+  CPUE_Data$Catch_g[i] <- sum(a$Weight_g)
   
   # Effort (traps)
   CPUE_Data$Effort_traps[i] <- a$TrapsFished[1]
   
 }
+
+# Fill in Catch_kg column of CPUE_Data
+CPUE_Data$Catch_kg <- CPUE_Data$Catch_g / 1000
 
 # Fill in CPUE column of CPUE_Data
 CPUE_Data$CPUE <- CPUE_Data$Catch_kg / CPUE_Data$Effort_traps
@@ -162,15 +170,56 @@ write.csv(CPUE_Results[[1]], file = "04_Access_Out/CPUE_Results.csv")
 # We got super small p-values for all independent variables!
 
 
+##### 4.3.2 CPUE By Site #####
 
+# Test CPUE at each site
 
+# Vector of each unique site for gated traps
+a <- subset(CPUE_Data, CPUE_Data$TrapType == "Gated")
+b <- unique(a$Site)
 
+# Vector of each unique site for traditional traps
+a <- subset(CPUE_Data, CPUE_Data$TrapType == "Traditional")
+c <- unique(a$Site)
 
+# Vector of sites with both trap types
+SitesToTest <- intersect(b,c)
 
+# Empty vectors to fill in with the loop
+Site <- NA
+p.value <- NA
 
+# Test the preferred ANOVA structure for each site (removing site for obvious reasons)
+for(i in 1:length(SitesToTest)){
+  
+  # Save the site name in question
+  a <- SitesToTest[i]
+  
+  # Subset the data for only this site
+  b <- subset(CPUE_Data, CPUE_Data$Site == a)
+  
+  # Run the ANOVA
+  c <- aov(CPUE ~ TrapType + GateCode, data = b)
+  
+  # Save the p-value for the trap type variable
+  p <- summary(c)[[1]]$`Pr(>F)`[1]
+  
+  # Save the site name
+  Site <- append(Site, a, after = length(Site))
+  
+  # Save the p-value
+  p.value <- append(p.value, p, after = length(p.value))
+  
+}
 
+# Combine vectors into a data frame
+Site_CPUE_p <- data.frame(Site, p.value)
 
+# Delete rows with NA for site
+Site_CPUE_p <- Site_CPUE_p[!is.na(Site_CPUE_p$Site),]
 
+# Save results
+write.csv(Site_CPUE_p, file = "04_Access_Out/CPUEBySite_pvalues.csv")
 
 
 
