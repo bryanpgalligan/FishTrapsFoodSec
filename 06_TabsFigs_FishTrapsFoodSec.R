@@ -114,21 +114,32 @@ ggsave(filename = "06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg", device = "jpeg
 
 
 ##### 6.x Length by Trap Type #####
+
+# Define p-value annotation
+p <- expression("p ="~3.88~"*"~10^-225)
+
 a <- ggplot(data = TrapData, mapping = aes(x = TrapType, y = Length_cm)) +
   stat_summary(fun = mean, geom = "point") +
-  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.02)) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
   theme(panel.background = element_blank(),
-        axis.line = element_line())
+        axis.line = element_line()) +
+  annotate(geom = "text", x = "Traditional", y = 24, label = p) +
+  ylab("Length (cm)") +
+  xlab("Trap Type")
 
-b <- ggplot(data = TrapData, aes(Length_cm, group = TrapType)) +
-  geom_histogram(binwidth = 2) +
+b <- ggplot(data = TrapData, aes(Length_cm, fill = TrapType)) +
+  geom_density(alpha = 0.4) +
   coord_cartesian(xlim = c(0, 50)) +
-  facet_wrap(facets = vars(TrapType)) +
-  theme_bw()
+  theme(panel.background = element_blank(),
+    axis.line = element_line()) +
+  ylab("Density") +
+  xlab("Length (cm)") +
+  labs(fill = "Trap Type")
 
 ggarrange(a, b, nrow = 1, widths = c(0.5, 1))
 
-ggsave(filename = "06_TabsFigs_Out/Length.jpeg", device = "jpeg")
+ggsave(filename = "06_TabsFigs_Out/Length.jpeg", device = "jpeg",
+  width = 300, height = 150, units = "mm")
 
 
 
