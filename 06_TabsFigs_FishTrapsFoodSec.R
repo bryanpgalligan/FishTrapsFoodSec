@@ -118,11 +118,14 @@ ggsave(filename = "06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg", device = "jpeg
 ##### 6.x Length by Trap Type #####
 
 a <- ggplot(data = TrapData, mapping = aes(x = TrapType, y = Length_cm)) +
-  stat_summary(fun = mean, geom = "point") +
-  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  #stat_summary(fun = mean, geom = "point") +
+  #stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  geom_boxplot(outlier.alpha = 0.25) +
+  coord_cartesian(ylim = c(0, 60)) +
   theme(panel.background = element_blank(),
         axis.line = element_line()) +
-  annotate(geom = "text", x = "Traditional", y = 24, label = "p = 0.000") +
+  annotate(geom = "text", x = Inf, y = Inf, label = "p = 0.000",
+    hjust = 1, vjust = 2) +
   ylab("Length (cm)") +
   xlab("Trap Type")
 
@@ -200,10 +203,13 @@ for (i in 1:nrow(p)){
 # Main CPUE plot
 a <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
   geom_boxplot(outlier.alpha = 0.1) +
+  coord_cartesian(ylim = c(0,5)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
   ylab("Catch per Unit Effort (kg / trap)") +
-  xlab("")
+  xlab("") +
+  annotate(geom = "text", x = Inf, y = Inf, label = "p = 0.000",
+    hjust = 1, vjust = 2)
 
 # CPUE by site
 b <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
