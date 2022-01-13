@@ -15,7 +15,7 @@
 ## Script Title:
 ##    06 Tables and Figures
 
-## Last update: 4 Jan 22
+## Last update: 13 Jan 22
 
 
 
@@ -58,6 +58,8 @@ CPUE_Data <- read_csv("04_Access_Out/CPUE_Data.csv",
 
 
 ##### 6.x Key Herbivore Composition by Trap Type #####
+
+# A simple figure of the proportion of key herbivores in catch
 ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = KeyHerbivoreMassRatio)) +
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.02)) +
@@ -66,6 +68,47 @@ ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = KeyHerbivoreMass
     axis.line = element_line())
 
 ggsave(filename = "06_TabsFigs_Out/KeyHerbivores.jpeg", device = "jpeg")
+
+# A figure containing three plots, one for proportion of each type of herbivore in catch
+
+# Browsers
+a <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = BrowserMassRatio)) +
+  stat_summary(fun = mean, geom = "point") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  coord_cartesian(ylim = c(0.4, 0.6)) +
+  theme(panel.background = element_blank(),
+    axis.line = element_line()) +
+  annotate(geom = "text", x = "Traditional", y = 0.58, label = "p = 0.012", size = 3) +
+  ylab("") +
+  xlab("")
+
+# Scrapers
+b <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = ScraperMassRatio)) +
+  stat_summary(fun = mean, geom = "point") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  coord_cartesian(ylim = c(0, 0.2)) +
+  theme(panel.background = element_blank(),
+    axis.line = element_line()) +
+  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.659", size = 3) +
+  ylab("") +
+  xlab("")
+
+# Grazers
+c <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = GrazerMassRatio)) +
+  stat_summary(fun = mean, geom = "point") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  coord_cartesian(ylim = c(0, 0.2)) +
+  theme(panel.background = element_blank(),
+    axis.line = element_line()) +
+  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.020", size = 3) +
+  ylab("") +
+  xlab("")
+
+# Combine the plots
+ggarrange(a, b, c, labels = "AUTO")
+
+# Save the plots
+ggsave(filename = "06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg", device = "jpeg")
 
 
 
