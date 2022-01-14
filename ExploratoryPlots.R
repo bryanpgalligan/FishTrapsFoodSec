@@ -76,8 +76,41 @@ summary(model)
 
 # It does not look like there is a trend in CPUE over time
 
-## Plot KeyHerbivoreCtRatio: Finds different distributions for different sites
-ggplot(data = CatchComposition, mapping = aes(KeyHerbivoreCtRatio)) +
+## Plot KeyHerbivoreMassRatio: Finds different distributions for different sites
+ggplot(data = CatchComposition, mapping = aes(KeyHerbivoreMassRatio)) +
   geom_density() +
-  facet_grid(rows = vars(TrapType), cols = vars(Site))
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/KeyHerbivoreMassRatio.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
+
+## Plot Browser Mass Ratio: looks like a few different distributions
+ggplot(data = CatchComposition, mapping = aes(BrowserMassRatio)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/BrowserMassRatio.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
+
+## Plot Scraper Mass Ratio: looks like mostly a poisson distribution?
+ggplot(data = CatchComposition, mapping = aes(ScraperMassRatio)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/ScraperMassRatio.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
+
+## Plot Grazer Mass Ratio: looks like mostly a poisson distribution?
+ggplot(data = CatchComposition, mapping = aes(GrazerMassRatio)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/GrazerMassRatio.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
+
+
 
