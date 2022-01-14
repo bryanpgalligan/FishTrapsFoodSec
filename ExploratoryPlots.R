@@ -20,6 +20,10 @@ CPUE_Data <- read_csv("04_Access_Out/CPUE_Data.csv",
 CPUEBySite_p <- read_csv("04_Access_Out/CPUEBySite_pvalues.csv",
   col_types = cols(...1 = col_skip()))
 
+# Load Length Data
+LengthData <- read_csv("03_Availability_Out/LengthData.csv",
+  col_types = cols(Date = col_date(format = "%Y-%m-%d")))
+
 ## CPUE by trap type
 ggplot(data = CPUE_Data, mapping = aes(x = TrapType, y = CPUE)) +
   geom_point(alpha = 0.1, aes(color = Site)) +
@@ -112,5 +116,13 @@ ggplot(data = CatchComposition, mapping = aes(GrazerMassRatio)) +
 ggsave("ExploratoryPlots/GrazerMassRatio.jpeg", device = "jpeg",
   height = 300, width = 900, units = "mm")
 
+## Plot length
+ggplot(data = LengthData, mapping = aes(Length_cm)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/LengthDistributions.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
 
 
