@@ -46,6 +46,8 @@ library(readr)
 library(tidyr)
 library(dplyr)
 library(AICcmodavg)
+library(ggplot2)
+library(rstatix)
 
 # Load Trap Data
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
@@ -233,6 +235,9 @@ AOV_FunGrDiet$KeyHerbivoreMassRatio <- AOV_FunGrDiet$KeyHerbivoreMass_g / AOV_Fu
 # Remove rows of AOV data frame where mass = 0 g
 AOV_FunGrDiet <- subset(AOV_FunGrDiet, AOV_FunGrDiet$TotalMass_g > 0)
 
+# Coerce to a data frame
+AOV_FunGrDiet <- as.data.frame(AOV_FunGrDiet)
+
 # Save AOV_FunGrDiet
 write.csv(AOV_FunGrDiet, file = "02_Stability_Out/CatchComposition_FunGrDiet_Data.csv")
 
@@ -283,6 +288,20 @@ write.csv(CatchComposition_DietCt_Results[[1]], file = "02_Stability_Out/CatchCo
 
 # We find significant relationships for all independent variables!
 
+# Test the normality of residuals (qq plot)
+ggqqplot(residuals(CatchComposition_DietCt_InteractingBlocking))
+
+# The residuals look good
+
+# Test homogeneity of variance
+AOV_FunGrDiet %>%
+  levene_test(KeyHerbivoreCtRatio ~ TrapType * Site)
+
+# We do NOT have homogeneity of variance
+
+
+
+
 ##### 2.2.2.2 Key Herbivore Mass Ratio #####
 
 ## Catch composition using mass ratio (mass of key herbivores)
@@ -324,6 +343,17 @@ write.csv(CatchComposition_DietMass_Results[[1]], file = "02_Stability_Out/Catch
 
 # Now we find significant effects of Site, GateCode, and TrapType:Site, but NOT for TrapType!
 
+# Test the normality of residuals (qq plot)
+ggqqplot(residuals(CatchComposition_DietMass_InteractingBlocking))
+
+# The residuals are not perfect, but look fine
+
+# Test homogeneity of variance
+AOV_FunGrDiet %>%
+  levene_test(KeyHerbivoreMassRatio ~ TrapType * Site)
+
+# We do NOT have homogeneity of variance
+
 
 
 
@@ -337,15 +367,68 @@ write.csv(CatchComposition_DietMass_Results[[1]], file = "02_Stability_Out/Catch
 Browser_CtRatio <- aov(BrowserCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Browser_CtRatio)[[1]], file = "02_Stability_Out/Browser_CtRatio_Results.csv")
 
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Browser_CtRatio))
+    
+    # The residuals  look okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(BrowserCtRatio ~ TrapType * Site)
+    
+    # We do NOT have homogeneity of variance
+
 # Test for scrapers by count ratio and save results
 Scraper_CtRatio <- aov(ScraperCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Scraper_CtRatio)[[1]], file = "02_Stability_Out/Scraper_CtRatio_Results.csv")
+
+    # p-value for TrapType was 0.177. Make sure you did not fail to reject the null
+    #   because of outliers.
+
+    # Test for significant outliers
+    Scraper_CtRatio_Outliers <-
+    AOV_FunGrDiet %>%
+      group_by(TrapType, Site) %>%
+      identify_outliers(ScraperCtRatio)
+    
+    # We find 294 outliers (out of 2988 observations), 250 of which are extreme
+    
+    # Remove outliers and see if the results change
+    AOV_FunGrDiet_NoOutliers <- AOV_FunGrDiet[!(AOV_FunGrDiet$TripID %in% Scraper_CtRatio_Outliers$TripID),]
+    
+    a <- aov(ScraperCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet_NoOutliers)
+    summary(a)
+    summary(Scraper_CtRatio)
+    
+    # We do find a statistically significant effect with outliers removed (p = 2.87 * 10^-7), but because
+    # the means are so close together, it is probably still not ecologically significant.
+
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Scraper_CtRatio))
+    
+    # The residuals DO NOT look okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(ScraperCtRatio ~ TrapType * Site)
+    
+    # We do NOT have homogeneity of variance
+
 
 # Test for grazers by count ratio and save results
 Grazer_CtRatio <- aov(GrazerCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Grazer_CtRatio)[[1]], file = "02_Stability_Out/Grazer_CtRatio_Results.csv")
 
-
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Grazer_CtRatio))
+    
+    # The residuals DO NOT look okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(GrazerCtRatio ~ TrapType * Site)
+    
+    # We do NOT have homogeneity of variance
 
 
 ##### 2.2.2.4 Browser, Scraper, Grazer Mass Ratio #####
@@ -358,13 +441,68 @@ write.csv(summary(Grazer_CtRatio)[[1]], file = "02_Stability_Out/Grazer_CtRatio_
 Browser_MassRatio <- aov(BrowserMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Browser_MassRatio)[[1]], file = "02_Stability_Out/Browser_MassRatio_Results.csv")
 
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Browser_MassRatio))
+    
+    # The residuals look mostly okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(BrowserMassRatio ~ TrapType * Site)
+
+
 # Test for scrapers by mass ratio and save results
 Scraper_MassRatio <- aov(ScraperMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Scraper_MassRatio)[[1]], file = "02_Stability_Out/Scraper_MassRatio_Results.csv")
 
+    # p-value was 0.659, so not a significant difference. Make sure this is not because of outliers.
+    
+    # Test for significant outliers
+    Scraper_MassRatio_Outliers <-
+    AOV_FunGrDiet %>%
+      group_by(TrapType, Site) %>%
+      identify_outliers(ScraperMassRatio)
+    
+    # We find 286 outliers (out of 2988 observations), 258 of which are extreme
+    
+    # Remove outliers and see if the results change
+    AOV_FunGrDiet_NoOutliers <- AOV_FunGrDiet[!(AOV_FunGrDiet$TripID %in% Scraper_MassRatio_Outliers$TripID),]
+    
+    a <- aov(ScraperMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet_NoOutliers)
+    summary(a)
+    summary(Scraper_MassRatio)
+    
+    # We do find a statistically significant effect with outliers removed (p = 0.00376), but because
+    # the means are so close together, it is probably still not ecologically significant.
+
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Scraper_MassRatio))
+    
+    # The residuals DO NOT look okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(ScraperMassRatio ~ TrapType * Site)
+    
+    # We DO NOT have homogeneity of variance
+    
 # Test for grazers by count ratio and save results
 Grazer_MassRatio <- aov(GrazerMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRatio_Results.csv")
+
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Grazer_MassRatio))
+    
+    # The residuals DO NOT look okay
+    
+    # Test homogeneity of variance
+    AOV_FunGrDiet %>%
+      levene_test(GrazerMassRatio ~ TrapType * Site)
+    
+    # We DO NOT have homogeneity of variance
+
+
+
 
 
 
