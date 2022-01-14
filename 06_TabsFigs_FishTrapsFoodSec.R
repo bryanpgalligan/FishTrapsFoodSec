@@ -218,7 +218,7 @@ a <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
 b <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
   geom_boxplot(outlier.alpha = 0.1) +
   facet_wrap(facets = vars(Site), scales = "free") +
-  theme_classic2() +
+  theme_bw() +
   ylab("") +
   xlab("") +
   geom_text(data = p,
