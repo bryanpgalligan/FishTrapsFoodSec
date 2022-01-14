@@ -113,6 +113,7 @@ write.csv(LengthAOV_Results[[1]], file = "03_Availability_Out/LengthAOV_Results.
 
 # Test the normality of residuals (qq plot)
 ggqqplot(residuals(Length_IntBlock))
+ggsave("03_Availability_Temp/LengthQQ.jpeg", device = "jpeg")
 
 # The residuals DO NOT look okay
 

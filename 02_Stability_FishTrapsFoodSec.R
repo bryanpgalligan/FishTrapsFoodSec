@@ -443,6 +443,7 @@ write.csv(summary(Browser_MassRatio)[[1]], file = "02_Stability_Out/Browser_Mass
 
     # Test the normality of residuals (qq plot)
     ggqqplot(residuals(Browser_MassRatio))
+    ggsave("02_Stability_Temp/BrowserMassQQ.jpeg", device = "jpeg")
     
     # The residuals look mostly okay
     
@@ -477,6 +478,7 @@ write.csv(summary(Scraper_MassRatio)[[1]], file = "02_Stability_Out/Scraper_Mass
 
     # Test the normality of residuals (qq plot)
     ggqqplot(residuals(Scraper_MassRatio))
+    ggsave("02_Stability_Temp/ScraperMassQQ.jpeg", device = "jpeg")
     
     # The residuals DO NOT look okay
     
@@ -492,6 +494,7 @@ write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRa
 
     # Test the normality of residuals (qq plot)
     ggqqplot(residuals(Grazer_MassRatio))
+    ggsave("02_Stability_Temp/GrazerMassQQ.jpeg", device = "jpeg")
     
     # The residuals DO NOT look okay
     

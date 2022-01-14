@@ -171,6 +171,7 @@ write.csv(CPUE_Results[[1]], file = "04_Access_Out/CPUE_Results.csv")
 
 # Test the normality of residuals (qq plot)
 ggqqplot(residuals(CPUE_IntBlock))
+ggsave("04_Access_Temp/CPUEQQ.jpeg", device = "jpeg")
 
 # The residuals DO NOT look okay
 
