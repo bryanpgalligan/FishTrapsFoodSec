@@ -125,4 +125,18 @@ ggplot(data = LengthData, mapping = aes(Length_cm)) +
 ggsave("ExploratoryPlots/LengthDistributions.jpeg", device = "jpeg",
   height = 300, width = 900, units = "mm")
 
+## Plot CPUE
+ggplot(data = CPUE_Data, mapping = aes(CPUE)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site)) +
+  theme_bw()
+
+ggsave("ExploratoryPlots/CPUE.jpeg", device = "jpeg",
+  height = 300, width = 900, units = "mm")
+
+
+
+
+
+
 
