@@ -169,6 +169,19 @@ write.csv(CPUE_Results[[1]], file = "04_Access_Out/CPUE_Results.csv")
 
 # We got super small p-values for all independent variables!
 
+# Test the normality of residuals (qq plot)
+ggqqplot(residuals(CPUE_IntBlock))
+
+# The residuals DO NOT look okay
+
+# Test homogeneity of variance
+CPUE_Data %>%
+  levene_test(CPUE ~ TrapType * Site)
+
+# We DO NOT have homogeneity of variance
+
+
+
 
 ##### 4.3.2 CPUE By Site #####
 
