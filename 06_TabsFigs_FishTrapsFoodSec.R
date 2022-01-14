@@ -77,6 +77,7 @@ ggsave(filename = "06_TabsFigs_Out/KeyHerbivores.jpeg", device = "jpeg")
 a <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = BrowserMassRatio)) +
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  #geom_boxplot(outlier.alpha = 0.1) +
   coord_cartesian(ylim = c(0.4, 0.6)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
@@ -88,6 +89,7 @@ a <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = BrowserMass
 b <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = ScraperMassRatio)) +
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  #geom_boxplot(outlier.alpha = 0.1) +
   coord_cartesian(ylim = c(0, 0.2)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
@@ -99,6 +101,7 @@ b <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = ScraperMass
 c <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = GrazerMassRatio)) +
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
+  #geom_boxplot(outlier.alpha = 0.1) +
   coord_cartesian(ylim = c(0, 0.2)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
