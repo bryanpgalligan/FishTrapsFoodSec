@@ -52,7 +52,6 @@ library(taxize)
   library(dplyr)
   library(magrittr)
 library(rfishbase)
-library(lubridate)
 
 # Load WCS combined gated trap data for 2010-2019
 TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")

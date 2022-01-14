@@ -170,6 +170,10 @@ Number of **observations**: 27793
 
     -   `dplyr`
 
+    -   `ggplot2`
+
+    -   `ggpubr`
+
     -   `magrittr`
 
     -   `readr`
@@ -177,6 +181,8 @@ Number of **observations**: 27793
     -   `readxl`
 
     -   `rfishbase`
+
+    -   `rstatix`
 
     -   `stringr`
 
