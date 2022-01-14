@@ -76,3 +76,8 @@ summary(model)
 
 # It does not look like there is a trend in CPUE over time
 
+## Plot KeyHerbivoreCtRatio: Finds different distributions for different sites
+ggplot(data = CatchComposition, mapping = aes(KeyHerbivoreCtRatio)) +
+  geom_density() +
+  facet_grid(rows = vars(TrapType), cols = vars(Site))
+
