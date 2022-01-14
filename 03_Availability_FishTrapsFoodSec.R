@@ -111,6 +111,20 @@ write.csv(LengthAOV_Results[[1]], file = "03_Availability_Out/LengthAOV_Results.
 
 # We got super small p-values for all independent variables!
 
+# Test the normality of residuals (qq plot)
+ggqqplot(residuals(Length_IntBlock))
+
+# The residuals DO NOT look okay
+
+# Test homogeneity of variance
+LengthData %>%
+  levene_test(Length_cm ~ TrapType * Site)
+
+# We DO NOT have homogeneity of variance
+
+# Save LengthData
+write.csv(LengthData, "03_Availability_Out/LengthData.csv")
+
 
 
 
