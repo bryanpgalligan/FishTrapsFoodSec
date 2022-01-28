@@ -15,7 +15,7 @@
 ## Script Title:
 ##    03 Availability
 
-## Last update: 4 Jan 22
+## Last update: 28 Jan 22
 
 
 
@@ -126,7 +126,31 @@ LengthData %>%
 # Save LengthData
 write.csv(LengthData, "03_Availability_Out/LengthData.csv")
 
+# AOV with length data log transformed
+LogLength_AOV <- aov(log(Length_cm + 1) ~ TrapType * Site + GateCode, data = LengthData)
 
+# Test normality of residuals
+ggqqplot(residuals(LogLength_AOV))
+
+# The residuals are problematic again.
+
+# Let's try the Tweedie GLMM
+LengthTweedie <- glmmTMB(Length_cm ~ TrapType + (1|Site),
+  data = LengthData, family = "tweedie")
+    
+    # Check the model results.
+    summary(LengthTweedie)
+    
+    # The results are similar - still significant.
+
+    # Run model diagnostics
+    simulateResiduals(LengthTweedie, n = 250, plot = TRUE)
+
+    # The diagnostics are not ideal, but they are interpretable.
+    
+    # Present the model results as ANOVA and save
+    LengthTweedie_AOV <- glmmTMB:::Anova.glmmTMB(LengthTweedie)
+    write.csv(LengthTweedie_AOV, file = "03_Availability_Out/LengthTweedie_Results.csv")
 
 
 
