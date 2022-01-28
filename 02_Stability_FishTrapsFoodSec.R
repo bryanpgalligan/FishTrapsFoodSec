@@ -15,7 +15,7 @@
 ## Script Title:
 ##    02 Stability
 
-## Last update: 13 Jan 22
+## Last update: 28 Jan 22
 
 
 
@@ -48,6 +48,9 @@ library(dplyr)
 library(AICcmodavg)
 library(ggplot2)
 library(rstatix)
+library(ggpubr)
+library(glmmTMB)
+library(DHARMa)
 
 # Load Trap Data
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
@@ -299,6 +302,24 @@ AOV_FunGrDiet %>%
 
 # We do NOT have homogeneity of variance
 
+## Test group size ratio
+
+# Sample size for traditional traps
+a <- length(
+  subset(AOV_FunGrDiet$TrapType, AOV_FunGrDiet$TrapType == "Traditional")
+)
+
+# Sample size for gated traps
+b <- length(
+  subset(AOV_FunGrDiet$TrapType, AOV_FunGrDiet$TrapType == "Gated")
+)
+
+# Calculate the ratio
+b/a
+
+# The ratio is 1.02. Because it is less than 1.5, we can ignore the assumption of
+#   homogeneity of variances.
+
 
 
 
@@ -377,7 +398,7 @@ write.csv(summary(Browser_CtRatio)[[1]], file = "02_Stability_Out/Browser_CtRati
       levene_test(BrowserCtRatio ~ TrapType * Site)
     
     # We do NOT have homogeneity of variance
-
+    
 # Test for scrapers by count ratio and save results
 Scraper_CtRatio <- aov(ScraperCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Scraper_CtRatio)[[1]], file = "02_Stability_Out/Scraper_CtRatio_Results.csv")
@@ -408,12 +429,41 @@ write.csv(summary(Scraper_CtRatio)[[1]], file = "02_Stability_Out/Scraper_CtRati
     
     # The residuals DO NOT look okay
     
-    # Test homogeneity of variance
-    AOV_FunGrDiet %>%
-      levene_test(ScraperCtRatio ~ TrapType * Site)
-    
-    # We do NOT have homogeneity of variance
+# Log transform data to deal with residuals problem
+Scraper_LogCtRatio <- aov(log(ScraperCtRatio + 1) ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
+summary(Scraper_LogCtRatio)
 
+    # p-value for TrapType was 0.27.
+
+    # Test the normality of residuals (qq plot)
+    ggqqplot(residuals(Scraper_LogCtRatio))
+    
+    # The residuals are still no good.
+
+# Fit a different model. This model excludes GateCode, because that term led
+#   to overparameterization (non-convergence). It includes Site as a random
+#   effect (not a fixed effect) for the same reason. A tweedie distribution
+#   is used because it is robust to zero-inflation and can handle non-integer
+#   responses (unlike negative binomial / negbinom2). It also produces the
+#   best residuals (non-significant KS test) when compared to negbinom2,
+#   gaussian, and poisson.
+Scraper_CtRatioTweedie <- glmmTMB(ScraperCtRatio ~ TrapType + (1|Site),
+  data = AOV_FunGrDiet, family = "tweedie")
+    
+    # Check the model results.
+    summary(Scraper_CtRatioTweedie)
+    
+    # The results are similar - still nonsignificant.
+
+    # Run model diagnostics
+    simulateResiduals(Scraper_CtRatioTweedie, n = 250, plot = TRUE)
+
+    # The diagnostics look great. Only the outlier test is significant, but
+    # we expected that.
+    
+    # Present the model results as ANOVA and save
+    Scraper_CtRatioTweedie_AOV <- glmmTMB:::Anova.glmmTMB(Scraper_CtRatioTweedie)
+    write.csv(Scraper_CtRatioTweedie_AOV, file = "02_Stability_Out/Scraper_CtRatioTweedie_Results.csv")
 
 # Test for grazers by count ratio and save results
 Grazer_CtRatio <- aov(GrazerCtRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
