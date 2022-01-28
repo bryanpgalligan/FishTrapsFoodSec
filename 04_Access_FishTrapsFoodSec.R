@@ -15,7 +15,7 @@
 ## Script Title:
 ##    04 Access
 
-## Last update: 13 Jan 22
+## Last update: 28 Jan 22
 
 
 
@@ -40,6 +40,9 @@ rm(list = ls())
 
 # Load packages
 library(readr)
+library(glmmTMB)
+library(DHARMa)
+library(stringr)
 
 # Load TrapData
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv", 
@@ -181,6 +184,32 @@ CPUE_Data %>%
 
 # We DO NOT have homogeneity of variance
 
+# Use the tweedie-distributed GLMM alternative
+CPUETweedie <- glmmTMB(CPUE ~ TrapType + Site,
+  data = CPUE_Data, family = "tweedie")
+summary(CPUETweedie)
+
+simulateResiduals(CPUETweedie, n = 250, plot = TRUE)
+
+# Present the model results as ANOVA and save
+CPUETweedie_AOV <- glmmTMB:::Anova.glmmTMB(CPUETweedie)
+write.csv(CPUETweedie_AOV, file = "04_Access_Out/CPUETweedie_Results.csv")
+
+# Save the p-values by site
+CPUETweedie_Results <- summary(CPUETweedie)
+CPUETweedie_Results <- as.data.frame(CPUETweedie_Results[["coefficients"]][["cond"]])
+
+# Clean the data frame of p-values by site
+CPUETweedie_Results$Site <- NA
+CPUETweedie_Results <- CPUETweedie_Results[3:length(CPUETweedie_Results$`Pr(>|z|)`),]
+
+# Fill in Site column
+CPUETweedie_Results$Site <- row.names(CPUETweedie_Results)
+CPUETweedie_Results$Site <- str_remove(CPUETweedie_Results$Site, "Site")
+
+# Save Data Frame
+write.csv(CPUETweedie_Results, file = "04_Access_Out/CPUETweedie_ResultsBySite.csv")
+
 
 
 
@@ -188,52 +217,55 @@ CPUE_Data %>%
 
 # Test CPUE at each site
 
+# This is defunct because it uses the original ANOVA model structure, which had
+# skewed residuals.
+
 # Vector of each unique site for gated traps
-a <- subset(CPUE_Data, CPUE_Data$TrapType == "Gated")
-b <- unique(a$Site)
+#a <- subset(CPUE_Data, CPUE_Data$TrapType == "Gated")
+#b <- unique(a$Site)
 
 # Vector of each unique site for traditional traps
-a <- subset(CPUE_Data, CPUE_Data$TrapType == "Traditional")
-c <- unique(a$Site)
+#a <- subset(CPUE_Data, CPUE_Data$TrapType == "Traditional")
+#c <- unique(a$Site)
 
 # Vector of sites with both trap types
-SitesToTest <- intersect(b,c)
+#SitesToTest <- intersect(b,c)
 
 # Empty vectors to fill in with the loop
-Site <- NA
-p.value <- NA
+#Site <- NA
+#p.value <- NA
 
 # Test the preferred ANOVA structure for each site (removing site for obvious reasons)
-for(i in 1:length(SitesToTest)){
+#for(i in 1:length(SitesToTest)){
   
   # Save the site name in question
-  a <- SitesToTest[i]
+#  a <- SitesToTest[i]
   
   # Subset the data for only this site
-  b <- subset(CPUE_Data, CPUE_Data$Site == a)
+#  b <- subset(CPUE_Data, CPUE_Data$Site == a)
   
   # Run the ANOVA
-  c <- aov(CPUE ~ TrapType + GateCode, data = b)
+#  c <- aov(CPUE ~ TrapType + GateCode, data = b)
   
   # Save the p-value for the trap type variable
-  p <- summary(c)[[1]]$`Pr(>F)`[1]
+#  p <- summary(c)[[1]]$`Pr(>F)`[1]
   
   # Save the site name
-  Site <- append(Site, a, after = length(Site))
+#  Site <- append(Site, a, after = length(Site))
   
   # Save the p-value
-  p.value <- append(p.value, p, after = length(p.value))
+#  p.value <- append(p.value, p, after = length(p.value))
   
-}
+#}
 
 # Combine vectors into a data frame
-Site_CPUE_p <- data.frame(Site, p.value)
+#Site_CPUE_p <- data.frame(Site, p.value)
 
 # Delete rows with NA for site
-Site_CPUE_p <- Site_CPUE_p[!is.na(Site_CPUE_p$Site),]
+#Site_CPUE_p <- Site_CPUE_p[!is.na(Site_CPUE_p$Site),]
 
 # Save results
-write.csv(Site_CPUE_p, file = "04_Access_Out/CPUEBySite_pvalues.csv")
+#write.csv(Site_CPUE_p, file = "04_Access_Out/CPUEBySite_pvalues.csv")
 
 
 
