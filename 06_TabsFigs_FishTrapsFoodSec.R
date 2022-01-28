@@ -15,7 +15,7 @@
 ## Script Title:
 ##    06 Tables and Figures
 
-## Last update: 13 Jan 22
+## Last update: 28 Jan 22
 
 
 
@@ -53,7 +53,7 @@ CatchComposition <- read_csv("02_Stability_Out/CatchComposition_FunGrDiet_Data.c
 # Load CPUE_Data
 CPUE_Data <- read_csv("04_Access_Out/CPUE_Data.csv", 
     col_types = cols(...1 = col_skip()))
-CPUEBySite_p <- read_csv("04_Access_Out/CPUEBySite_pvalues.csv",
+CPUE_ResultsBySite <- read_csv("04_Access_Out/CPUETweedie_ResultsBySite.csv",
   col_types = cols(...1 = col_skip()))
 
 
@@ -93,7 +93,7 @@ b <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = ScraperMass
   coord_cartesian(ylim = c(0, 0.2)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
-  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.659", size = 3) +
+  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.855", size = 3) +
   ylab("") +
   xlab("")
 
@@ -105,7 +105,7 @@ c <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = GrazerMassR
   coord_cartesian(ylim = c(0, 0.2)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
-  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.020", size = 3) +
+  annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.000", size = 3) +
   ylab("") +
   xlab("")
 
@@ -153,6 +153,7 @@ ggsave(filename = "06_TabsFigs_Out/Length.jpeg", device = "jpeg",
 
 # First, remove Bogowa because it only has gated traps
 CPUE_Data <- subset(CPUE_Data, CPUE_Data$Site != "Bogowa")
+CPUE_ResultsBySite <- subset(CPUE_ResultsBySite, CPUE_ResultsBySite$Site != "Bogowa")
 
 # Set sites in order from least to greatest CPUE
 
@@ -195,16 +196,30 @@ round2 <- function(x, digits = 0) {  # Function to always round 0.5 up
 }
 
 # Round p-values
-CPUEBySite_p$p.value <- round2(CPUEBySite_p$p.value, digits = 3)
+CPUE_ResultsBySite$`Pr(>|z|)` <- round2(CPUE_ResultsBySite$`Pr(>|z|)`, digits = 3)
 
 # Put sites in order as a factor
-CPUEBySite_p$Site <- factor(CPUEBySite_p$Site, levels = CPUE_BySite$Site)
+CPUE_ResultsBySite$Site <- factor(CPUE_ResultsBySite$Site, levels = CPUE_BySite$Site)
 
 # Prepare p-value annotations
-p <- CPUEBySite_p
+p <- CPUE_ResultsBySite
+p$`Pr(>|z|)` <- as.character(p$`Pr(>|z|)`)
+
 for (i in 1:nrow(p)){
-  p$p.value[i] <- paste("p = ", p$p.value[i], sep="")
+  p$`Pr(>|z|)`[i] <- paste("p = ", p$`Pr(>|z|)`[i], sep="")
 }
+
+# as.character rounds 0.000 to 0, so we have to fix that
+for(i in 1:nrow(p)){
+  
+  if(p$`Pr(>|z|)`[i] == "p = 0"){
+    
+    p$`Pr(>|z|)`[i] <- "p = 0.000"
+    
+  }
+  
+}
+
 
 # Main CPUE plot
 a <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
@@ -225,7 +240,7 @@ b <- ggplot(data = CPUE_Data, aes(x = TrapType, y = CPUE)) +
   ylab("") +
   xlab("") +
   geom_text(data = p,
-    aes(x = Inf, y = Inf, label = p.value),
+    aes(x = Inf, y = Inf, label = `Pr(>|z|)`),
     hjust = 1.1, vjust = 1.5)
 
 # Combine plots
