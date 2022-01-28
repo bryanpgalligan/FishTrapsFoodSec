@@ -78,10 +78,10 @@ a <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = BrowserMass
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
   #geom_boxplot(outlier.alpha = 0.1) +
-  coord_cartesian(ylim = c(0.4, 0.6)) +
+  #coord_cartesian(ylim = c(0.4, 0.6)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
-  annotate(geom = "text", x = "Traditional", y = 0.58, label = "p = 0.012", size = 3) +
+  annotate(geom = "text", x = "Traditional", y = 0.56, label = "p = 0.012", size = 3) +
   ylab("") +
   xlab("")
 
@@ -90,10 +90,14 @@ b <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = ScraperMass
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
   #geom_boxplot(outlier.alpha = 0.1) +
-  coord_cartesian(ylim = c(0, 0.2)) +
+  coord_cartesian(ylim = c(0.06, 0.12)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
+<<<<<<< HEAD
   annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.855", size = 3) +
+=======
+  annotate(geom = "text", x = "Traditional", y = 0.12, label = "p = 0.855", size = 3) +
+>>>>>>> 3585257 (Update figures to reflect new statistical tests.)
   ylab("") +
   xlab("")
 
@@ -102,10 +106,14 @@ c <- ggplot(data = CatchComposition, mapping = aes(x = TrapType, y = GrazerMassR
   stat_summary(fun = mean, geom = "point") +
   stat_summary(fun.data = mean_se, geom = "errorbar", aes(width = 0.5)) +
   #geom_boxplot(outlier.alpha = 0.1) +
-  coord_cartesian(ylim = c(0, 0.2)) +
+  coord_cartesian(ylim = c(0, 0.05)) +
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
+<<<<<<< HEAD
   annotate(geom = "text", x = "Traditional", y = 0.18, label = "p = 0.000", size = 3) +
+=======
+  annotate(geom = "text", x = "Traditional", y = 0.05, label = "p = 0.000", size = 3) +
+>>>>>>> 3585257 (Update figures to reflect new statistical tests.)
   ylab("") +
   xlab("")
 
