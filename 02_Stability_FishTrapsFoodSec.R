@@ -518,6 +518,8 @@ write.csv(summary(Browser_MassRatio)[[1]], file = "02_Stability_Out/Browser_Mass
     # Test homogeneity of variance
     AOV_FunGrDiet %>%
       levene_test(BrowserMassRatio ~ TrapType * Site)
+    
+    # We do NOT have homogeneity of variance.
 
 
 # Test for scrapers by mass ratio and save results
@@ -556,6 +558,25 @@ write.csv(summary(Scraper_MassRatio)[[1]], file = "02_Stability_Out/Scraper_Mass
     
     # We DO NOT have homogeneity of variance
     
+# Use the alternative protocol: a glmm with a tweedie distribution
+Scraper_MassRatioTweedie <- glmmTMB(ScraperMassRatio ~ TrapType + (1|Site),
+  data = AOV_FunGrDiet, family = "tweedie")
+    
+    # Check the model results.
+    summary(Scraper_MassRatioTweedie)
+    
+    # The results are similar - still not significant.
+
+    # Run model diagnostics
+    simulateResiduals(Scraper_MassRatioTweedie, n = 250, plot = TRUE)
+
+    # The diagnostics are beautiful.
+    
+    # Present the model results as ANOVA and save
+    Scraper_MassRatioTweedie_AOV <- glmmTMB:::Anova.glmmTMB(Scraper_MassRatioTweedie)
+    write.csv(Scraper_MassRatioTweedie_AOV, file = "02_Stability_Out/Scraper_MassRatioTweedie_Results.csv")
+
+
 # Test for grazers by count ratio and save results
 Grazer_MassRatio <- aov(GrazerMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRatio_Results.csv")
