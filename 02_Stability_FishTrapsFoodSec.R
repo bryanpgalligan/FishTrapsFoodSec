@@ -480,6 +480,24 @@ write.csv(summary(Grazer_CtRatio)[[1]], file = "02_Stability_Out/Grazer_CtRatio_
     
     # We do NOT have homogeneity of variance
 
+# Use the glmm with a tweedie distribution that worked for scraper count ratio
+Grazer_CtRatioTweedie <- glmmTMB(GrazerCtRatio ~ TrapType + (1|Site),
+  data = AOV_FunGrDiet, family = "tweedie")
+    
+    # Check the model results.
+    summary(Grazer_CtRatioTweedie)
+    
+    # The results are similar - still significant.
+
+    # Run model diagnostics
+    simulateResiduals(Grazer_CtRatioTweedie, n = 250, plot = TRUE)
+
+    # The diagnostics are beautiful.
+    
+    # Present the model results as ANOVA and save
+    Grazer_CtRatioTweedie_AOV <- glmmTMB:::Anova.glmmTMB(Grazer_CtRatioTweedie)
+    write.csv(Grazer_CtRatioTweedie_AOV, file = "02_Stability_Out/Grazer_CtRatioTweedie_Results.csv")
+
 
 ##### 2.2.2.4 Browser, Scraper, Grazer Mass Ratio #####
 
