@@ -577,7 +577,7 @@ Scraper_MassRatioTweedie <- glmmTMB(ScraperMassRatio ~ TrapType + (1|Site),
     write.csv(Scraper_MassRatioTweedie_AOV, file = "02_Stability_Out/Scraper_MassRatioTweedie_Results.csv")
 
 
-# Test for grazers by count ratio and save results
+# Test for grazers by mass ratio and save results
 Grazer_MassRatio <- aov(GrazerMassRatio ~ TrapType * Site + GateCode, data = AOV_FunGrDiet)
 write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRatio_Results.csv")
 
@@ -593,6 +593,23 @@ write.csv(summary(Grazer_MassRatio)[[1]], file = "02_Stability_Out/Grazer_MassRa
     
     # We DO NOT have homogeneity of variance
 
+# Use the alternative protocol: a glmm with a tweedie distribution
+Grazer_MassRatioTweedie <- glmmTMB(GrazerMassRatio ~ TrapType + (1|Site),
+  data = AOV_FunGrDiet, family = "tweedie")
+    
+    # Check the model results.
+    summary(Grazer_MassRatioTweedie)
+    
+    # The results are similar - still significant.
+
+    # Run model diagnostics
+    simulateResiduals(Grazer_MassRatioTweedie, n = 250, plot = TRUE)
+
+    # The diagnostics are beautiful.
+    
+    # Present the model results as ANOVA and save
+    Grazer_MassRatioTweedie_AOV <- glmmTMB:::Anova.glmmTMB(Grazer_MassRatioTweedie)
+    write.csv(Grazer_MassRatioTweedie_AOV, file = "02_Stability_Out/Grazer_MassRatioTweedie_Results.csv")
 
 
 
