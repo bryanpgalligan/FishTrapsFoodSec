@@ -152,5 +152,14 @@ LengthTweedie <- glmmTMB(Length_cm ~ TrapType + (1|Site),
     LengthTweedie_AOV <- glmmTMB:::Anova.glmmTMB(LengthTweedie)
     write.csv(LengthTweedie_AOV, file = "03_Availability_Out/LengthTweedie_Results.csv")
 
-
-
+    # Test group size ratio to see if you can ignore the significant Levene test
+    #   (homogeneity of variance)
+    a <- length(
+      subset(LengthData$Length_cm, LengthData$TrapType == "Traditional")
+    )
+    b <- length(
+      subset(LengthData$Length_cm, LengthData$TrapType == "Gated")
+    )
+    a/b
+    
+    # The ratio is 1.04, which means we are okay because it is less than 1.5.
