@@ -53,6 +53,7 @@ library(ggpubr)
 library(glmmTMB)
 library(DHARMa)
 library(mFD)
+library(rfishbase)
 
 # Load Trap Data
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
@@ -618,8 +619,6 @@ Grazer_MassRatioTweedie <- glmmTMB(GrazerMassRatio ~ TrapType + (1|Site),
 
 ##### 2.3 Functional Diversity #####
 
-<<<<<<< HEAD
-=======
 ##### 2.3.1 Data Manipulation #####
 
 # Make a fish traits data frame based on Mbaru et al. 2020
@@ -631,14 +630,18 @@ mobility <- NA
 active <- NA
 position <- NA
 
-fish.traits <- cbind(species, diet, size, schooling, mobility, active, position)
+fish.traits <- as.data.frame(
+  cbind(species, diet, size, schooling, mobility, active, position)
+)
+
+# Query FishBase for ecology information
+ecology <- ecology(fish.traits$species,
+  fields = c("Species", "FeedingType", "DietTroph"))
 
 
 
 
 
-
->>>>>>> eacd397 (Added section for functional diversity)
 
 
 
