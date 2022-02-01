@@ -618,6 +618,27 @@ Grazer_MassRatioTweedie <- glmmTMB(GrazerMassRatio ~ TrapType + (1|Site),
 
 ##### 2.3 Functional Diversity #####
 
+<<<<<<< HEAD
+=======
+##### 2.3.1 Data Manipulation #####
+
+# Make a fish traits data frame based on Mbaru et al. 2020
+species <- unique(TrapData$Species)
+diet <- NA
+size <- NA
+schooling <- NA
+mobility <- NA
+active <- NA
+position <- NA
+
+fish.traits <- cbind(species, diet, size, schooling, mobility, active, position)
+
+
+
+
+
+
+>>>>>>> eacd397 (Added section for functional diversity)
 
 
 
