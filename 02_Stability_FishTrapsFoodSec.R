@@ -15,7 +15,7 @@
 ## Script Title:
 ##    02 Stability
 
-## Last update: 28 Jan 22
+## Last update: 1 Feb 22
 
 
 
@@ -29,6 +29,7 @@
 #     2.2.2.2 Key Herbivore Mass Ratio
 #     2.2.2.3 Browser, Scraper, Grazer Count Ratio
 #     2.2.2.4 Broser, Scraper, Grazer Mass Ratio
+#     2.3 Functional Diversity
 
 
 
@@ -51,6 +52,7 @@ library(rstatix)
 library(ggpubr)
 library(glmmTMB)
 library(DHARMa)
+library(mFD)
 
 # Load Trap Data
 TrapData <- read_csv("01_CleanData_Out/TrapData_Cleaned.csv")
@@ -613,6 +615,8 @@ Grazer_MassRatioTweedie <- glmmTMB(GrazerMassRatio ~ TrapType + (1|Site),
 
 
 
+
+##### 2.3 Functional Diversity #####
 
 
 
