@@ -638,10 +638,42 @@ fish.traits <- as.data.frame(
 ecology <- ecology(fish.traits$species,
   fields = c("Species", "FeedingType", "DietTroph"))
 
+# Edit new ecology feeding types
 
+  # Change "hunting macrofauna (predator)" to "predator"
+  ecology$FeedingType <- gsub("hunting macrofauna (predator)", "predator",
+    ecology$FeedingType, fixed = TRUE)
 
+  # Change "grazing on aquatic plants" to "grazer"
+  ecology$FeedingType <- gsub("grazing on aquatic plants", "grazer",
+    ecology$FeedingType, fixed = TRUE)
 
+  # Change "selective plankton feeding" to "planktivore"
+  ecology$FeedingType <- gsub("selective plankton feeding", "planktivore",
+    ecology$FeedingType, fixed = TRUE)
 
+  # Change "picking parasites off a host (cleaner)" to "cleaner"
+  ecology$FeedingType <- gsub("picking parasites off a host (cleaner)", "cleaner",
+    ecology$FeedingType, fixed = TRUE)
 
+  # Change "browsing on substrate" to "browser"
+  ecology$FeedingType <- gsub("browsing on substrate", "browser",
+    ecology$FeedingType, fixed = TRUE)
 
+# Query FishBase for general species data
+traits <- species(fish.traits$species,
+  fields = c("Species", "DemersPelag", "Length", "Comments"))
+
+swimming(fish.traits$species)
+
+fishbase_pane()
+
+# Nocturnal/diurnal solution one
+eco <- ecology("Pristiapogon exostigma")
+eco[grepl( "Nocturnal", unlist(eco))]
+eco$AddRems
+
+# Nocturnal/diurnal solution two
+sp <- species("Pristiapogon exostigma")
+sp$Comments
 
