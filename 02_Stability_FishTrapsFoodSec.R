@@ -661,8 +661,13 @@ ecology <- ecology(fish.traits$species,
     ecology$FeedingType, fixed = TRUE)
 
 # Query FishBase for general species data
-traits <- species(fish.traits$species,
+species.table <- species(fish.traits$species,
   fields = c("Species", "DemersPelag", "Length", "Comments"))
+
+
+##################
+
+write.csv(traits, file = "02_Stability_Temp/SpeciesTable.csv")
 
 swimming(fish.traits$species)
 
