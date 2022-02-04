@@ -15,7 +15,7 @@
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 22 Dec 21
+## Last update: 4 Feb 22
 
 
 
@@ -33,6 +33,7 @@
 ##    1.10 Date Column
 ##    1.11 Trip ID Column
 ##    1.12 Trim and Rename Columns
+##    1.13 Normalization
 
 
 # First, clean the environment
@@ -664,4 +665,43 @@ colnames(TrapData)[30] <- "TripID"
 write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = FALSE)
 
 
+
+
+##### 1.13 Normalization ####
+
+# "Normalize" the database by creating separate tables for each level of observation.
+#   This section will also add data that will be needed for later analyses.
+
+# A table for catch data
+CatchData <- TrapData[, c("TripID", "TrapType", "GateCode", "TrapLocation",
+  "SoakTime_Days", "GapSize_cm", "Species",
+  "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
+
+# Save the catch data table
+write.csv(CatchData, file = "01_CleanData_Out/CatchData_FishTrapsFoodSec.R")
+
+# Construct a table for species-level data
+SpeciesData <- as.data.frame(unique(TrapData$Species))
+colnames(SpeciesData) <- "Species"
+
+# Add empty columns
+SpeciesData$Family <- NA
+SpeciesData$FishGroups <- NA
+SpeciesData$EnglishName <- NA
+SpeciesData$KiswahiliName <- NA
+SpeciesData$Bycatch <- NA
+SpeciesData$Price_KSH/kg <- NA
+SpeciesData$FunGr_Diet <- NA
+SpeciesData$Lmat <- NA
+SpeciesData$Lopt <- NA
+SpeciesData$Linf <- NA
+SpeciesData$SizeCategory <- NA
+SpeciesData$Diet <- NA
+SpeciesData$Mobility <- NA
+SpeciesData$Active <- NA
+SpeciesData$Schooling <- NA
+SpeciesData$Position <- NA
+SpeciesData$Calcium <- NA
+SpeciesData$Iron <- NA
+SpeciesData$VitaminA <- NA
 
