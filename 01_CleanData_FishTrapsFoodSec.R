@@ -708,11 +708,17 @@ SpeciesData$VitaminA_ugPer100g <- NA
 SpeciesData$Selenium_ugPer100g <- NA
 SpeciesData$Zinc_ugPer100g <- NA
 
+# Extract growth data from FishBase
+PopGrowthFishBase <- popgrowth(SpeciesData$Species)
+
 # Fill in SpeciesData columns
 for(i in 1:nrow(SpeciesData)){
   
   # Vector of row numbers for occurrence of this species in original data
   a <- which(TrapData$Species == SpeciesData$Species[i])
+  
+  # Species occurrence in FishBase PopGrowth table
+  c <- which(PopGrowthFishBase$Species == SpeciesData$Species[i])
   
   # Family
   
@@ -772,7 +778,17 @@ for(i in 1:nrow(SpeciesData)){
     SpeciesData$FunGr_Diet[i] <- b
   }  
   
+  # Linf
   
+  # Extract maximum length in cm from FishBase
+  b <- PopGrowthFishBase$Loo[c]
+  
+  # Save Linf to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$Linf_cm[i] <- b
+  }
+  
+  #Lmat
   
 }
 
