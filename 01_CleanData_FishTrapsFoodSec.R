@@ -60,7 +60,8 @@ TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")
 # Load Condy's key for diet based functional groups
 FunGrKey_Condy <- read_excel("00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx")
 
-
+# Load Mbaru's key for species functional traits
+TraitData <- read_excel("00_RawData/Traits_MbaruEtAl2020.xls", skip = 1)
 
 
 ##### 1.2 "TRAP NO." Column #####
@@ -673,7 +674,7 @@ write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = 
 #   This section will also add data that will be needed for later analyses.
 
 # A table for catch data
-CatchData <- TrapData[, c("TripID", "TrapType", "GateCode", "TrapLocation",
+CatchData <- TrapData[, c("TripID", "TrapType", "TrapLocation",
   "SoakTime_Days", "GapSize_cm", "Species",
   "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
 
@@ -692,16 +693,89 @@ SpeciesData$KiswahiliName <- NA
 SpeciesData$Bycatch <- NA
 SpeciesData$Price_KSH/kg <- NA
 SpeciesData$FunGr_Diet <- NA
-SpeciesData$Lmat <- NA
-SpeciesData$Lopt <- NA
-SpeciesData$Linf <- NA
+SpeciesData$Lmat_cm <- NA
+SpeciesData$Lopt_cm <- NA
+SpeciesData$Linf_cm <- NA
 SpeciesData$SizeCategory <- NA
 SpeciesData$Diet <- NA
 SpeciesData$Mobility <- NA
 SpeciesData$Active <- NA
 SpeciesData$Schooling <- NA
 SpeciesData$Position <- NA
-SpeciesData$Calcium <- NA
-SpeciesData$Iron <- NA
-SpeciesData$VitaminA <- NA
+SpeciesData$Calcium_mgPer100g <- NA
+SpeciesData$Iron_mgPer100g <- NA
+SpeciesData$VitaminA_ugPer100g <- NA
+SpeciesData$Selenium_ugPer100g <- NA
+SpeciesData$Zinc_ugPer100g <- NA
 
+# Fill in SpeciesData columns
+for(i in 1:nrow(SpeciesData)){
+  
+  # Vector of row numbers for occurrence of this species in original data
+  a <- which(TrapData$Species == SpeciesData$Species[i])
+  
+  # Family
+  
+  # Choose most frequent family assigned to this species in original data
+  b <- tail(names(sort(table(TrapData$Family[a]))), 1)
+  
+  # Save family to SpeciesData if you have a value for b
+  if(length(b) > 0){
+    SpeciesData$Family[i] <- b
+  }
+  
+  # FishGroups
+  
+  # Choose most frequent fish group assigned to this species in original data
+  b <- tail(names(sort(table(TrapData$FishGroups[a]))), 1)
+  
+  # Save fish group to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$FishGroups[i] <- b
+  }
+  
+  # English Name
+  
+  # Choose most frequent English name assigned to this species in original data
+  b <- tail(names(sort(table(TrapData$EnglishName[a]))), 1)
+  
+  # Save English name to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$EnglishName[i] <- b
+  }  
+  
+  # Kiswahili Name
+  
+  # Choose most frequent Kiswahili name assigned to this species in original data
+  b <- tail(names(sort(table(TrapData$KiswahiliName[a]))), 1)
+  
+  # Save Kiswahili name to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$KiswahiliName[i] <- b
+  }
+  
+  # Choose most frequent bycatch answer (y/n) from original data
+  b <- tail(names(sort(table(TrapData$Bycatch[a]))), 1)
+
+  # Save bycatch answer to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$Bycatch[i] <- b
+  }  
+  
+  # Diet-based functional group
+  
+  # Choose most common diet-based functional group from original data
+  b <- tail(names(sort(table(TrapData$FunGr_Diet[a]))), 1)
+
+  # Save diet-based functional group to SpeciesData if you have a value
+  if(length(b) > 0){
+    SpeciesData$FunGr_Diet[i] <- b
+  }  
+  
+  
+  
+}
+
+# Capitalize Common names
+SpeciesData$KiswahiliName <- str_to_sentence(SpeciesData$KiswahiliName)
+SpeciesData$EnglishName <- str_to_sentence(SpeciesData$EnglishName)
