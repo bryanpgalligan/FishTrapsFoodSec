@@ -53,6 +53,8 @@ library(taxize)
   library(dplyr)
   library(magrittr)
 library(rfishbase)
+library(RCurl)
+library(strex)
 
 # Load WCS combined gated trap data for 2010-2019
 TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")
@@ -292,16 +294,6 @@ TrapData <- subset(TrapData, TrapData$Site != "Reef")
   
   # The Parupeneas spp. are fixed by taxize::gnr_resolve() so do not need to be done manually.
   
-  # Replace Monotaxinae grandoculus with Monotaxis grandoculus.
-  TrapData$SPECIES <- gsub("Monotaxinae", "Monotaxis", TrapData$SPECIES)
-  
-  # Replace P. cryterinus with P. gaterinus.
-  TrapData$SPECIES <- gsub("Plectohinchus cryterinus", "Plectorhinchus gaterinus",
-    TrapData$SPECIES, fixed = TRUE)
-  
-  # Update Unique_Species to reflect the above changes
-  Unique_Species <- unique(TrapData$SPECIES)
-  
   # Obtain accurate scientific names using the taxize package
   CanonicalTaxa <- gnr_resolve(Unique_Species, best_match_only = TRUE, canonical = TRUE)
   
@@ -322,6 +314,117 @@ TrapData <- subset(TrapData, TrapData$Site != "Reef")
       TrapData$SPECIES, fixed = TRUE)
     
   }
+    
+  # Replace Monotaxinae grandoculus with Monotaxis grandoculus.
+  TrapData$SPECIES <- gsub("Monotaxinae", "Monotaxis", TrapData$SPECIES)
+  
+  # Replace P. cryterinus with P. gaterinus.
+  TrapData$SPECIES <- gsub("Plectohinchus cryterinus", "Plectorhinchus gaterinus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace P. macronema with P. macronemus
+  TrapData$SPECIES <- gsub("Parupeneas macronema", "Parupeneus macronemus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Parupeneas macronema with Parupeneus macronemus
+  TrapData$SPECIES <- gsub("Parupeneas macronema", "Parupeneus macronemus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace the other P. macronema with P. macronemus
+  TrapData$SPECIES <- gsub("Parupeneus macronema", "Parupeneus macronemus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace O. cubicus with O. cubicum
+  TrapData$SPECIES <- gsub("Ostracion cubicus", "Ostracion cubicum",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace S. ruselli with S. ruselii
+  TrapData$SPECIES <- gsub("Scarus russelli", "Scarus russelii",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace N. branchycentron with N. brachycentron
+  TrapData$SPECIES <- gsub("Naso branchycentron", "Naso brachycentron",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace S. tieroides with S. tiereoides
+  TrapData$SPECIES <- gsub("Sargocentron tieroides", "Sargocentron tiereoides",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Parupenaeus indicus with Parupeneus indicus
+  TrapData$SPECIES <- gsub("Parupenaeus indicus", "Parupeneus indicus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lethrinus borbonicus valenciennes with L. borbonicus
+  TrapData$SPECIES <- gsub("Lethrinus borbonicus valenciennes", "Lethrinus borbonicus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Scarus sordidus with Chlorurus sordidus
+  TrapData$SPECIES <- gsub("Scarus sordidus", "Chlorurus sordidus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Scarus atrilunula with Chlorurus atrilunula
+  TrapData$SPECIES <- gsub("Scarus atrilunula", "Chorurus atrilunula",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Monotaxis grandoculus with Monotaxis grandoculis
+  TrapData$SPECIES <- gsub("Monotaxis grandoculus", "Monotaxis grandoculis",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Epinephelus caeruleopunctatus with Epinephelus coeruleopunctatus
+  TrapData$SPECIES <- gsub("Epinephelus caeruleopunctatus", "Epinephelus coeruleopunctatus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lethrinus sanguineus with Lethrinus mahsena
+  TrapData$SPECIES <- gsub("Lethrinus sanguineus", "Lethrinus mahsena",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lutjanus russelli with Lutjanus russellii
+  TrapData$SPECIES <- gsub("Lutjanus russelli", "Lutjanus russellii",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Chlorurus strongycephalus with Chlorurus strongylocephalus
+  TrapData$SPECIES <- gsub("Chlorurus strongycephalus", "Chlorurus strongylocephalus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Acanthurus tennenti with Acanthurus tennentii
+  TrapData$SPECIES <- gsub("Acanthurus tennenti", "Acanthurus tennentii",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace G. grandoculus with G. grandoculis
+  TrapData$SPECIES <- gsub("Gymnocranius grandoculus", "Gymnocranius grandoculis",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace C. merra with E. merra
+  TrapData$SPECIES <- gsub("Cephalopholis merra", "Epinephelus merra",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lutjanus carponatus with Lutjanus carponotatus
+  TrapData$SPECIES <- gsub("Lutjanus carponatus", "Lutjanus carponotatus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lethrinus genivitattus with Lethrinus genivittatus
+  TrapData$SPECIES <- gsub("Lethrinus genivitattus", "Lethrinus genivittatus",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Scarus harid with Hipposcarus harid
+  TrapData$SPECIES <- gsub("Scarus harid", "Hipposcarus harid",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Lethrinus elongatus with L. microdon
+  TrapData$SPECIES <- gsub("Lethrinus elongatus", "Lethrinus microdon",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Myripristis melanosticta with M. botche
+  TrapData$SPECIES <- gsub("Myripristis melanosticta", "Myripristis botche",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Replace Chorurus atrilunula with Chlorurus atrilunula
+  TrapData$SPECIES <- gsub("Chorurus atrilunula", "Chlorurus atrilunula",
+    TrapData$SPECIES, fixed = TRUE)
+  
+  # Remove rows of TrapData with NA for species
+  TrapData <- TrapData[!is.na(TrapData$SPECIES) == TRUE,]
+
 
     
  
@@ -708,8 +811,11 @@ SpeciesData$VitaminA_ugPer100g <- NA
 SpeciesData$Selenium_ugPer100g <- NA
 SpeciesData$Zinc_ugPer100g <- NA
 
-# Extract growth data from FishBase
-PopGrowthFishBase <- popgrowth(SpeciesData$Species)
+# Extract data from FishBase
+SpeciesFishBase <- species(SpeciesData$Species)
+
+# Set up a placeholder value for life.history.tool.previous
+life.hx.tool.previous <- "placeholder"
 
 # Fill in SpeciesData columns
 for(i in 1:nrow(SpeciesData)){
@@ -717,8 +823,8 @@ for(i in 1:nrow(SpeciesData)){
   # Vector of row numbers for occurrence of this species in original data
   a <- which(TrapData$Species == SpeciesData$Species[i])
   
-  # Species occurrence in FishBase PopGrowth table
-  c <- which(PopGrowthFishBase$Species == SpeciesData$Species[i])
+  # Species occurrence in FishBase Species table
+  c <- which(SpeciesFishBase$Species == SpeciesData$Species[i])
   
   # Family
   
@@ -778,20 +884,135 @@ for(i in 1:nrow(SpeciesData)){
     SpeciesData$FunGr_Diet[i] <- b
   }  
   
-  # Linf
+  # Linf, Lopt, and Lmat
   
-  # Extract maximum length in cm from FishBase
-  b <- PopGrowthFishBase$Loo[c]
+  # Test to see if there was a match in the FishBase species table
+  if(length(c) > 0){
   
-  # Save Linf to SpeciesData if you have a value
-  if(length(b) > 0){
-    SpeciesData$Linf_cm[i] <- b
+    # Species ID
+    spec.id <- SpeciesFishBase$SpecCode[c]
+    
+    # Genus Name
+    gen.name <- SpeciesFishBase$Genus[c]
+    
+    # Species Name
+    spec.name <- str_split(SpeciesFishBase$Species[c], pattern = " ", n = 2)[[1]][2]
+    
+    # URL
+    url <- paste(
+      "https://www.fishbase.de/popdyn/KeyfactsSummary_1.php?ID=",
+      spec.id,
+      "&GenusName=",
+      gen.name,
+      "&SpeciesName=",
+      spec.name,
+      sep = "")
+    
+    # Get the HTML code from the life history tool webpage
+    try(life.hx.tool <- getURLContent(url), silent = FALSE)
+    
+    # Test whether you got new HTML code (i.e. if you found an actual life history tool for this species)
+    if(life.hx.tool != life.hx.tool.previous){
+      
+      # Save current HTML code to compare with next iteration of loop
+      life.hx.tool.previous <- life.hx.tool
+      
+      # Split right after L infinity
+      x <- str_split(life.hx.tool, pattern = "L infinity")
+      
+      # Split before Linf value
+      x <- str_split(x[[1]][2], pattern = "value=", n = 2)
+      
+      # Split after Linf value
+      x <- str_split(x[[1]][2], pattern = "size", n = 2)
+      
+      # Save relatively isolated value for Linf
+      x <- x[[1]][1]
+      
+      # Save Linf
+      if(!is.na(x)){
+        l.inf <- str_first_number(x, decimals = TRUE)
+      } else{
+        l.inf <- NA
+      }
+      
+      # Make sure value is not zero
+      if(!is.na(l.inf)){
+        if(l.inf <= 0){
+          l.inf <- NA
+        }
+      }
+      
+      # Split right after L maturity
+      x <- str_split(life.hx.tool, pattern = "L maturity")
+      
+      # Split before Lmat value
+      x <- str_split(x[[1]][2], pattern = "value=", n = 2)
+      
+      # Split after Lmat value
+      x <- str_split(x[[1]][2], pattern = "\r\nsize", n = 2)
+      
+      # Save relatively isolated value for Lmat
+      x <- x[[1]][1]
+      
+      # Save Lmat
+      if(!is.na(x)){
+        l.mat <- str_first_number(x, decimals = TRUE)
+      } else{
+        l.mat <- NA
+      }
+      
+      # Make sure value is not zero
+      if(!is.na(l.mat)){
+        if(l.mat <= 0){
+          l.mat <- NA
+        }
+      }
+      
+      # Split right after L max. yeild (Lopt)
+      x <- str_split(life.hx.tool, pattern = "L max. yield")
+      
+      # Split before Lopt value
+      x <- str_split(x[[1]][2], pattern = "value=", n = 2)
+      
+      # Split after Lopt value
+      x <- str_split(x[[1]][2], pattern = "align", n = 2)
+      
+      # Save relatively isolated value for Lopt
+      x <- x[[1]][1]
+      
+      # Save Lopt
+      if(!is.na(x)){
+        l.opt <- str_first_number(x, decimals = TRUE)
+      } else{
+        l.opt <- NA
+      }
+      
+      # Make sure value is not zero
+      if(!is.na(l.opt)){
+        if(l.opt <= 0){
+          l.opt <- NA
+        }
+      }
+      
+      # Save life hx info to SpeciesData
+      if(length(l.inf) > 0){
+        SpeciesData$Linf_cm[i] <- l.inf
+      }  
+      
+      if(length(l.mat) > 0){
+        SpeciesData$Lmat_cm[i] <- l.mat
+      }  
+      
+      if(length(l.opt) > 0){
+        SpeciesData$Lopt_cm[i] <- l.opt
+      }
+    }
   }
-  
-  #Lmat
-  
 }
 
 # Capitalize Common names
 SpeciesData$KiswahiliName <- str_to_sentence(SpeciesData$KiswahiliName)
 SpeciesData$EnglishName <- str_to_sentence(SpeciesData$EnglishName)
+
+beep()
