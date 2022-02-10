@@ -65,6 +65,11 @@ FunGrKey_Condy <- read_excel("00_RawData/FunctionalGroupKey_DietBased_Condy2015.
 # Load Mbaru's key for species functional traits
 TraitData <- read_excel("00_RawData/Traits_MbaruEtAl2020.xls", skip = 1)
 
+# Load price table used for previous studies
+FamilyValues <- read_csv("00_RawData/ValueByFamily.csv")
+
+
+
 
 ##### 1.2 "TRAP NO." Column #####
 
@@ -593,24 +598,10 @@ for(i in 1:length(TrapData$`FD/HC`)){
 
 ##### 1.9 Price Column #####
 
-# Some values in the Price column are still a little suspicious.
+# Assign new values to entire price column
 
-# First, subset these values to share with Austin. The table with fish values
-#   only lists 200, 120, 160, 80, and 0 as possible prices in KES/kg. Subset
-#   all rows that have other values.
-
-FishPrice_Suspicious <- subset(TrapData,
-  TrapData$`Fish price_final` != 200 &
-    TrapData$`Fish price_final` != 120 &
-    TrapData$`Fish price_final` != 160 &
-    TrapData$`Fish price_final` != 80 &
-    TrapData$`Fish price_final` != 0)
-
-# Save data frame
-write.csv(FishPrice_Suspicious, file = "01_CleanData_Temp/SuspiciousPrices.csv")
-
-
-
+# This has been moved to the normalization section so as to only apply it to the
+#   SpeciesData table.
 
 ##### 1.10 Date Column #####
 
@@ -794,7 +785,7 @@ SpeciesData$FishGroups <- NA
 SpeciesData$EnglishName <- NA
 SpeciesData$KiswahiliName <- NA
 SpeciesData$Bycatch <- NA
-SpeciesData$Price_KSH/kg <- NA
+SpeciesData$Price_KSHPerkg <- NA
 SpeciesData$FunGr_Diet <- NA
 SpeciesData$Lmat_cm <- NA
 SpeciesData$Lopt_cm <- NA
@@ -1011,8 +1002,31 @@ for(i in 1:nrow(SpeciesData)){
   }
 }
 
-# Capitalize Common names
+# Capitalize Common names and Families
 SpeciesData$KiswahiliName <- str_to_sentence(SpeciesData$KiswahiliName)
 SpeciesData$EnglishName <- str_to_sentence(SpeciesData$EnglishName)
+SpeciesData$Family <- str_to_sentence(SpeciesData$Family)
 
 beep()
+
+# Fill in price column
+for(i in 1:nrow(SpeciesData)){
+  
+  # Test to make sure there is a match
+  if(SpeciesData$Family[i] %in% FamilyValues$Family){
+  
+    # Row number where this family occurs in the FamilyValues table
+    a <- which(FamilyValues$Family == SpeciesData$Family[i])
+    
+    # Fill in price column
+    SpeciesData$Price_KSHPerkg[i] <- FamilyValues$Price_KSHPerkg[a]
+  
+  }
+}
+
+
+
+
+
+
+
