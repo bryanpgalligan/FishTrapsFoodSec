@@ -63,7 +63,9 @@ TrapData <- read_csv("00_RawData/CombinedTrapData_2010_2019_Anonymized.csv")
 FunGrKey_Condy <- read_excel("00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx")
 
 # Load Mbaru's key for species functional traits
-TraitData <- read_excel("00_RawData/Traits_MbaruEtAl2020.xls", skip = 1)
+TraitData <- read_excel("00_RawData/Traits_MbaruEtAl2020.xls")
+TraitData <- TraitData[-1,] # Remove first (empty) row
+
 
 # Load price table used for previous studies
 FamilyValues <- read_csv("00_RawData/ValueByFamily.csv")
@@ -747,8 +749,8 @@ TrapData <- select(TrapData, -`PriceOfFish(Ksh)`)
 # Delete Survey, Sea State, Trophic Level, and ID columns
 TrapData <- select(TrapData, -c(Survey, SeaState, TrophicLevel, Id))
 
-# Rename FishPrice_final as Price_KSH/kg
-colnames(TrapData)[26] <- "Price_KSH/kg"
+# Rename FishPrice_final as Price_KSHPerkg
+colnames(TrapData)[26] <- "Price_KSHPerkg"
 
 # Rename Fungr_diet to FunGr_Diet
 colnames(TrapData)[27] <- "FunGr_Diet"
@@ -1024,7 +1026,50 @@ for(i in 1:nrow(SpeciesData)){
   }
 }
 
+# Make TraitData table more readable
 
+# Change diet codes to plain English
+TraitData$Diets <- gsub("FC", "Carnivorous", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("HD", "Herbivorous detritivorous", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("HM", "Macroalgal herbivorous", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("IM", "Mobile Inverts", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("IS", "Sessile Inverts", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("OM", "Omnivorous", TraitData$Diets, fixed = TRUE)
+TraitData$Diets <- gsub("PK", "Planktivorous", TraitData$Diets, fixed = TRUE)
+
+
+
+
+# Fill in the traits
+for(i in 1:nrow(SpeciesData)){
+  
+  # Test to make sure there is a match with Mbaru's trait table
+  if(SpeciesData$Species[i] %in% TraitData$Genus_and_species...2){
+    
+    # Row number of match in Mbaru's table
+    a <- which(TraitData$Genus_and_species...2 == SpeciesData$Species[i])
+    
+    # Fill in Size Category
+    SpeciesData$SizeCategory[i] <- TraitData$`Size-Class`[a]
+    
+    # Fill in Diet
+    SpeciesData$Diet[i] <- TraitData$Diets[a]
+    
+    # Fill in Mobility
+    SpeciesData$Mobility[i] <- TraitData$`Home-Range`[a]
+    
+    # Fill in Active
+    SpeciesData$Active[i] <- TraitData$Activity[a]
+    
+    # Fill in Schooling
+    SpeciesData$Schooling[i] <- TraitData$Schooling[a]
+    
+    # Fill in Position
+    SpeciesData$Position[i] <- TraitData$`Level-water`[a]
+    
+  }
+  
+}
 
 
 
