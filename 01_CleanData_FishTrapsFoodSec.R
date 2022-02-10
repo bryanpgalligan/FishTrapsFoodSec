@@ -799,10 +799,21 @@ SpeciesData$Active <- NA
 SpeciesData$Schooling <- NA
 SpeciesData$Position <- NA
 SpeciesData$Calcium_mgPer100g <- NA
+SpeciesData$Calicum_L95 <- NA
+SpeciesData$Calcium_U95 <- NA
 SpeciesData$Iron_mgPer100g <- NA
+SpeciesData$Iron_L95 <- NA
+SpeciesData$Iron_U95 <- NA
 SpeciesData$VitaminA_ugPer100g <- NA
+SpeciesData$VitaminA_L95 <- NA
+SpeciesData$VitaminA_U95 <- NA
 SpeciesData$Selenium_ugPer100g <- NA
+SpeciesData$Selenium_L95 <- NA
+SpeciesData$Selenium_U95 <- NA
 SpeciesData$Zinc_ugPer100g <- NA
+SpeciesData$Zinc_L95 <- NA
+SpeciesData$Zinc_U95 <- NA
+
 
 # Extract data from FishBase
 SpeciesFishBase <- species(SpeciesData$Species)
@@ -1009,8 +1020,6 @@ SpeciesData$KiswahiliName <- str_to_sentence(SpeciesData$KiswahiliName)
 SpeciesData$EnglishName <- str_to_sentence(SpeciesData$EnglishName)
 SpeciesData$Family <- str_to_sentence(SpeciesData$Family)
 
-beep()
-
 # Fill in price column
 for(i in 1:nrow(SpeciesData)){
   
@@ -1036,9 +1045,6 @@ TraitData$Diets <- gsub("IM", "Mobile Inverts", TraitData$Diets, fixed = TRUE)
 TraitData$Diets <- gsub("IS", "Sessile Inverts", TraitData$Diets, fixed = TRUE)
 TraitData$Diets <- gsub("OM", "Omnivorous", TraitData$Diets, fixed = TRUE)
 TraitData$Diets <- gsub("PK", "Planktivorous", TraitData$Diets, fixed = TRUE)
-
-
-
 
 # Fill in the traits
 for(i in 1:nrow(SpeciesData)){
@@ -1071,7 +1077,38 @@ for(i in 1:nrow(SpeciesData)){
   
 }
 
+# Extract nutrient estimates from FishBase
+NutrientBase <- estimate(SpeciesData$Species)
 
+beep()
 
-
+# Fill in nutrient estimates
+for(i in 1:nrow(SpeciesData)){
+  
+  # Confirm that there is a match
+  if(SpeciesData$Species[i] %in% NutrientBase$Species){
+    
+    # Find row number for this species in NutrientBase
+    a <- which(NutrientBase$Species == SpeciesData$Species[i])
+    
+    # Save necessary values to SpeciesData
+    SpeciesData$Calcium_mgPer100g[i] <- NutrientBase$Calcium[a]
+    SpeciesData$Calcium_U95[i] <- NutrientBase$Calcium_u95[a]
+    SpeciesData$Calicum_L95[i] <- NutrientBase$Calcium_l95[a]
+    SpeciesData$Iron_mgPer100g[i] <- NutrientBase$Iron[a]
+    SpeciesData$Iron_L95[i] <- NutrientBase$Iron_l95[a]
+    SpeciesData$Iron_U95[i] <- NutrientBase$Iron_u95[a]
+    SpeciesData$VitaminA_ugPer100g[i] <- NutrientBase$VitaminA[a]
+    SpeciesData$VitaminA_L95[i] <- NutrientBase$VitaminA_l95[a]
+    SpeciesData$VitaminA_U95[i] <- NutrientBase$VitaminA_u95[a]
+    SpeciesData$Selenium_ugPer100g[i] <- NutrientBase$Selenium[a]
+    SpeciesData$Selenium_L95[i] <- NutrientBase$Selenium_l95[a]
+    SpeciesData$Selenium_U95[i] <- NutrientBase$Selenium_u95[a]
+    SpeciesData$Zinc_ugPer100g[i] <- NutrientBase$Zinc[a]
+    SpeciesData$Zinc_L95[i] <- NutrientBase$Zinc_l95[a]
+    SpeciesData$Zinc_U95[i] <- NutrientBase$Zinc_u95[a]
+    
+  }
+  
+}
 
