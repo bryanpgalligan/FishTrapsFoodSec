@@ -1020,6 +1020,41 @@ SpeciesData$KiswahiliName <- str_to_sentence(SpeciesData$KiswahiliName)
 SpeciesData$EnglishName <- str_to_sentence(SpeciesData$EnglishName)
 SpeciesData$Family <- str_to_sentence(SpeciesData$Family)
 
+# Clean bycatch column
+SpeciesData$Bycatch <- str_to_sentence(SpeciesData$Bycatch)
+
+# Subset for values that are not "Yes" or "No"
+bad.bycatch <- subset(SpeciesData, SpeciesData$Bycatch != "Yes" & SpeciesData$Bycatch != "No")
+
+# Fix bad bycatch values
+for(i in 1:nrow(bad.bycatch)){
+  
+  # Yes if price is NA
+  if(is.na(bad.bycatch$Price_KSHPerkg[i])){
+    bad.bycatch$Bycatch[i] <- "Yes"
+  } else{
+  
+    # Yes if price is 0
+    if(bad.bycatch$Price_KSHPerkg[i] == 0){
+      bad.bycatch$Bycatch[i] <- "Yes"
+    }
+  
+    # No if price is greater than 0
+    if(bad.bycatch$Price_KSHPerkg[i] > 0){
+      bad.bycatch$Bycatch[i] <- "No"
+    }
+  
+  }
+    
+  # Row number for this species in SpeciesData
+  a <- which(SpeciesData$Species == bad.bycatch$Species[i])
+  
+  # Save new bycatch value
+  SpeciesData$Bycatch[a] <- bad.bycatch$Bycatch[i]
+  
+}
+
+
 # Fill in price column
 for(i in 1:nrow(SpeciesData)){
   
@@ -1080,8 +1115,6 @@ for(i in 1:nrow(SpeciesData)){
 # Extract nutrient estimates from FishBase
 NutrientBase <- estimate(SpeciesData$Species)
 
-beep()
-
 # Fill in nutrient estimates
 for(i in 1:nrow(SpeciesData)){
   
@@ -1111,4 +1144,11 @@ for(i in 1:nrow(SpeciesData)){
   }
   
 }
+
+
+
+
+
+
+
 
