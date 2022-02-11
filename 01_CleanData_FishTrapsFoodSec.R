@@ -1300,7 +1300,109 @@ for(i in 1:nrow(TripData)){
     }
   }
   
+  # BrowserMass_g
+  y <- subset(x, x$FunGr_Diet == "Browser")
+  if(nrow(y) > 0){
+    TripData$BrowserMass_g[i] <- sum(y$TotalCatch_g)
+  } else{
+    TripData$BrowserMass_g[i] <- 0
+  }
   
+  # ScraperMass_g
+  y <- subset(x, x$FunGr_Diet == "Scraper")
+  if(nrow(y) > 0){
+    TripData$ScraperMass_g[i] <- sum(y$TotalCatch_g)
+  } else{
+    TripData$ScraperMass_g[i] <- 0
+  }
+  
+  # GrazerMass_g
+  y <- subset(x, x$FunGr_Diet == "Grazer")
+  if(nrow(y) > 0){
+    TripData$GrazerMass_g[i] <- sum(y$TotalCatch_g)
+  } else{
+    TripData$GrazerMass_g[i] <- 0
+  }
+  
+  # TotalCatch_g
+  TripData$TotalCatch_g[i] <- sum(x$TotalCatch_g)
+  
+  # Add species data columns to temporary data frame x
+  x$Price_KSH <- NA
+  x$Ca <- NA
+  x$Fe <- NA
+  x$VA <- NA
+  x$Se <- NA
+  x$Zn <- NA
+  
+  # Add species data to x
+  for(j in 1:nrow(x)){
+    
+    # Row number in SpeciesData for this species
+    a <- which(SpeciesData$Species == x$Species[j])
+    
+    # Price_KSH
+    x$Price_KSH[j] <- SpeciesData$Price_KSHPerkg[a] * (x$Weight_g[j] / 1000)
+    
+    # Calcium
+    x$Ca[j] <- SpeciesData$Calcium_mgPer100g[a] * (x$Weight_g[j] / 100)
+    
+    # Iron
+    x$Fe[j] <- SpeciesData$Iron_mgPer100g[a] * (x$Weight_g[j] / 100)
+    
+    # Vitamin A
+    x$VA[j] <- SpeciesData$VitaminA_ugPer100g[a] * (x$Weight_g[j] / 100)
+    
+    # Selenium
+    x$Se[j] <- SpeciesData$Selenium_ugPer100g[a] * (x$Weight_g[j] / 100)
+    
+    # Zinc
+    x$Zn[j] <- SpeciesData$Zinc_ugPer100g[a] * (x$Weight_g[j] / 100)
+    
+  }
+  
+  # Add additional values to TripData
+  
+  # Total Value
+  TripData$TotalValue_KSH[i] <- sum(x$Price_KSH)
+  
+  # Total Calcium
+  TripData$TotalCa_mg[i] <- sum(x$Ca)
+  
+  # Total Iron
+  TripData$TotalFe_mg[i] <- sum(x$Fe)
+  
+  # Total Vitamin A
+  TripData$TotalVA_ug[i] <- sum(x$VA)
+  
+  # Total Selenium
+  TripData$TotalSe_ug[i] <- sum(x$Se)
+  
+  # Total Zinc
+  TripData$TotalZn_ug[i] <- sum(x$Zn)
   
 }
+
+# Mass Ratios
+TripData$BrowserMassRatio <- TripData$BrowserMass_g / TripData$TotalCatch_g
+TripData$ScraperMassRatio <- TripData$ScraperMass_g / TripData$TotalCatch_g
+TripData$GrazerMassRatio <- TripData$GrazerMass_g / TripData$TotalCatch_g
+
+# Convert Trap and Crew stats to numeric
+TripData$TotalCrew <- as.numeric(TripData$TotalCrew)
+TripData$TrapsOwned <- as.numeric(TripData$TrapsOwned)
+TripData$TrapsFished <- as.numeric(TripData$TrapsFished)
+
+# xPUE
+TripData$CPUE_kgPerTrap <- (TripData$TotalCatch_g / 1000) / TripData$TrapsFished
+TripData$ValuePUE <- TripData$TotalValue_KSH / TripData$TrapsFished
+TripData$CaPUE <- TripData$TotalCa_mg / TripData$TrapsFished
+TripData$FePUE <- TripData$TotalFe_mg / TripData$TrapsFished
+TripData$VAPUE <- TripData$TotalVA_ug / TripData$TrapsFished
+TripData$SePUE <- TripData$TotalSe_ug / TripData$TrapsFished
+TripData$ZnPUE <- TripData$TotalZn_ug / TripData$TrapsFished
+
+# Save the data table
+write.csv(TripData, file = "01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
+
 
