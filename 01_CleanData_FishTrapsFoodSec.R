@@ -749,14 +749,14 @@ TrapData <- select(TrapData, -`PriceOfFish(Ksh)`)
 # Delete Survey, Sea State, Trophic Level, and ID columns
 TrapData <- select(TrapData, -c(Survey, SeaState, TrophicLevel, Id))
 
-# Rename FishPrice_final as Price_KSHPerkg
-colnames(TrapData)[26] <- "Price_KSHPerkg"
+# Delete FishPrice_final column
+TrapData <- select(TrapData, -`FishPrice_final`)
 
 # Rename Fungr_diet to FunGr_Diet
-colnames(TrapData)[27] <- "FunGr_Diet"
+colnames(TrapData)[26] <- "FunGr_Diet"
 
 # Rename Tripid to TripID
-colnames(TrapData)[30] <- "TripID"
+colnames(TrapData)[29] <- "TripID"
 
 # Save TrapData
 write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = FALSE)
@@ -775,7 +775,8 @@ CatchData <- TrapData[, c("TripID", "TrapType", "TrapLocation",
   "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
 
 # Save the catch data table
-write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv")
+write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv",
+  row.names = FALSE)
 
 # Construct a table for species-level data
 SpeciesData <- as.data.frame(unique(TrapData$Species))
@@ -1146,7 +1147,8 @@ for(i in 1:nrow(SpeciesData)){
 }
 
 # Save SpeciesData
-write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv")
+write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv",
+  row.names = FALSE)
 
 # Prepare a TripData table
 TripData <- as.data.frame(unique(TrapData$TripID))
@@ -1402,7 +1404,15 @@ TripData$VAPUE <- TripData$TotalVA_ug / TripData$TrapsFished
 TripData$SePUE <- TripData$TotalSe_ug / TripData$TrapsFished
 TripData$ZnPUE <- TripData$TotalZn_ug / TripData$TrapsFished
 
-# Save the data table
-write.csv(TripData, file = "01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
+# Change sig figs
+TripData$BrowserMassRatio <- round(TripData$BrowserMassRatio, digits = 4)
+TripData$GrazerMassRatio <- round(TripData$GrazerMassRatio, digits = 4)
+TripData$ScraperMassRatio <- round(TripData$ScraperMassRatio, digits = 4)
+TripData$CPUE_kgPerTrap <- round(TripData$CPUE_kgPerTrap, digits = 4)
+TripData$TotalValue_KSH <- round(TripData$TotalValue_KSH, digits = 0)
+TripData$ValuePUE <- round(TripData$ValuePUE, digits = 0)
 
+# Save the data table
+write.csv(TripData, file = "01_CleanData_Out/TripData_GatedTraps_Galligan.csv",
+  row.names = FALSE)
 
