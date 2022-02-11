@@ -775,7 +775,7 @@ CatchData <- TrapData[, c("TripID", "TrapType", "TrapLocation",
   "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
 
 # Save the catch data table
-write.csv(CatchData, file = "01_CleanData_Out/CatchData_FishTrapsFoodSec.R")
+write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv")
 
 # Construct a table for species-level data
 SpeciesData <- as.data.frame(unique(TrapData$Species))
@@ -1145,10 +1145,162 @@ for(i in 1:nrow(SpeciesData)){
   
 }
 
+# Save SpeciesData
+write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv")
 
+# Prepare a TripData table
+TripData <- as.data.frame(unique(TrapData$TripID))
+colnames(TripData) <- "TripID"
+TripData$Date <- NA
+TripData$Country <- NA
+TripData$Site <- NA
+TripData$Latitude <- NA
+TripData$Longitude <- NA
+TripData$Observer <- NA
+TripData$Fisher <- NA
+TripData$TotalCrew <- NA
+TripData$TrapsOwned <- NA
+TripData$TrapsFished <- NA
+TripData$TrapLocation <- NA
+TripData$Depth_m <- NA
+TripData$SoakTime_Days <- NA
+TripData$TrapType <- NA
+TripData$GapSize_cm <- NA
+TripData$BrowserMass_g <- NA
+TripData$BrowserMassRatio <- NA
+TripData$ScraperMass_g <- NA
+TripData$ScraperMassRatio <- NA
+TripData$GrazerMass_g <- NA
+TripData$GrazerMassRatio <- NA
+TripData$TotalCatch_g <- NA
+TripData$CPUE_kgPerTrap <- NA
+TripData$TotalValue_KSH <- NA
+TripData$ValuePUE <- NA
+TripData$TotalCa_mg <- NA
+TripData$CaPUE <- NA
+TripData$TotalFe_mg <- NA
+TripData$FePUE <- NA
+TripData$TotalVA_ug <- NA
+TripData$VAPUE <- NA
+TripData$TotalSe_ug <- NA
+TripData$SePUE <- NA
+TripData$TotalZn_ug <- NA
+TripData$ZnPUE <- NA
 
-
-
-
-
+# Fill in TripData with the easy values
+for(i in 1:nrow(TripData)){
+  
+  # Subset this trip's information from CatchData
+  x <- subset(TrapData, TrapData$TripID == TripData$TripID[i])
+  
+  # Choose most frequent value for the easy values and save to temporary data frame x
+  
+  # Date
+  a <- tail(names(sort(table(x$Date))), 1)
+  if(length(a) > 0){
+    TripData$Date[i] <- a
+  }
+  
+  # Country
+  a <- tail(names(sort(table(x$Country))), 1)
+  if(length(a) > 0){
+   TripData$Country[i] <- a
+  }
+  
+  # Site
+  a <- tail(names(sort(table(x$Site))), 1)
+  if(length(a) > 0){
+    TripData$Site[i] <- a
+  }
+  
+  # Latitude
+  a <- tail(names(sort(table(x$Latitude, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$Latitude[i] <- a
+  }
+    
+  # Longitude
+  a <- tail(names(sort(table(x$Longitude, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$Longitude[i] <- a
+  }
+  
+  # Observer
+  a <- tail(names(sort(table(x$DataCollector, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$Observer[i] <- a
+  }
+  
+  # Fisher
+  a <- tail(names(sort(table(x$Fisher, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$Fisher[i] <- a
+  }
+    
+  # Total Crew
+  a <- tail(names(sort(table(x$TotalCrew, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$TotalCrew[i] <- a
+  }
+  
+  # Traps Owned
+  a <- tail(names(sort(table(x$TrapsOwned, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$TrapsOwned[i] <- a
+  }
+    
+  # Traps Fished
+  a <- tail(names(sort(table(x$TrapsFished, useNA = "ifany"))), 1)
+  if(!is.na(a)){
+    TripData$TrapsFished[i] <- a
+  }
+    
+  # Trap Location
+  if(length(unique(x$TrapLocation)) > 1){
+    TripData$TrapLocation[i] <- "Multiple"
+  } else{
+    if(!is.na(x$TrapLocation[1])){
+      TripData$TrapLocation[i] <- x$TrapLocation[1]
+    }
+  }
+  
+  # Depth (m)
+  if(length(unique(x$Depth_m)) > 1){
+    TripData$Depth_m[i] <- "Multiple"
+  } else{
+    if(!is.na(x$Depth_m[1])){
+      TripData$Depth_m[i] <- x$Depth_m[1]
+    }
+  }
+  
+  # SoakTime_Days
+  if(length(unique(x$SoakTime_Days)) > 1){
+    TripData$SoakTime_Days[i] <- "Multiple"
+  } else{
+    if(!is.na(x$SoakTime_Days[1])){
+      TripData$SoakTime_Days[i] <- x$SoakTime_Days[1]
+    }
+  }
+  
+  # TrapType
+  if(length(unique(x$TrapType)) > 1){
+    TripData$TrapType[i] <- "Multiple"
+  } else{
+    if(!is.na(x$TrapType[1])){
+      TripData$TrapType[i] <- x$TrapType[1]
+    }
+  }
+  
+  # GapSize_cm
+  if(length(unique(x$GapSize_cm)) > 1){
+    TripData$GapSize_cm[i] <- "Multiple"
+  } else{
+    if(!is.na(x$GapSize_cm[1])){
+      TripData$GapSize_cm[i] <- x$GapSize_cm[1]
+    }
+  }
+  
+  
+  
+}
 
