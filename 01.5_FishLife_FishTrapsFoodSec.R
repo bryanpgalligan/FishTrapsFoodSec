@@ -7,6 +7,8 @@
 # Install old version of fishbase
 remotes::install_github( 'ropensci/rfishbase@fb-21.06', force=TRUE )
 
+# NOW RESTART R AND RUN THE CODE FROM THIS POINT
+
 library(rfishbase)
 library(FishLife)
 library(readr)
@@ -66,5 +68,5 @@ detach(package:rfishbase, unload = TRUE)
 # Update rfishbase to the current version
 install.packages("rfishbase")
 
-
+# NOW RESTART R BEFORE RUNNING ANY OTHER CODE THAT USES FISH BASE
 
