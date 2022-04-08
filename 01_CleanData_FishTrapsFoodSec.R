@@ -790,6 +790,7 @@ SpeciesData$KiswahiliName <- NA
 SpeciesData$Bycatch <- NA
 SpeciesData$Price_KSHPerkg <- NA
 SpeciesData$FunGr_Diet <- NA
+SpeciesData$Vulnerability <- NA
 SpeciesData$Lmat_cm <- NA
 SpeciesData$Lopt_cm <- NA
 SpeciesData$Linf_cm <- NA
@@ -888,6 +889,16 @@ for(i in 1:nrow(SpeciesData)){
   if(length(b) > 0){
     SpeciesData$FunGr_Diet[i] <- b
   }  
+  
+  # Vulnerability
+  
+  # Query vulnerability value from FishBase
+  b <- as.numeric(SpeciesFishBase[c, "Vulnerability"])
+  
+  # Save vulnerability value to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$Vulnerability[i] <- b
+  }
   
 }
 
@@ -1051,18 +1062,33 @@ TripData$GrazerMass_g <- NA
 TripData$GrazerMassRatio <- NA
 TripData$TotalCatch_g <- NA
 TripData$CPUE_kgPerTrap <- NA
+TripData$CPUE_DistFromMean <- NA
 TripData$TotalValue_KSH <- NA
 TripData$ValuePUE <- NA
+TripData$MeanLLmat <- NA
+TripData$FR <- NA
+TripData$FE <- NA
+TripData$FD <- NA
 TripData$TotalCa_mg <- NA
 TripData$CaPUE <- NA
+TripData$CaConc_mgPer100g <- NA
+TripData$CaPrice_KSHPermg <- NA
 TripData$TotalFe_mg <- NA
 TripData$FePUE <- NA
+TripData$FeConc_mgPer100g <- NA
+TripData$FePrice_KSHPermg <- NA
 TripData$TotalVA_ug <- NA
 TripData$VAPUE <- NA
+TripData$VAConc_ugPer100g <- NA
+TripData$VAPrice_KSHPerug <- NA
 TripData$TotalSe_ug <- NA
 TripData$SePUE <- NA
+TripData$SeConc_ugPer100g <- NA
+TripData$SePrice_KSHPerug <- NA
 TripData$TotalZn_ug <- NA
 TripData$ZnPUE <- NA
+TripData$ZnConc_ugPer100g <- NA
+TripData$ZnPrice_KSHPerug <- NA
 
 # Fill in TripData with the easy values
 for(i in 1:nrow(TripData)){
@@ -1279,11 +1305,46 @@ TripData$VAPUE <- TripData$TotalVA_ug / TripData$TrapsFished
 TripData$SePUE <- TripData$TotalSe_ug / TripData$TrapsFished
 TripData$ZnPUE <- TripData$TotalZn_ug / TripData$TrapsFished
 
+# Micronutrient Concentrations
+TripData$CaConc_mgPer100g <- (TripData$TotalCa_mg / TripData$TotalCatch_g) * 100
+TripData$FeConc_mgPer100g <- (TripData$TotalFe_mg / TripData$TotalCatch_g) * 100
+TripData$VAConc_ugPer100g <- (TripData$TotalVA_ug / TripData$TotalCatch_g) * 100
+TripData$SeConc_ugPer100g <- (TripData$TotalSe_ug / TripData$TotalCatch_g) * 100
+TripData$ZnConc_ugPer100g <- (TripData$TotalZn_ug / TripData$TotalCatch_g) * 100
+
+# Micronutrient Prices
+TripData$CaPrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalCa_mg
+TripData$FePrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalFe_mg
+TripData$VAPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalVA_ug
+TripData$SePrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalSe_ug
+TripData$ZnPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalZn_ug
+
+# CPUE_DistFromMean
+for(i in 1:nrow(TripData)){
+  
+  # Find site
+  a <- TripData[i, "Site"]
+  
+  # Find Trap type
+  b <- TripData[i, "TrapType"]
+  
+  # Subset all trips matching site and traptype
+  x <- subset(TripData, TripData$Site == a & TripData$TrapType == b)
+  
+  # Find mean CPUE
+  c <- mean(x$CPUE_kgPerTrap, na.rm = TRUE)
+  
+  # Save the ratio of CPUE / Mean CPUE for this combination of trap type and site
+  TripData$CPUE_DistFromMean[i] <- abs(c - TripData$CPUE_kgPerTrap[i]) / c
+  
+}
+
 # Change sig figs
 TripData$BrowserMassRatio <- round(TripData$BrowserMassRatio, digits = 4)
 TripData$GrazerMassRatio <- round(TripData$GrazerMassRatio, digits = 4)
 TripData$ScraperMassRatio <- round(TripData$ScraperMassRatio, digits = 4)
 TripData$CPUE_kgPerTrap <- round(TripData$CPUE_kgPerTrap, digits = 4)
+TripData$CPUE_DistFromMean <- round(TripData$CPUE_DistFromMean, digits = 4)
 TripData$TotalValue_KSH <- round(TripData$TotalValue_KSH, digits = 0)
 TripData$ValuePUE <- round(TripData$ValuePUE, digits = 0)
 
