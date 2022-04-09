@@ -4,6 +4,8 @@
 
 # Load packages
 library(mFD)
+library(readr)
+library(dplyr)
 
 # Load data
 TripData <- read_csv("01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
@@ -44,62 +46,161 @@ FishTraits$Position <- factor(FishTraits$Position,
   ordered = TRUE)
 
 
-# Make a species assemblage (by trip) dataframe
+# Trip assemblage codes are commented because the assemblages are to small if binned
+# by trip. If you have fewer FEs/species than traits in any assemblage, that assemblage
+# can't be used to calculate Functional Richness. Instead, we'll bin assemblages by site
+# and trap type.
 
-# First column (TripID)
-TripAssemblages <- as.data.frame(TripData$TripID)
-colnames(TripAssemblages) <- "TripID"
+# # Make a species assemblage (by trip) dataframe
+# 
+# # First column (TripID)
+# TripAssemblages <- as.data.frame(TripData$TripID)
+# colnames(TripAssemblages) <- "TripID"
+# 
+# # Add a column for each species in FishTraits
+# for (i in 1:nrow(FishTraits)){
+#   
+#   # Add column to TripAssemblages
+#   TripAssemblages[, rownames(FishTraits)[i]] <- NA
+#   
+# }
+
+# Make a species assemblage (by site) dataframe
+
+# First column (Site.TrapType)
+a <- unique(TripData$Site)
+a.trad <- paste(a, "Traditional", sep = ".")
+a.mult <- paste(a, "Multiple", sep = ".")
+a.gat <- paste(a, "Gated", sep = ".")
+SiteAssemblages <- as.data.frame(c(a.trad, a.mult, a.gat))
+colnames(SiteAssemblages) <- "Site.TrapType"
 
 # Add a column for each species in FishTraits
 for (i in 1:nrow(FishTraits)){
   
-  # Add column to FishTraits
-  TripAssemblages[, rownames(FishTraits)[i]] <- NA
+  # Add column to SiteAssemblages
+  SiteAssemblages[, rownames(FishTraits)[i]] <- NA
   
 }
 
+# Replace NAs with 0
+SiteAssemblages[is.na(SiteAssemblages)] <- 0
+
+# Convert first column of SiteAssemblages to row names
+rownames(SiteAssemblages) <- SiteAssemblages[, 1]
+
+# Delete now-redundant first column
+SiteAssemblages <- SiteAssemblages[, -1]
+
+# A vector of species not categorized with traits
+UncategorizedSpecies <- SpeciesData$Species[!(SpeciesData$Species %in% rownames(FishTraits))]
+
+# A version of CatchData that excludes uncategorized species
+CatchData2 <- subset(CatchData, !(CatchData$Species %in% UncategorizedSpecies))
+
+# # Add biomass by species to assemblages data frame
+# for (i in 1:nrow(TripAssemblages)){
+#   
+#   # Get TripID
+#   a <- TripAssemblages$TripID[i]
+#   
+#   # Subset this trip's catch data
+#   x <- subset(CatchData, TripID == a)
+#   
+#   # Vector of species caught on this trip
+#   b <- unique(x$Species)
+#   
+#   # Sum the biomass by species
+#   for (j in 1:length(b)){
+#     
+#     # Subset catch data for this species
+#     y <- subset(x, Species == b[j])
+#     
+#     # Sum biomass
+#     c <- sum(y$Weight_g)
+#     
+#     # Save biomass to TripAssemblages
+#     TripAssemblages[i, b[j]] <- c
+#     
+#   }
+#   
+# }
+# 
+# # Replace NAs with 0
+# TripAssemblages[is.na(TripAssemblages)] <- 0
+# 
+# # Convert first column of TripAssemblages to row names
+# rownames(TripAssemblages) <- TripAssemblages[, 1]
+# 
+# # Delete now-redundant first column
+# TripAssemblages <- TripAssemblages[, -1]
+# 
+# # Make TripAssemblages a matrix
+# TripAssemblages <- as.matrix(TripAssemblages)
+# 
+# # Make TripAssemblages numeric
+# class(TripAssemblages) <- "numeric"
+
 # Add biomass by species to assemblages data frame
-for (i in 1:nrow(TripAssemblages)){
+for (i in 1:nrow(TripData)){
   
   # Get TripID
-  a <- TripAssemblages$TripID[i]
+  a <- TripData$TripID[i]
+  
+  # Get TrapType
+  b <- TripData$TrapType[i]
+  
+  # Get Site
+  c <- TripData$Site[i]
   
   # Subset this trip's catch data
-  x <- subset(CatchData, TripID == a)
+  x <- subset(CatchData2, TripID == a)
+  
+  # If catch data are missing (b/c species caught do not have traits), go to next iteration
+  if (nrow(x) < 1) next
   
   # Vector of species caught on this trip
-  b <- unique(x$Species)
+  d <- unique(x$Species)
   
   # Sum the biomass by species
-  for (j in 1:length(b)){
+  for (j in 1:length(d)){
     
     # Subset catch data for this species
-    y <- subset(x, Species == b[j])
+    y <- subset(x, Species == d[j])
     
     # Sum biomass
-    c <- sum(y$Weight_g)
+    e <- sum(y$Weight_g)
     
-    # Save biomass to TripAssemblages
-    TripAssemblages[i, b[j]] <- c
+    # Create row name to key to Site Assemblages
+    f <- paste(c, b, sep = ".")
+    
+    # Save biomass to SiteAssemblages
+    SiteAssemblages[f, d[j]] <- e + SiteAssemblages[f, d[j]]
     
   }
   
 }
 
 # Replace NAs with 0
-TripAssemblages[is.na(TripAssemblages)] <- 0
+SiteAssemblages[is.na(SiteAssemblages)] <- 0
 
-# Convert first column of TripAssemblages to row names
-rownames(TripAssemblages) <- TripAssemblages[, 1]
+# Make SiteAssemblages a matrix
+SiteAssemblages <- as.matrix(SiteAssemblages)
 
-# Delete now-redundant first column
-TripAssemblages <- TripAssemblages[, -1]
+# Make SiteAssemblages numeric
+class(SiteAssemblages) <- "numeric"
 
-# Make TripAssemblages a matrix
-TripAssemblages <- as.matrix(TripAssemblages)
-
-# Make TripAssemblages numeric
-class(TripAssemblages) <- "numeric"
+# # Convert first column of TripAssemblages to row names
+# rownames(TripAssemblages) <- TripAssemblages[, 1]
+# 
+# # Delete now-redundant first column
+# TripAssemblages <- TripAssemblages[, -1]
+# 
+# # Make TripAssemblages a matrix
+# TripAssemblages <- as.matrix(TripAssemblages)
+# 
+# # Make TripAssemblages numeric
+# class(TripAssemblages) <- "numeric"
 
 
 # Make a TraitKey dataframe
@@ -117,7 +218,7 @@ FishTraitsSummary <- sp.tr.summary(
 )
 
 # Summary of species assemblages
-AssemblageSummary <- asb.sp.summary(TripAssemblages)
+AssemblageSummary <- asb.sp.summary(SiteAssemblages)
 
 AssemblageSummary$"sp_tot_w"       # Species total biomass in all assemblages
 AssemblageSummary$"asb_tot_w"      # Total biomass per assemblage
@@ -137,7 +238,143 @@ FunctionalEntities <- sp.to.fe(
 FETraits <- FunctionalEntities$fe_tr
 
 # Key to convert species to FEs
-FE_Species <- FunctionalEntities$sp_fe
+FE_Species <- as.data.frame(FunctionalEntities[["sp_fe"]])
+colnames(FE_Species) <- "FE"
+
+# # Matrix of FE assemblages, to be used instead of TripAssemblages
+# 
+# # First column (TripID)
+# FEAssemblages <- as.data.frame(TripData$TripID)
+# colnames(FEAssemblages) <- "TripID"
+# 
+# # Add a column for each species in FETraits
+# for (i in 1:nrow(FETraits)){
+#   
+#   # Add column to FETraits
+#   FEAssemblages[, rownames(FETraits)[i]] <- NA
+#   
+# }
+# 
+# # Replace NAs with 0
+# FEAssemblages[is.na(FEAssemblages)] <- 0
+# 
+# # Add biomass by FE to assemblages data frame
+# for (i in 1:nrow(FEAssemblages)){
+#   
+#   # Get TripID
+#   a <- FEAssemblages$TripID[i]
+#   
+#   # Subset this trip's catch data
+#   x <- subset(CatchData, TripID == a)
+#   
+#   # Vector of species caught on this trip
+#   b <- unique(x$Species)
+#   
+#   # Empty vector of FEs caught on this trip
+#   #c <- vector(mode = "character", length = 0)
+#   
+#   # FEs caught on this trip and add biomasses to FEAssemblages
+#   for (j in 1:length(b)){
+#     
+#     # Find the FE to which species b[j] is assigned
+#     d <- FE_Species[b[j],]
+#     
+#     if (is.na(d) == TRUE) next
+#     
+#     # Append FE to vector listing all FEs from trip
+#     #c <- append(c, d, after = length(c))
+#     
+#     # Sum the biomass by species
+#     
+#     # Subset catch data for this species
+#     y <- subset(x, Species == b[j])
+#     
+#     # Sum biomass
+#     e <- sum(y$Weight_g)
+#     
+#     # Save biomass to FEAssemblages
+#     FEAssemblages[i, d] <- e + FEAssemblages[i, d]
+#     
+#   }
+#   
+# }
+
+# Matrix of FE assemblages, to be used instead of SiteAssemblages
+
+# First column (Site.TrapType)
+FEAssemblages <- as.data.frame(rownames(SiteAssemblages))
+colnames(FEAssemblages) <- "Site.TrapType"
+
+# Add a column for each FE in FETraits
+for (i in 1:nrow(FETraits)){
+  
+  # Add column to FETraits
+  FEAssemblages[, rownames(FETraits)[i]] <- NA
+  
+}
+
+# Replace NAs with 0
+FEAssemblages[is.na(FEAssemblages)] <- 0
+
+# # Add biomass by FE to assemblages data frame (based on TRIPS)
+# for (i in 1:nrow(FEAssemblages)){
+#   
+#   # Get TripID
+#   a <- FEAssemblages$TripID[i]
+#   
+#   # Subset this trip's catch data
+#   x <- subset(CatchData, TripID == a)
+#   
+#   # Vector of species caught on this trip
+#   b <- unique(x$Species)
+#   
+#   # Empty vector of FEs caught on this trip
+#   #c <- vector(mode = "character", length = 0)
+#   
+#   # FEs caught on this trip and add biomasses to FEAssemblages
+#   for (j in 1:length(b)){
+#     
+#     # Find the FE to which species b[j] is assigned
+#     d <- FE_Species[b[j],]
+#     
+#     if (is.na(d) == TRUE) next
+#     
+#     # Append FE to vector listing all FEs from trip
+#     #c <- append(c, d, after = length(c))
+#     
+#     # Sum the biomass by species
+#     
+#     # Subset catch data for this species
+#     y <- subset(x, Species == b[j])
+#     
+#     # Sum biomass
+#     e <- sum(y$Weight_g)
+#     
+#     # Save biomass to FEAssemblages
+#     FEAssemblages[i, d] <- e + FEAssemblages[i, d]
+#     
+#   }
+#   
+# }
+
+# Add biomass by FE to assemblages data frame (based on SITES)
+
+
+
+# Convert first column of FEAssemblages to row names
+rownames(FEAssemblages) <- FEAssemblages[, 1]
+
+# Delete now-redundant first column
+FEAssemblages <- FEAssemblages[, -1]
+
+# Make FEAssemblages a matrix
+FEAssemblages <- as.matrix(FEAssemblages)
+
+# Make FEAssemblages numeric
+class(FEAssemblages) <- "numeric"
+
+# Replace NAs with 0
+FEAssemblages[is.na(FEAssemblages)] <- 0
 
 # Calculate traits-based distances
 FunDist <- funct.dist(
@@ -202,6 +439,21 @@ funct.space.plot(
 
 
 ##### 3.6 Compute and plot functional diversity indices #####
+
+# Compute multidimensional alpha diversity - F. Richness, Divergence, and Evenness (Villéger et al. 2008)
+alpha.fd.multidim(
+  sp_faxes_coord = FunSpacesQuality$details_fspaces$sp_pc_coord[, c("PC1", "PC2", "PC3", "PC4")],
+  asb_sp_w = FEAssemblages,
+  ind_vect = c("fric", "fdiv", "feve"),
+  scaling = TRUE,
+  check_input = TRUE,
+  details_returned = TRUE
+)
+
+
+
+
+
 
 
 
