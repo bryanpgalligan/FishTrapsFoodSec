@@ -10,8 +10,8 @@ library(stringr)
 library(ggplot2)
 
 # Load data
-TripData <- read_csv("01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
-CatchData <- read_csv("01_CleanData_Out/CatchData_GatedTraps_Galligan.csv")
+TripData <- read_csv("02_FishLife_Out/TripData_GatedTraps_Galligan.csv")
+CatchData <- read_csv("02_FishLife_Out/CatchData_GatedTraps_Galligan.csv")
 SpeciesData <- read_csv("02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv")
 
 

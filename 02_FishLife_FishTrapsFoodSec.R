@@ -14,8 +14,10 @@ library(FishLife)
 library(readr)
 library(stringr)
 
-# Import species data
+# Import data
 SpeciesData <- read_csv("01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv")
+CatchData <- read_csv("01_CleanData_Out/CatchData_GatedTraps_Galligan.csv")
+TripData <- read_csv("01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
 
 # Delete existing life history values
 SpeciesData$Linf_cm <- NA
@@ -61,6 +63,45 @@ for(i in 1:nrow(SpeciesData)){
 # Save SpeciesData
 write.csv(SpeciesData, file = "02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv",
   row.names = FALSE)
+
+# Add LLmat to CatchData
+CatchData$LLmat <- NA
+for(i in 1:nrow(CatchData)){
+  
+  # Extract Species
+  a <- CatchData$Species[i]
+  
+  # Extract Lmat_cm
+  b <- SpeciesData$Lmat_cm[SpeciesData$Species == a]
+  
+  # Save LLmat
+  CatchData$LLmat[i] <- CatchData$Length_cm[i] / b
+  
+}
+
+# Save CatchData
+write.csv(CatchData, file = "02_FishLife_Out/CatchData_GatedTraps_Galligan.csv",
+  row.names = FALSE)
+
+# Add MeanLLmat to TripData
+for(i in 1:nrow(TripData)){
+  
+  # Extract TripID
+  a <- TripData$TripID[i]
+  
+  # Subset of catch data
+  x <- subset(CatchData, CatchData$TripID == a)
+  
+  # Mean of LLmat for this Trip
+  b <- mean(x$LLmat)
+  
+  # Save to TripData
+  TripData$MeanLLmat[i] <- b
+  
+}
+
+# Save TripData
+write.csv(TripData, file = "02_FishLife_Out/TripData_GatedTraps_Galligan.csv")
 
 # Detach rfishbase
 detach(package:rfishbase, unload = TRUE)
