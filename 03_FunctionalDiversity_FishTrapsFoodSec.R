@@ -6,6 +6,8 @@
 library(mFD)
 library(readr)
 library(dplyr)
+library(stringr)
+library(ggplot2)
 
 # Load data
 TripData <- read_csv("01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
@@ -70,9 +72,8 @@ FishTraits$Position <- factor(FishTraits$Position,
 # First column (Site.TrapType)
 a <- unique(TripData$Site)
 a.trad <- paste(a, "Traditional", sep = ".")
-a.mult <- paste(a, "Multiple", sep = ".")
 a.gat <- paste(a, "Gated", sep = ".")
-SiteAssemblages <- as.data.frame(c(a.trad, a.mult, a.gat))
+SiteAssemblages <- as.data.frame(c(a.trad, a.gat))
 colnames(SiteAssemblages) <- "Site.TrapType"
 
 # Add a column for each species in FishTraits
@@ -142,42 +143,22 @@ CatchData2 <- subset(CatchData, !(CatchData$Species %in% UncategorizedSpecies))
 # class(TripAssemblages) <- "numeric"
 
 # Add biomass by species to assemblages data frame
-for (i in 1:nrow(TripData)){
+for (i in 1:nrow(CatchData2)){
   
-  # Get TripID
-  a <- TripData$TripID[i]
+  # Extract Site
+  a <- as.character(TripData[TripData$TripID == CatchData2$TripID[i], "Site"])
   
-  # Get TrapType
-  b <- TripData$TrapType[i]
+  # Extract TrapType
+  b <- CatchData2$TrapType[i]
   
-  # Get Site
-  c <- TripData$Site[i]
+  # Extract Species
+  c <- CatchData2$Species[i]
   
-  # Subset this trip's catch data
-  x <- subset(CatchData2, TripID == a)
+  # Reproduce target rowname
+  d <- paste(a, b, sep = ".")
   
-  # If catch data are missing (b/c species caught do not have traits), go to next iteration
-  if (nrow(x) < 1) next
-  
-  # Vector of species caught on this trip
-  d <- unique(x$Species)
-  
-  # Sum the biomass by species
-  for (j in 1:length(d)){
-    
-    # Subset catch data for this species
-    y <- subset(x, Species == d[j])
-    
-    # Sum biomass
-    e <- sum(y$Weight_g)
-    
-    # Create row name to key to Site Assemblages
-    f <- paste(c, b, sep = ".")
-    
-    # Save biomass to SiteAssemblages
-    SiteAssemblages[f, d[j]] <- e + SiteAssemblages[f, d[j]]
-    
-  }
+  # Add to appropriate cell in SiteAssemblages data frame
+  SiteAssemblages[d, c] <- SiteAssemblages[d, c] + CatchData2$Weight_g[i]
   
 }
 
@@ -316,7 +297,7 @@ for (i in 1:nrow(FETraits)){
 # Replace NAs with 0
 FEAssemblages[is.na(FEAssemblages)] <- 0
 
-# # Add biomass by FE to assemblages data frame (based on TRIPS)
+# # Add biomass of each functional entity to FEAssemblages data frame (based on TRIPS)
 # for (i in 1:nrow(FEAssemblages)){
 #   
 #   # Get TripID
@@ -357,9 +338,29 @@ FEAssemblages[is.na(FEAssemblages)] <- 0
 #   
 # }
 
-# Add biomass by FE to assemblages data frame (based on SITES)
-
-
+# Add biomass of each functional entity to FEAssemblages data frame (based on SITES)
+for (i in 1:nrow(CatchData2)){
+  
+  # Extract Species
+  a <- CatchData2$Species[i]
+  
+  # Extract TrapType
+  b <- CatchData2$TrapType[i]
+  
+  # Extract Site
+  c <- TripData$Site[TripData$TripID == CatchData2$TripID[i]]
+  
+  # Convert Species to FE
+  d <- FE_Species[a, ]
+  
+  # Reproduce target row name in FEAssembalges
+  e <- paste(c, b, sep = ".")
+  
+  # Add this fish's mass to the appropriate cell in FEAssemblages
+  FEAssemblages[FEAssemblages$Site.TrapType == e, d] <-
+    FEAssemblages[FEAssemblages$Site.TrapType == e, d] + CatchData2$Weight_g[i]
+  
+}
 
 # Convert first column of FEAssemblages to row names
 rownames(FEAssemblages) <- FEAssemblages[, 1]
@@ -420,12 +421,17 @@ quality.fspaces.plot(
 # Test for correlations
 TraitAxisCorrelations <- traits.faxes.cor(
   sp_tr = FETraits,
-  sp_faxes_coord = FunSpacesQuality$"details_fspaces"$"sp_pc_coord"[, c("PC2", "PC3", "PC4", "PC5", "PC6")],
+  sp_faxes_coord = FunSpacesQuality$"details_fspaces"$"sp_pc_coord"[, c("PC1", "PC2", "PC3", "PC4")],
   plot = TRUE
 )
 
 # Return plots:
 TraitAxisCorrelations$"tr_faxes_plot"
+
+# Save plot
+ggsave(filename = "03_FunctionalDiversity_Out/TraitsAndPCoAAxes.png", device = "png",
+  width = 15, height = 10, units = "in")
+
 
 
 
@@ -435,13 +441,23 @@ funct.space.plot(
   sp_faxes_coord = FunSpacesQuality$details_fspaces$sp_pc_coord[, c("PC1", "PC2", "PC3", "PC4")]
 )
 
+# Save plot
+ggsave(filename = "03_FunctionalDiversity_Out/PositionSpeciesFunctionalAxes.png", device = "png",
+  width = 10, height = 8, units = "in")
+
 
 
 
 ##### 3.6 Compute and plot functional diversity indices #####
 
+# Remove sites from FEAssemblages where the number of FEs is not greater than
+# number of axes used to compute the convex hull, meaning FRic cannot be computed using those
+# assemblages.
+ProblemAssemblages <- c("Tiwi.Traditional", "Mtwapa.Traditional", "Chale.Gated", "Mtwapa.Gated")
+FEAssemblages <- subset(FEAssemblages, !(rownames(FEAssemblages) %in% ProblemAssemblages))
+
 # Compute multidimensional alpha diversity - F. Richness, Divergence, and Evenness (Villéger et al. 2008)
-alpha.fd.multidim(
+FDIndices <- alpha.fd.multidim(
   sp_faxes_coord = FunSpacesQuality$details_fspaces$sp_pc_coord[, c("PC1", "PC2", "PC3", "PC4")],
   asb_sp_w = FEAssemblages,
   ind_vect = c("fric", "fdiv", "feve"),
@@ -450,10 +466,41 @@ alpha.fd.multidim(
   details_returned = TRUE
 )
 
+# Save FD Indices by assemblage
+FDIndices_Results <- FDIndices[["functional_diversity_indices"]]
 
+# Save FD Indices to TripData
+for (i in 1:nrow(TripData)){
+  
+  # Extract Site
+  a <- TripData$Site[i]
+  
+  # Extract TrapType
+  b <- TripData$TrapType[i]
+  
+  # Go to next iteration if TrapType is Multiple
+  if (b == "Multiple") next
+  
+  # Target row name in FDIndices_Results
+  c <- paste(a, b, sep = ".")
+  
+  # Index of target row
+  d <- which(c %in% rownames(FDIndices_Results))
+  
+  # Go to next iteration if there is no match
+  if (length(d) < 1) next
+  
+  # Save all four values to TripData
+  TripData$FECount[i] <- FDIndices_Results$sp_richn[d]
+  TripData$FRic[i] <- FDIndices_Results$fric[d]
+  TripData$FEve[i] <- FDIndices_Results$feve[d]
+  TripData$FDiv[i] <- FDIndices_Results$fdiv[d]
+  
+}
 
-
-
+# Save new TripData
+write.csv(TripData, file = "03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv",
+  row.names = FALSE)
 
 
 

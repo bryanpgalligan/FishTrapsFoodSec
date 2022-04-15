@@ -1066,9 +1066,10 @@ TripData$CPUE_DistFromMean <- NA
 TripData$TotalValue_KSH <- NA
 TripData$ValuePUE <- NA
 TripData$MeanLLmat <- NA
-TripData$FR <- NA
-TripData$FE <- NA
-TripData$FD <- NA
+TripData$FECount <- NA
+TripData$FRic <- NA
+TripData$FEve <- NA
+TripData$FDiv <- NA
 TripData$TotalCa_mg <- NA
 TripData$CaPUE <- NA
 TripData$CaConc_mgPer100g <- NA
