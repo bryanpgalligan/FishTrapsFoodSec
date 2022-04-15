@@ -7,15 +7,14 @@
 
 ## Project TOC:
 ##    01 Data Cleaning
-##    02 Stability
-##    03 Availability
-##    04 Access
-##    06 Tables and Figures
+##    02 Adding Life History Values Using FishLife
+##    03 Calculating Functional Diversity Indices
+##    04 Data Exploration
 
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 4 Feb 22
+## Last update: 15 Apr 22
 
 
 
