@@ -1085,6 +1085,8 @@ TripData$ScraperMass_g <- NA
 TripData$ScraperMassRatio <- NA
 TripData$GrazerMass_g <- NA
 TripData$GrazerMassRatio <- NA
+TripData$PredatorMass_g <- NA
+TripData$PredatorMassRatio <- NA
 TripData$TotalCatch_g <- NA
 TripData$CPUE_kgPerTrap <- NA
 TripData$CPUE_DistFromMean <- NA
@@ -1254,6 +1256,14 @@ for(i in 1:nrow(TripData)){
     TripData$GrazerMass_g[i] <- 0
   }
   
+  # PredatorMass_g
+  y <- subset(x, x$FunGr_Diet == "Predator")
+  if(nrow(y) > 0){
+    TripData$PredatorMass_g[i] <- sum(y$TotalCatch_g)
+  } else{
+    TripData$PredatorMass_g[i] <- 0
+  }
+  
   # TotalCatch_g
   TripData$TotalCatch_g[i] <- sum(x$TotalCatch_g)
   
@@ -1324,6 +1334,7 @@ for(i in 1:nrow(TripData)){
 TripData$BrowserMassRatio <- TripData$BrowserMass_g / TripData$TotalCatch_g
 TripData$ScraperMassRatio <- TripData$ScraperMass_g / TripData$TotalCatch_g
 TripData$GrazerMassRatio <- TripData$GrazerMass_g / TripData$TotalCatch_g
+TripData$PredatorMassRatio <- TripData$PredatorMass_g / TripData$TotalCatch_g
 
 # Convert Trap and Crew stats to numeric
 TripData$TotalCrew <- as.numeric(TripData$TotalCrew)
