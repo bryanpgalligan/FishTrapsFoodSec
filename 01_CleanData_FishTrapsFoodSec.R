@@ -812,6 +812,12 @@ SpeciesData$Calcium_U95 <- NA
 SpeciesData$Iron_mgPer100g <- NA
 SpeciesData$Iron_L95 <- NA
 SpeciesData$Iron_U95 <- NA
+SpeciesData$Omega3_gPer100g <- NA
+SpeciesData$Omega3_L95 <- NA
+SpeciesData$Omega3_U95 <- NA
+SpeciesData$Protein_gPer100g <- NA
+SpeciesData$Protein_L95 <- NA
+SpeciesData$Protein_U95 <- NA
 SpeciesData$VitaminA_ugPer100g <- NA
 SpeciesData$VitaminA_L95 <- NA
 SpeciesData$VitaminA_U95 <- NA
@@ -821,9 +827,6 @@ SpeciesData$Selenium_U95 <- NA
 SpeciesData$Zinc_ugPer100g <- NA
 SpeciesData$Zinc_L95 <- NA
 SpeciesData$Zinc_U95 <- NA
-
-# Set up a placeholder value for life.history.tool.previous
-life.hx.tool.previous <- "placeholder"
 
 # Fill in SpeciesData columns
 for(i in 1:nrow(SpeciesData)){
@@ -1043,6 +1046,12 @@ for(i in 1:nrow(SpeciesData)){
     SpeciesData$Iron_mgPer100g[i] <- NutrientBase$Iron[a]
     SpeciesData$Iron_L95[i] <- NutrientBase$Iron_l95[a]
     SpeciesData$Iron_U95[i] <- NutrientBase$Iron_u95[a]
+    SpeciesData$Omega3_gPer100g[i] <- NutrientBase$Omega3[a]
+    SpeciesData$Omega3_L95[i] <- NutrientBase$Omega3_l95[a]
+    SpeciesData$Omega3_U95[i] <- NutrientBase$Omega3_u95[a]
+    SpeciesData$Protein_gPer100g[i] <- NutrientBase$Protein[a]
+    SpeciesData$Protein_L95[i] <- NutrientBase$Protein_l95[a]
+    SpeciesData$Protein_U95[i] <- NutrientBase$Protein_u95[a]
     SpeciesData$VitaminA_ugPer100g[i] <- NutrientBase$VitaminA[a]
     SpeciesData$VitaminA_L95[i] <- NutrientBase$VitaminA_l95[a]
     SpeciesData$VitaminA_U95[i] <- NutrientBase$VitaminA_u95[a]
@@ -1108,6 +1117,14 @@ TripData$TotalFe_mg <- NA
 TripData$FePUE <- NA
 TripData$FeConc_mgPer100g <- NA
 TripData$FePrice_KSHPermg <- NA
+TripData$TotalOmega3_g <- NA
+TripData$Omega3PUE <- NA
+TripData$Omega3Conc_gPer100g <- NA
+TripData$Omega3Price_KSHPerg <- NA
+TripData$TotalProtein_g <- NA
+TripData$ProteinPUE <- NA
+TripData$ProteinConc_gPer100g <- NA
+TripData$ProteinPrice_KSHPerg <- NA
 TripData$TotalVA_ug <- NA
 TripData$VAPUE <- NA
 TripData$VAConc_ugPer100g <- NA
@@ -1288,6 +1305,8 @@ for(i in 1:nrow(TripData)){
   x$TrophLevel <- NA
   x$Ca <- NA
   x$Fe <- NA
+  x$O3 <- NA
+  x$Protein <- NA
   x$VA <- NA
   x$Se <- NA
   x$Zn <- NA
@@ -1310,6 +1329,12 @@ for(i in 1:nrow(TripData)){
     # Iron
     x$Fe[j] <- SpeciesData$Iron_mgPer100g[a] * (x$Weight_g[j] / 100)
     
+    # Omega 3
+    x$O3[j] <- SpeciesData$Omega3_gPer100g[a] * (x$Weight_g[j] / 100)
+    
+    # Protein
+    x$Protein[j] <- SpeciesData$Protein_gPer100g[a] * (x$Weight_g[j] / 100)
+    
     # Vitamin A
     x$VA[j] <- SpeciesData$VitaminA_ugPer100g[a] * (x$Weight_g[j] / 100)
     
@@ -1324,25 +1349,31 @@ for(i in 1:nrow(TripData)){
   # Add additional values to TripData
   
   # Total Value
-  TripData$TotalValue_KSH[i] <- sum(x$Price_KSH)
+  TripData$TotalValue_KSH[i] <- sum(x$Price_KSH, na.rm = TRUE)
   
   # Mean Trophic Level
   TripData$MeanTrophLevel[i] <- mean(x$TrophLevel, na.rm = TRUE)
   
   # Total Calcium
-  TripData$TotalCa_mg[i] <- sum(x$Ca)
+  TripData$TotalCa_mg[i] <- sum(x$Ca, na.rm = TRUE)
   
   # Total Iron
-  TripData$TotalFe_mg[i] <- sum(x$Fe)
+  TripData$TotalFe_mg[i] <- sum(x$Fe, na.rm = TRUE)
+  
+  # Total Omega 3
+  TripData$TotalOmega3_g[i] <- sum(x$O3, na.rm = TRUE)
+  
+  # Total Protein
+  TripData$TotalProtein_g[i] <- sum(x$Protein, na.rm = TRUE)
   
   # Total Vitamin A
-  TripData$TotalVA_ug[i] <- sum(x$VA)
+  TripData$TotalVA_ug[i] <- sum(x$VA, na.rm = TRUE)
   
   # Total Selenium
-  TripData$TotalSe_ug[i] <- sum(x$Se)
+  TripData$TotalSe_ug[i] <- sum(x$Se, na.rm = TRUE)
   
   # Total Zinc
-  TripData$TotalZn_ug[i] <- sum(x$Zn)
+  TripData$TotalZn_ug[i] <- sum(x$Zn, na.rm = TRUE)
   
 }
 
@@ -1362,20 +1393,26 @@ TripData$CPUE_kgPerTrap <- (TripData$TotalCatch_g / 1000) / TripData$TrapsFished
 TripData$ValuePUE <- TripData$TotalValue_KSH / TripData$TrapsFished
 TripData$CaPUE <- TripData$TotalCa_mg / TripData$TrapsFished
 TripData$FePUE <- TripData$TotalFe_mg / TripData$TrapsFished
+TripData$Omega3PUE <- TripData$TotalOmega3_g / TripData$TrapsFished
+TripData$ProteinPUE <- TripData$TotalProtein_g / TripData$TrapsFished
 TripData$VAPUE <- TripData$TotalVA_ug / TripData$TrapsFished
 TripData$SePUE <- TripData$TotalSe_ug / TripData$TrapsFished
 TripData$ZnPUE <- TripData$TotalZn_ug / TripData$TrapsFished
 
-# Micronutrient Concentrations
+# Nutrient Concentrations
 TripData$CaConc_mgPer100g <- (TripData$TotalCa_mg / TripData$TotalCatch_g) * 100
 TripData$FeConc_mgPer100g <- (TripData$TotalFe_mg / TripData$TotalCatch_g) * 100
+TripData$Omega3Conc_gPer100g <- (TripData$TotalOmega3_g / TripData$TotalCatch_g) * 100
+TripData$ProteinConc_gPer100g <- (TripData$TotalProtein_g / TripData$TotalCatch_g) * 100
 TripData$VAConc_ugPer100g <- (TripData$TotalVA_ug / TripData$TotalCatch_g) * 100
 TripData$SeConc_ugPer100g <- (TripData$TotalSe_ug / TripData$TotalCatch_g) * 100
 TripData$ZnConc_ugPer100g <- (TripData$TotalZn_ug / TripData$TotalCatch_g) * 100
 
-# Micronutrient Prices
+# Nutrient Prices
 TripData$CaPrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalCa_mg
 TripData$FePrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalFe_mg
+TripData$Omega3Price_KSHPerg <- TripData$TotalValue_KSH / TripData$TotalOmega3_g
+TripData$ProteinPrice_KSHPerg <- TripData$TotalValue_KSH / TripData$TotalProtein_g
 TripData$VAPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalVA_ug
 TripData$SePrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalSe_ug
 TripData$ZnPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalZn_ug
