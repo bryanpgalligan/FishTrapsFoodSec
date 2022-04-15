@@ -759,7 +759,7 @@ colnames(TrapData)[26] <- "FunGr_Diet"
 colnames(TrapData)[29] <- "TripID"
 
 # Save TrapData
-write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = FALSE)
+write.csv(TrapData, file = "01_CleanData_Temp/TrapData_Cleaned.csv", row.names = FALSE)
 
 
 
@@ -773,6 +773,10 @@ write.csv(TrapData, file = "01_CleanData_Out/TrapData_Cleaned.csv", row.names = 
 CatchData <- TrapData[, c("TripID", "TrapType", "TrapLocation",
   "SoakTime_Days", "GapSize_cm", "Species",
   "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
+
+# Extract data from FishBase
+SpeciesFishBase <- species(unique(CatchData$Species))
+EcologyFishBase <- ecology(unique(CatchData$Species))
 
 # Save the catch data table
 write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv",
@@ -790,6 +794,8 @@ SpeciesData$KiswahiliName <- NA
 SpeciesData$Bycatch <- NA
 SpeciesData$Price_KSHPerkg <- NA
 SpeciesData$FunGr_Diet <- NA
+SpeciesData$TrophLevel <- NA
+SpeciesData$SE_TrophLevel <- NA
 SpeciesData$Vulnerability <- NA
 SpeciesData$Lmat_cm <- NA
 SpeciesData$Lopt_cm <- NA
@@ -816,10 +822,6 @@ SpeciesData$Zinc_ugPer100g <- NA
 SpeciesData$Zinc_L95 <- NA
 SpeciesData$Zinc_U95 <- NA
 
-
-# Extract data from FishBase
-SpeciesFishBase <- species(SpeciesData$Species)
-
 # Set up a placeholder value for life.history.tool.previous
 life.hx.tool.previous <- "placeholder"
 
@@ -831,6 +833,9 @@ for(i in 1:nrow(SpeciesData)){
   
   # Species occurrence in FishBase Species table
   c <- which(SpeciesFishBase$Species == SpeciesData$Species[i])
+  
+  # Species occurrence in FishBase Ecology table
+  d <- which(EcologyFishBase$Species == SpeciesData$Species[i])
   
   # Family
   
@@ -889,6 +894,26 @@ for(i in 1:nrow(SpeciesData)){
   if(length(b) > 0){
     SpeciesData$FunGr_Diet[i] <- b
   }  
+  
+  # Trophic level
+  
+  # Trophic level estimate based on food items (not diet)
+  b <- as.numeric(EcologyFishBase[d, "FoodTroph"])
+  
+  # Save Trophic Level estimate to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$TrophLevel[i] <- b
+  }
+  
+  # Trophic level SE
+  
+  # Trophic level estimate SE
+  b <- as.numeric(EcologyFishBase[d, "FoodSeTroph"])
+  
+  # Save SE of trophic level estimate to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$SE_TrophLevel[i] <- b
+  }
   
   # Vulnerability
   
@@ -1066,6 +1091,7 @@ TripData$CPUE_DistFromMean <- NA
 TripData$TotalValue_KSH <- NA
 TripData$ValuePUE <- NA
 TripData$MeanLLmat <- NA
+TripData$MeanTrophLevel <- NA
 TripData$FECount <- NA
 TripData$FRic <- NA
 TripData$FEve <- NA
@@ -1233,6 +1259,7 @@ for(i in 1:nrow(TripData)){
   
   # Add species data columns to temporary data frame x
   x$Price_KSH <- NA
+  x$TrophLevel <- NA
   x$Ca <- NA
   x$Fe <- NA
   x$VA <- NA
@@ -1247,6 +1274,9 @@ for(i in 1:nrow(TripData)){
     
     # Price_KSH
     x$Price_KSH[j] <- SpeciesData$Price_KSHPerkg[a] * (x$Weight_g[j] / 1000)
+    
+    # TrophLevel
+    x$TrophLevel[j] <- SpeciesData$TrophLevel[a]
     
     # Calcium
     x$Ca[j] <- SpeciesData$Calcium_mgPer100g[a] * (x$Weight_g[j] / 100)
@@ -1269,6 +1299,9 @@ for(i in 1:nrow(TripData)){
   
   # Total Value
   TripData$TotalValue_KSH[i] <- sum(x$Price_KSH)
+  
+  # Mean Trophic Level
+  TripData$MeanTrophLevel[i] <- mean(x$TrophLevel, na.rm = TRUE)
   
   # Total Calcium
   TripData$TotalCa_mg[i] <- sum(x$Ca)
