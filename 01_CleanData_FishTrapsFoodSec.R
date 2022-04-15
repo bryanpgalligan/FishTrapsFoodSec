@@ -1089,6 +1089,7 @@ TripData$GrazerMassRatio <- NA
 TripData$PredatorMass_g <- NA
 TripData$PredatorMassRatio <- NA
 TripData$TotalCatch_g <- NA
+TripData$LowNoCatch <- NA
 TripData$CPUE_kgPerTrap <- NA
 TripData$CPUE_DistFromMean <- NA
 TripData$TotalValue_KSH <- NA
@@ -1243,7 +1244,7 @@ for(i in 1:nrow(TripData)){
   # BrowserMass_g
   y <- subset(x, x$FunGr_Diet == "Browser")
   if(nrow(y) > 0){
-    TripData$BrowserMass_g[i] <- sum(y$TotalCatch_g)
+    TripData$BrowserMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
     TripData$BrowserMass_g[i] <- 0
   }
@@ -1251,7 +1252,7 @@ for(i in 1:nrow(TripData)){
   # ScraperMass_g
   y <- subset(x, x$FunGr_Diet == "Scraper")
   if(nrow(y) > 0){
-    TripData$ScraperMass_g[i] <- sum(y$TotalCatch_g)
+    TripData$ScraperMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
     TripData$ScraperMass_g[i] <- 0
   }
@@ -1259,7 +1260,7 @@ for(i in 1:nrow(TripData)){
   # GrazerMass_g
   y <- subset(x, x$FunGr_Diet == "Grazer")
   if(nrow(y) > 0){
-    TripData$GrazerMass_g[i] <- sum(y$TotalCatch_g)
+    TripData$GrazerMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
     TripData$GrazerMass_g[i] <- 0
   }
@@ -1267,13 +1268,20 @@ for(i in 1:nrow(TripData)){
   # PredatorMass_g
   y <- subset(x, x$FunGr_Diet == "Predator")
   if(nrow(y) > 0){
-    TripData$PredatorMass_g[i] <- sum(y$TotalCatch_g)
+    TripData$PredatorMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
     TripData$PredatorMass_g[i] <- 0
   }
   
   # TotalCatch_g
-  TripData$TotalCatch_g[i] <- sum(x$TotalCatch_g)
+  TripData$TotalCatch_g[i] <- sum(x$TotalCatch_g, na.rm = TRUE)
+  
+  # LowNoCatch
+  if(sum(x$TotalCatch_g, na.rm = TRUE) < 1000){
+    TripData$LowNoCatch[i] <- "LowNoCatch"
+  } else{
+    TripData$LowNoCatch[i] <- "Catch"
+  }
   
   # Add species data columns to temporary data frame x
   x$Price_KSH <- NA
