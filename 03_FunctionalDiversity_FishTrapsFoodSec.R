@@ -1,6 +1,6 @@
 
 
-# Add FR, FE, and FD to TripData
+# Add FECount, FRic, FEve, and FDiv to TripData
 
 # Load packages
 library(mFD)
@@ -12,7 +12,7 @@ library(ggplot2)
 # Load data
 TripData <- read_csv("01_CleanData_Out/TripData_GatedTraps_Galligan.csv")
 CatchData <- read_csv("01_CleanData_Out/CatchData_GatedTraps_Galligan.csv")
-SpeciesData <- read_csv("01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv")
+SpeciesData <- read_csv("02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv")
 
 
 ##### 3.1 Enter data #####

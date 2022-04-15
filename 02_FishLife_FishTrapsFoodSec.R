@@ -59,7 +59,7 @@ for(i in 1:nrow(SpeciesData)){
 }
 
 # Save SpeciesData
-write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv",
+write.csv(SpeciesData, file = "02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv",
   row.names = FALSE)
 
 # Detach rfishbase
