@@ -1079,6 +1079,7 @@ TripData$Depth_m <- NA
 TripData$SoakTime_Days <- NA
 TripData$TrapType <- NA
 TripData$GapSize_cm <- NA
+TripData$B.undulatus <- NA
 TripData$BrowserMass_g <- NA
 TripData$BrowserMassRatio <- NA
 TripData$ScraperMass_g <- NA
@@ -1230,6 +1231,13 @@ for(i in 1:nrow(TripData)){
     if(!is.na(x$GapSize_cm[1])){
       TripData$GapSize_cm[i] <- x$GapSize_cm[1]
     }
+  }
+  
+  # B.undulatus (presence of Balistapus undulatus in the catch)
+  if("Balistapus undulatus" %in% x$Species){
+    TripData$B.undulatus[i] <- "Yes"
+  } else{
+    TripData$B.undulatus[i] <- "No"
   }
   
   # BrowserMass_g
