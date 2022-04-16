@@ -1154,6 +1154,7 @@ TripData$TotalValue_KSH <- NA
 TripData$ValuePUE <- NA
 TripData$MeanLLmat <- NA
 TripData$MeanTrophLevel <- NA
+TripData$MeanVulnerability <- NA
 TripData$MTC_degC <- NA
 TripData$FECount <- NA
 TripData$FRic <- NA
@@ -1353,6 +1354,7 @@ for(i in 1:nrow(TripData)){
   # Add species data columns to temporary data frame x
   x$Price_KSH <- NA
   x$TrophLevel <- NA
+  x$Vulnerability <- NA
   x$WeightedTemp <- NA
   x$Ca <- NA
   x$Fe <- NA
@@ -1373,6 +1375,9 @@ for(i in 1:nrow(TripData)){
     
     # TrophLevel
     x$TrophLevel[j] <- SpeciesData$TrophLevel[a]
+    
+    # Vulnerability
+    x$Vulnerability[j] <- SpeciesData$Vulnerability[a]
     
     # Weighted Temp
     x$WeightedTemp[j] <- SpeciesData$TempPrefMean_degC[a] * x$Weight_g[j]
@@ -1407,7 +1412,10 @@ for(i in 1:nrow(TripData)){
   
   # Mean Trophic Level
   TripData$MeanTrophLevel[i] <- mean(x$TrophLevel, na.rm = TRUE)
-
+  
+  # Mean Vulnerability
+  TripData$MeanVulnerability[i] <- mean(x$Vulnerability, na.rm = TRUE)
+  
   # Mean temperature of the catch
   TripData$MTC_degC[i] <- sum(x$WeightedTemp, na.rm = TRUE) / sum(x$Weight_g, na.rm = TRUE)
   
