@@ -789,6 +789,7 @@ write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv"
 # Extract data from FishBase
 SpeciesFishBase <- species(unique(CatchData$Species))
 EcologyFishBase <- ecology(unique(CatchData$Species))
+NutrientBase <- estimate(unique(CatchData$Species))
 
 # Construct a table for species-level data
 SpeciesData <- as.data.frame(unique(TrapData$Species))
@@ -814,6 +815,9 @@ SpeciesData$Mobility <- NA
 SpeciesData$Active <- NA
 SpeciesData$Schooling <- NA
 SpeciesData$Position <- NA
+SpeciesData$TempPrefMin_degC <- NA
+SpeciesData$TempPrefMean_degC <- NA
+SpeciesData$TempPrefMax_degC <- NA
 SpeciesData$Calcium_mgPer100g <- NA
 SpeciesData$Calicum_L95 <- NA
 SpeciesData$Calcium_U95 <- NA
@@ -847,6 +851,9 @@ for(i in 1:nrow(SpeciesData)){
   
   # Species occurrence in FishBase Ecology table
   d <- which(EcologyFishBase$Species == SpeciesData$Species[i])
+  
+  # Species occurrence in FishBase Estimate (NutrientBase) table
+  e <- which(NutrientBase$Species == SpeciesData$Species[i])
   
   # Family
   
@@ -934,6 +941,36 @@ for(i in 1:nrow(SpeciesData)){
   # Save vulnerability value to SpeciesData
   if(length(b) > 0){
     SpeciesData$Vulnerability[i] <- b
+  }
+  
+  # Minimum temperature preference
+  
+  # Extract minimum temperature preference from FishBase
+  b <- as.numeric(NutrientBase[e, "TempPrefMin"])
+  
+  # Save minimum temperature preference to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$TempPrefMin_degC[i] <- b
+  }
+  
+  # Mean temperature preference
+  
+  # Extract mean temperature preference from FishBase
+  b <- as.numeric(NutrientBase[e, "TempPrefMean"])
+  
+  # Save to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$TempPrefMean_degC[i] <- b
+  }
+  
+  # Maximum temperature preference
+  
+  # Extract max temperature preference from FishBase
+  b <- as.numeric(NutrientBase[e, "TempPrefMax"])
+  
+  # Save to SpeciesData
+  if(length(b) > 0){
+    SpeciesData$TempPrefMax_degC[i] <- b
   }
   
 }
@@ -1034,9 +1071,6 @@ for(i in 1:nrow(SpeciesData)){
   }
   
 }
-
-# Extract nutrient estimates from FishBase
-NutrientBase <- estimate(SpeciesData$Species)
 
 # Fill in nutrient estimates
 for(i in 1:nrow(SpeciesData)){
