@@ -32,7 +32,9 @@
 ##    1.10 Date Column
 ##    1.11 Trip ID Column
 ##    1.12 Trim and Rename Columns
-##    1.13 Normalization
+##    1.13 Catch Data Normalization
+##    1.14 Species Data Normalization
+##    1.15 Trip Data Normalization
 
 
 # First, clean the environment
@@ -763,7 +765,7 @@ write.csv(TrapData, file = "01_CleanData_Temp/TrapData_Cleaned.csv", row.names =
 
 
 
-##### 1.13 Normalization ####
+##### 1.13 Catch Data Normalization #####
 
 # "Normalize" the database by creating separate tables for each level of observation.
 #   This section will also add data that will be needed for later analyses.
@@ -773,13 +775,20 @@ CatchData <- TrapData[, c("TripID", "TrapType", "TrapLocation",
   "SoakTime_Days", "GapSize_cm", "Species",
   "FD_HC", "Length_cm", "Depth_m", "Weight_g")]
 
-# Extract data from FishBase
-SpeciesFishBase <- species(unique(CatchData$Species))
-EcologyFishBase <- ecology(unique(CatchData$Species))
-
 # Save the catch data table
 write.csv(CatchData, file = "01_CleanData_Out/CatchData_GatedTraps_Galligan.csv",
   row.names = FALSE)
+
+
+
+
+##### 1.14 Species Data Normalization #####
+
+# Create a table of data relevant to each species.
+
+# Extract data from FishBase
+SpeciesFishBase <- species(unique(CatchData$Species))
+EcologyFishBase <- ecology(unique(CatchData$Species))
 
 # Construct a table for species-level data
 SpeciesData <- as.data.frame(unique(TrapData$Species))
@@ -1068,6 +1077,13 @@ for(i in 1:nrow(SpeciesData)){
 # Save SpeciesData
 write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv",
   row.names = FALSE)
+
+
+
+
+##### 1.15 Trip Data Normalization #####
+
+# Prepare a table of data relevant to each trip
 
 # Prepare a TripData table
 TripData <- as.data.frame(unique(TrapData$TripID))
