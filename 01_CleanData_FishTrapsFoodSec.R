@@ -1353,7 +1353,7 @@ for(i in 1:nrow(TripData)){
   # Add species data columns to temporary data frame x
   x$Price_KSH <- NA
   x$TrophLevel <- NA
-  x$TempPrefMean_degC <- NA
+  x$WeightedTemp <- NA
   x$Ca <- NA
   x$Fe <- NA
   x$O3 <- NA
@@ -1374,8 +1374,8 @@ for(i in 1:nrow(TripData)){
     # TrophLevel
     x$TrophLevel[j] <- SpeciesData$TrophLevel[a]
     
-    # MeanTempPref_degC
-    x$TempPrefMean_degC[j] <- SpeciesData$TempPrefMean_degC[a]
+    # Weighted Temp
+    x$WeightedTemp[j] <- SpeciesData$TempPrefMean_degC[a] * x$Weight_g[j]
     
     # Calcium
     x$Ca[j] <- SpeciesData$Calcium_mgPer100g[a] * (x$Weight_g[j] / 100)
@@ -1408,27 +1408,9 @@ for(i in 1:nrow(TripData)){
   # Mean Trophic Level
   TripData$MeanTrophLevel[i] <- mean(x$TrophLevel, na.rm = TRUE)
 
-  
-  
-  
-  
-####################################### WIP #################    
   # Mean temperature of the catch
-  for(j in 1:nrow(x)){
-    
-    # Extract temperature preference for species j
-    a <- x$TempPrefMean_degC[j]
-    
-    # Extract weight for individual j
-    b <- x$Weight_g[j]
-    
-    # Extract total weight for this trip
-    c <- TripData$TotalCatch_g[i]
-    
-    
-    
-  }
-#########################################################  
+  TripData$MTC_degC[i] <- sum(x$WeightedTemp, na.rm = TRUE) / sum(x$Weight_g, na.rm = TRUE)
+  
   # Total Calcium
   TripData$TotalCa_mg[i] <- sum(x$Ca, na.rm = TRUE)
   
