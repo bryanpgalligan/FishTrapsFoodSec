@@ -3,6 +3,7 @@
 
 ##  Bryan P. Galligan, S.J. (JENA)
 ##  Austin Humphries (URI)
+##  Maxwell Kodia Azali (WCS)
 ##  Tim McClanahan (WCS)
 
 ## Project TOC:
@@ -14,6 +15,12 @@
 ## Script Title:
 ##    03 Calculating Functional Diversity Indices
 
+## Last update: 15 Apr 22
+
+# This script adds the total count of unique functional entities (FECount), a measure of
+# functional richness based on total functional volume (FRic), a measure of functional
+# evenness (FEve), and a measure of functional diversity (FDiv) to TripData.
+
 ## Script TOC:
 ##    3.1 Load packages and data
 ##    3.2 Enter new data
@@ -22,12 +29,6 @@
 ##    3.5 Test correlations between functional axes and traits
 ##    3.6 Plot functional space
 ##    3.7 Compute and plot functional diversity indices
-
-## Last update: 15 Apr 22
-
-# This script adds the total count of unique functional entities (FECount), a measure of
-# functional richness based on total functional volume (FRic), a measure of functional
-# evenness (FEve), and a measure of functional diversity (FDiv) to TripData.
 
 
 

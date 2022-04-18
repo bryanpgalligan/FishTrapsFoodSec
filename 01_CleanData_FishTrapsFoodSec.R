@@ -3,6 +3,7 @@
 
 ##  Bryan P. Galligan, S.J. (JENA)
 ##  Austin Humphries (URI)
+##  Maxwell Kodia Azali (WCS)
 ##  Tim McClanahan (WCS)
 
 ## Project TOC:
@@ -14,12 +15,9 @@
 ## Script Title:
 ##    01 Data Cleaning
 
-## Last update: 15 Apr 22
+## Last update: 18 Apr 22
 
-
-
-
-## Table of Contents
+## Script TOC:
 ##    1.1 Load Packages and Data
 ##    1.2 "TRAP NO." Column
 ##    1.3 "Trap Type" & "Gap Size (Cms)" Columns
@@ -35,6 +33,8 @@
 ##    1.13 Catch Data Normalization
 ##    1.14 Species Data Normalization
 ##    1.15 Trip Data Normalization
+
+
 
 
 # First, clean the environment

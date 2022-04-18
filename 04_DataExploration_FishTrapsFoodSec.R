@@ -3,6 +3,7 @@
 
 ##  Bryan P. Galligan, S.J. (JENA)
 ##  Austin Humphries (URI)
+##  Maxwell Kodia Azali (WCS)
 ##  Tim McClanahan (WCS)
 
 ## Project TOC:
@@ -14,13 +15,13 @@
 ## Script Title:
 ##    04 Data Exploration
 
-## Script TOC:
-##    4.1 Load packages and data
-
 ## Last update: 18 Apr 22
 
 # This script explores the data to avoid common statistical errors, following the procedures
 # outlined by Zuur et al. (2010).
+
+## Script TOC:
+##    4.1 Load packages and data
 
 
 

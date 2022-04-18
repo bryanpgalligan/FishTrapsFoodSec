@@ -3,6 +3,7 @@
 
 ##  Bryan P. Galligan, S.J. (JENA)
 ##  Austin Humphries (URI)
+##  Maxwell Kodia Azali (WCS)
 ##  Tim McClanahan (WCS)
 
 ## Project TOC:
@@ -21,6 +22,9 @@
 #   restart R. Then install the old version of fishbase as below. You can then run this code. Once
 #   you've run the code, detach rfishbase, update the package back to v. 4 or higher, and restart
 #   R again.
+
+
+
 
 # Install old version of fishbase
 remotes::install_github( 'ropensci/rfishbase@fb-21.06', force=TRUE )
