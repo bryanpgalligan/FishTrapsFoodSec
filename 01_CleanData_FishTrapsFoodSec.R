@@ -1318,7 +1318,7 @@ for(i in 1:nrow(TripData)){
   }
   
   # ScraperMass_g
-  y <- subset(x, x$FunGr_Diet == "Scraper")
+  y <- subset(x, x$FunGr_Diet == "Scrapers/Excavators")
   if(nrow(y) > 0){
     TripData$ScraperMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
@@ -1334,7 +1334,7 @@ for(i in 1:nrow(TripData)){
   }
   
   # PredatorMass_g
-  y <- subset(x, x$FunGr_Diet == "Predator")
+  y <- subset(x, x$FunGr_Diet == "Predator" & x$FunGr_Diet == "Piscivore")
   if(nrow(y) > 0){
     TripData$PredatorMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{
