@@ -176,6 +176,10 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = ZnConc_ugPer100g, color = T
   geom_density(alpha = 0.4)
 
 
+# Save a copy of TripData ready for analysis
+write.csv(TripData_NoOutliers, "04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv",
+  row.names = FALSE)
+
 
 
 
