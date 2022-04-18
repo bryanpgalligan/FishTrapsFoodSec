@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <style type="text/css">
 .main-container {
   max-width: 940px;
@@ -80,6 +81,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -175,47 +179,27 @@ pre code {
 <ul>
 <li><p>Bryan P. Galligan, S.J. (<a href="mailto:bgalligan@jesuits.org">bgalligan@jesuits.org</a>)</p></li>
 <li><p>Austin Humphries (<a href="mailto:humphries@uri.edu">humphries@uri.edu</a>)</p></li>
+<li><p>Maxwell Kodia Azali (<a href="mailto:mkodia@wcs.org">mkodia@wcs.org</a>)</p></li>
 <li><p>Tim McClanahan (<a href="mailto:tmcclanahan@wcs.org">tmcclanahan@wcs.org</a>)</p></li>
 </ul>
 </div>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This repository is the data management and analysis workflow of a research project investigating the ecosystem and food security benefits of adding escape gaps to traditional African fish traps. It includes 10 years of landings data from artisanal fishers operating in the inshore waters of Kenya and Tanzania. Our hypotheses correspond to the FAO’s food security framework (Stability, Availability, Access, and Utilization) (FAO et al., 2021):</p>
-<ul>
-<li><p>Modified fish traps contribute to the <strong>stability</strong> of coastal East African food systems, enhancing coral reef resilience…</p>
-<ul>
-<li><p>…by generating less functionally diverse catches.</p></li>
-<li><p>…by catching fewer herbivorous fish.</p></li>
-</ul></li>
-<li><p>Modified fish traps contribute to the <strong>availability</strong> of food, enhancing stock status…</p>
-<ul>
-<li><p>…by catching lower proportions of immature individuals and individuals below optimum length.</p></li>
-<li><p>…but selectively target larger individuals and thus do not help maintain a population of mega-spawners.</p></li>
-</ul></li>
-<li><p>Modified fish traps increase <strong>access</strong> to food…</p>
-<ul>
-<li><p>…by catching as much or more fish and key micronutrients by mass as traditional traps.</p></li>
-<li><p>…by maintaining or increasing catch value in comparison to traditional traps.</p></li>
-</ul></li>
-<li><p>Modified traps could influence <strong>utilization</strong> of food…</p>
-<ul>
-<li><p>…by making it more expensive to retain enough catch to satisfy the micronutrient needs of a child under five.</p></li>
-<li><p>…by increasing or maintaining catch value after fishers retain enough catch to satisfy the micronutrient needs of a child under five.</p></li>
-</ul></li>
-</ul>
+<p>This repository is the data management and analysis workflow of a research project investigating the ecosystem and food security benefits and tradeoffs of adding escape gaps to traditional African fish traps. It includes 10 years of landings data from artisanal fishers operating in the inshore waters of Kenya and Tanzania.</p>
 </div>
 <div id="instructions" class="section level2">
 <h2>Instructions</h2>
 <p>R scripts should be run in numeric order, beginning with <code>01_CleanData_FishTrapsFoodSec.R</code>. Each script has two corresponding folders in the repository, one called <code>temp</code> and one called <code>out</code>. The <code>temp</code> folder contains temporary output files that are not needed for further analysis or reference. The <code>out</code> folder contains output files that will be used by subsequent scripts, kept for future reference, or formatted as data tables for publication.</p>
+<p>The R script <code>02_FishLife_FishTrapsFoodSec.R</code> retrieves estimated life history parameters for all species in the catch using Jim Thorson’s <code>FishLife</code> <a href="https://github.com/James-Thorson-NOAA/FishLife">package</a> (Thorson, 2020; Thorson et al., 2017). <strong>You must restart R twice while running this script</strong>, once after running the first line, which installs an older version of <code>rfishbase</code>, and once at the end of the script, which re-installs the newest version of <code>rfishbase</code>. This is necessary because <code>FishLife</code>is only compatible with earlier versions of <code>rfishbase</code>. These instructions are commented in the script itself.</p>
 </div>
 <div id="repository-files" class="section level2">
 <h2>Repository Files</h2>
 <table>
 <colgroup>
-<col width="32%" />
-<col width="40%" />
-<col width="4%" />
-<col width="23%" />
+<col width="31%" />
+<col width="34%" />
+<col width="3%" />
+<col width="29%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -234,21 +218,33 @@ pre code {
 </tr>
 <tr class="even">
 <td></td>
-<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv">CombinedTrapData_201 0_2019_Anonymized.csv</a></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv">CombinedTrapData_2010_2019_Anonymized.csv</a></td>
 <td>Spreadsheet</td>
 <td>WCS landings data</td>
 </tr>
 <tr class="odd">
 <td></td>
-<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx">FunctionalGroupKey_D ietBased_Condy2015. xlsx</a></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx">FunctionalGroupKey_DietBased_Condy2015.xlsx</a></td>
 <td>Spreadsheet</td>
 <td>A key developed for previous WCS studies assigning select species to diet-based functional groups</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_FishTrapsFoodSec.R">01_CleanData_FishTra psFoodSec.R</a></td>
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/Traits_MbaruEtAl2020.xls">Traits_MbaruEtAl2020.xls</a></td>
+<td>Spreadsheet</td>
+<td>A list of species with categorizations by functional trait, developed by Mbaru et al. (2020).</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/ValueByFamily.csv">ValueByFamily.csv</a></td>
+<td>Spreadsheet</td>
+<td>A list of fish families and their corresponding values in Kenya Shillings developed for previous WCS studies.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_FishTrapsFoodSec.R">01_CleanData_FishTrapsFoodSec.R</a></td>
 <td></td>
 <td>R Script</td>
-<td>Cleans the data from WCS and saves an edited and more compact version</td>
+<td>Cleans the data and saves an edited and more compact version. Produces three normalized output spreadsheets as found in <code>01_CleanData_Out</code>.</td>
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/01_CleanData_Out">01_CleanData_Out</a></td>
@@ -258,9 +254,21 @@ pre code {
 </tr>
 <tr class="even">
 <td></td>
-<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Out/TrapData_Cleaned.csv">TrapData_Cleaned.csv</a></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Out/CatchData_GatedTraps_Galligan.csv">CatchData_GatedTraps_Galligan.csv</a></td>
 <td>Spreadsheet</td>
-<td>Cleaned version of landings data</td>
+<td>Contains landings data; each row is an individual fish</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv">SpeciesData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Data for each species in the catch</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Out/TripData_GatedTraps_Galligan.csv">TripData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Contains landings data; each row is one fishing trip</td>
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/01_CleanData_Temp">01_CleanData_Temp</a></td>
@@ -270,18 +278,132 @@ pre code {
 </tr>
 <tr class="even">
 <td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Temp/SuspiciousPrices.csv">SuspiciousPrices.csv</a></td>
+<td>Spreadsheet</td>
+<td>A list of price data from the original WCS spreadsheet that seemed suspicious. These prices have all been replaced.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Temp/TrapData_Cleaned.csv">TrapData_Cleaned.csv</a></td>
+<td>Spreadsheet</td>
+<td>A cleaned copy of the original WCS data sheet.</td>
+</tr>
+<tr class="even">
+<td></td>
 <td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/01_CleanData_Temp/Unique_Species.csv">Unique_Species.csv</a></td>
 <td>Spreadsheet</td>
 <td>A list of species found in the WCS landings data</td>
 </tr>
 <tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_FishTrapsFoodSec.R">02_FishLife_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Obtains estimates of life history parameters for all species using Jim Thorson’s <code>FishLife</code> package.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/02_FishLife_Out">02_FishLife_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains output files from eponymous R script</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_Out/CatchData_GatedTraps_Galligan.csv">CatchData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Updates catch data to include life history parameters</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv">SpeciesData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Updates species data to include life history parameters</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_Out/TripData_GatedTraps_Galligan.csv">TripData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Updates trip data to include life history parameters</td>
+</tr>
+<tr class="even">
+<td>02_FishLife_Temp</td>
+<td></td>
+<td>Folder</td>
+<td>Empty</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_FishTrapsFoodSec.R">03_FunctionalDiversity_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Workflow for the <code>mFD</code> package, which computes multidimensional functional diversity indices</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/03_FunctionalDiversity_Out">03_FunctionalDiversity_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains output files from eponymous R script</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_Out/FunctionalSpacesQuality.png">FunctionalSpacesQuality.png</a></td>
+<td>Figure</td>
+<td>Results of PCoA analysis determining the quality of functional spaces</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_Out/PositionSpeciesFunctionalAxes.png">PositionSpeciesFunctionalAxes.png</a></td>
+<td>Figure</td>
+<td>Plots functional entities along pairs of functional axes</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_Out/TraitsAndPCoAAxes.png">TraitsAndPCoAAxes.png</a></td>
+<td>Figure</td>
+<td>Plots relationships between traits and PCoA axes</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv">TripData_GatedTraps_Galligan.csv</a></td>
+<td>Spreadsheet</td>
+<td>Updates trip data with functional diversity measures</td>
+</tr>
+<tr class="odd">
+<td>03_FunctionalDiversity_Temp</td>
+<td></td>
+<td>Folder</td>
+<td>Empty</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/04_DataExploration_FishTrapsFoodSec.R">04_DataExploration_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Explores data following procedures of Zuur et al. (2010)</td>
+</tr>
+<tr class="odd">
+<td>04_DataExploration_Out</td>
+<td></td>
+<td>Folder</td>
+<td>Empty</td>
+</tr>
+<tr class="even">
+<td>04_DataExploration_Temp</td>
+<td></td>
+<td>Folder</td>
+<td>Empty</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive">Archive</a></td>
+<td></td>
+<td>Folder</td>
+<td>See below</td>
+</tr>
+<tr class="even">
 <td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/README.md">README.md</a></td>
 <td></td>
 <td>Markdown</td>
 <td>This document</td>
 </tr>
-<tr class="even">
-<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/RWorkflow_FishTrapsFoodSec.Rproj">RWorkflow_FishTrapsF oodSec.Rproj</a></td>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/RWorkflow_FishTrapsFoodSec.Rproj">RWorkflow_FishTrapsFoodSec.Rproj</a></td>
 <td></td>
 <td>RStudio Project</td>
 <td>Sets working directory, source documents, etc. in RStudio</td>
@@ -289,25 +411,291 @@ pre code {
 </tbody>
 </table>
 </div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<div id="trap-data" class="section level3">
-<h3>Trap Data</h3>
-<p><strong>Filepath</strong>: <code>01_CleanData_Out/TrapData_Cleaned.csv</code></p>
+<div id="archived-files" class="section level2">
+<h2>Archived Files</h2>
+<p>These files have been kept for posterity, but are not used in the current analysis. They are located in the <code>Archive</code> folder.</p>
+<table>
+<colgroup>
+<col width="29%" />
+<col width="37%" />
+<col width="2%" />
+<col width="30%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>File/Folder</strong></td>
+<td><strong>Enclosed File</strong></td>
+<td><strong>Type</strong></td>
+<td><strong>Notes</strong></td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_FishTrapsFoodSec.R">02_Stability_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Analysis of the stability pillar of the food security framework</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/02_Stability_Out">02_Stability_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains output files from the eponymous R script</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietCt_ModelComparison.csv">CatchComposition_DietCt_ModelComparison.csv</a></td>
+<td>Spreadsheet</td>
+<td>Results of model comparisons for an ANOVA testing effect of trap type on catch composition (no. of fish, categorized by diet-based functional groups)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietCt_Results.csv">CatchComposition_DietCt_Results.csv</a></td>
+<td>Spreadsheet</td>
+<td>Results of ANOVA testing effect of trap type on catch composition (no. of fish, categorized by diet-based functional groups)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietMass_ModelComparison.csv">CatchComposition_DietMass_ModelComparison.csv</a></td>
+<td>Spreadsheet</td>
+<td>Results of model comparisons for an ANOVA testing effect of trap type on catch composition (biomass ratio, categorized by diet-based functional groups)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietMass_Results.csv">CatchComposition_DietMass_Results.csv</a></td>
+<td>Spreadsheet</td>
+<td>Results of ANOVA testing the effect of trap type on catch composition (biomass ratio, categorized by diet-based functional groups)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_FunGrDiet_Data.csv">CatchComposition_FunGrDiet_Data.csv</a></td>
+<td>Spreadsheet</td>
+<td>Datasheet used to analyze catch composition by diet-based functional group</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/02_Stability_Temp">02_Stability_Temp</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains temporary output files from the eponymous R script</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/BrowserMassQQ.jpeg">BrowserMassQQ.jpeg</a></td>
+<td>Image</td>
+<td>QQ plot of residuals for catch composition of browsers by mass</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/GrazerMassQQ.jpeg">GrazerMassQQ.jpeg</a></td>
+<td>Image</td>
+<td>QQ plot of residuals for catch composition of grazers by mass</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/ScraperMassQQ.jpeg">ScraperMassQQ.jpeg</a></td>
+<td>Image</td>
+<td>QQ plot of residuals for catch composition of scrapers by mass</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_FishTrapsFoodSec.R">03_Availability_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Analysis of the availability pillar of the food security framework</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/03_Availability_Out">03_Availability_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains output files from the eponymous R script</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthAOV_ModelComparison.csv">LengthAOV_ModelComparison.csv</a></td>
+<td>Spreadsheet</td>
+<td>Comparison of four ANOVAs for finding effect of trap type on length</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthAOV_Results.csv">LengthAOV_Results.csv</a></td>
+<td>Spreadsheet</td>
+<td>Effect of trap type on length ANOVA results</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthData.csv">LengthData.csv</a></td>
+<td>Spreadsheet</td>
+<td>A subset of the Trap Data spreadsheet that only includes entries with length data</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/03_Availability_Temp">03_Availability_Temp</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains temporary output files from the eponymous R script</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Temp/LengthQQ.jpeg">LengthQQ.jpeg</a></td>
+<td>Image</td>
+<td>QQ plot of residuals for length distribution by trap type</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_FishTrapsFoodSec.R">04_Access_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Analysis of the access pillar of the food security framework</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/04_Access_Out">04_Access_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains output files from the eponymous R script</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUEBySite_pvalues.csv">CPUEBySite_pvalues.csv</a></td>
+<td>Spreadsheet</td>
+<td>Contains p-values for ANOVAs of effect of trap type on CPUE at each site</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_Data.csv">CPUE_Data.csv</a></td>
+<td>Spreadsheet</td>
+<td>Data for CPUE by trip for trips that only used one trap type (gated or traditional)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_ModelComparison.csv">CPUE_ModelComparison.csv</a></td>
+<td>Spreadsheet</td>
+<td>Comparison of four ANOVAs for finding effect of trap type on CPUE</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_Results.csv">CPUE_Results.csv</a></td>
+<td>Spreadsheet</td>
+<td>Effect of trap type on CPUE (ANOVA results)</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/04_Access_Temp">04_Access_Temp</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains temporary output files from the eponymous R script</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Temp/CPUEQQ.jpeg">CPUEQQ.jpeg</a></td>
+<td>Image</td>
+<td>QQ plot of residuals for ANOVA of CPUE by trap type</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_FishTrapsFoodSec.R">06_TabsFigs_FishTrapsFoodSec.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Assembles tables and figures</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/06_TabsFigs_Out">06_TabsFigs_Out</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains figures assembled so far</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg">BrowsersScrapersGrazers.jpeg</a></td>
+<td>Image</td>
+<td>Effect of trap type on catch composition (ratio of browsers, scrapers, and grazers by mass)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/CPUE.jpeg">CPUE.jpeg</a></td>
+<td>Image</td>
+<td>Effect of trap type on CPUE</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/KeyHerbivores.jpeg">KeyHerbivores.jpeg</a></td>
+<td>Image</td>
+<td>Effect of trap type on catch composition (ratio of key herbivores by mass)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/Length.jpeg">Length.jpeg</a></td>
+<td>Image</td>
+<td>Effect of trap type on length</td>
+</tr>
+<tr class="even">
+<td>06_TabsFigs_Temp</td>
+<td></td>
+<td>Folder</td>
+<td>Empty</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots.R">ExploratoryPlots.R</a></td>
+<td></td>
+<td>R Script</td>
+<td>Contains code to generate some exploratory plots of the data</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/ExploratoryPlots">ExploratoryPlots</a></td>
+<td></td>
+<td>Folder</td>
+<td>Contains exploratory plots of the data</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/BrowserMassRatio.jpeg">BrowserMassRatio.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of catch composition of browsers (ratio by mass) across sites and trap types</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/CPUE.jpeg">CPUE.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of CPUE across sites and trap types</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/GrazerMassRatio.jpeg">GrazerMassRatio.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of catch composition of grazers (ratio by mass) across sites and trap types</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/KeyHerbivoreMassRatio.jpeg">KeyHerbivoreMassRatio.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of catch composition of key herbivores (ratio by mass) across sites and trap types</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/LengthDistributions.jpeg">LengthDistributions.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of fish lengths across sites and trap types</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><a href="https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/ScraperMassRatio.jpeg">ScraperMassRatio.jpeg</a></td>
+<td>Figure</td>
+<td>Density plots of catch composition of scrapers (ratio by mass) across sites and trap types</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="processed-data" class="section level2">
+<h2>Processed Data</h2>
 <p><strong>Date</strong> of data collection: 2010-2019</p>
 <p>Geographic <strong>location</strong> of data collection: southern coast of Kenya, northern coast of Tanzania</p>
 <p>Information about <strong>funding</strong> sources that supported the collection of the data: data were collected by Wildlife Conservation Society, Mombasa, Kenya</p>
 <p><strong>Restrictions</strong> placed on the data: Please contact Tim McClanahan before using data.</p>
 <p>Portions of this data have been <strong>used by</strong> Condy et al. (2015), Gomes et al. (2014), Mbaru et al. (2020), and Mbaru and McClanahan (2013).</p>
-<p>Number of <strong>variables</strong>: 42</p>
-<p>Number of <strong>observations</strong>: 27793</p>
-<p><strong>Missing</strong> <strong>data</strong> code: <code>NA</code></p>
+<div id="trip-data" class="section level3">
+<h3>Trip Data</h3>
+<p><strong>Filepath</strong>: <code>03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv</code></p>
+<p>Number of <strong>variables</strong>: 67</p>
+<p>Number of <strong>observations</strong>: 2734</p>
+<p><strong>Missing data</strong> code: <code>NA</code></p>
 <div id="variable-list" class="section level4">
 <h4>Variable List</h4>
 <table>
 <colgroup>
-<col width="12%" />
-<col width="87%" />
+<col width="17%" />
+<col width="82%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -317,128 +705,540 @@ pre code {
 </thead>
 <tbody>
 <tr class="odd">
+<td>TripID</td>
+<td>Alphanumeric identifier for each fishing trip</td>
+</tr>
+<tr class="even">
 <td>Date</td>
-<td>Sampling date (d)</td>
-</tr>
-<tr class="even">
-<td>Month</td>
-<td>Sampling date (m)</td>
+<td>Sampling date</td>
 </tr>
 <tr class="odd">
-<td>Year</td>
-<td>Sampling date (yyyy)</td>
-</tr>
-<tr class="even">
 <td>Country</td>
-<td>Sampling location</td>
+<td>Sampling location (country)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Site</td>
 <td>Sampling location (landing site)</td>
 </tr>
-<tr class="even">
-<td>Data collector</td>
-<td>Name of researcher</td>
-</tr>
 <tr class="odd">
-<td>TrapType</td>
-<td>Traditional or gated</td>
+<td>Latitude</td>
+<td>Sampling location (decimal degrees)</td>
 </tr>
 <tr class="even">
-<td>GateCode</td>
-<td>Traditional (T) or gated (G) plus gap size if applicable (i.e., G2 = 2 cm gated trap)</td>
+<td>Longitude</td>
+<td>Sampling location (decimal degrees)</td>
 </tr>
 <tr class="odd">
-<td>TrapLocation</td>
-<td>Fishing location (different from landing site)</td>
-</tr>
-<tr class="even">
-<td>SoakTime_Days</td>
-<td>Days between fishing trip and previous set</td>
-</tr>
-<tr class="odd">
-<td>GapSize_cm</td>
-<td>Size of escape gap</td>
+<td>Observer</td>
+<td>Researcher responsible for data</td>
 </tr>
 <tr class="even">
 <td>Fisher</td>
-<td>Unique alphanumeric code to identify each fisher or combination of fishers</td>
+<td>Alphanumeric identifier for each fisher or crew (combination of fishers)</td>
 </tr>
 <tr class="odd">
 <td>TotalCrew</td>
-<td>Total number of fishers participating in trip</td>
+<td>Size of fishing crew</td>
 </tr>
 <tr class="even">
 <td>TrapsOwned</td>
-<td>Number of traps owned by this fisher</td>
+<td>Number of traps owned by this fisher/crew</td>
 </tr>
 <tr class="odd">
 <td>TrapsFished</td>
 <td>Number of traps fished on this trip</td>
 </tr>
 <tr class="even">
-<td>TotalCatch_g</td>
-<td>Total catch for the trip in g</td>
+<td>TrapLocation</td>
+<td>Fishing location</td>
 </tr>
 <tr class="odd">
-<td>KiswahiliName</td>
-<td>Common name of fish species in Kiswahili</td>
+<td>Depth_m</td>
+<td>Depth of trap deployment (meters)</td>
+</tr>
+<tr class="even">
+<td>SoakTime_Days</td>
+<td>Duration of trap deployment (days)</td>
+</tr>
+<tr class="odd">
+<td>TrapType</td>
+<td>Type of trap used on this fishing trip (traditional, gated, or multiple)</td>
+</tr>
+<tr class="even">
+<td>GapSize_cm</td>
+<td>Size of escape gap on traps used (centimeters or multiple)</td>
+</tr>
+<tr class="odd">
+<td>B.undulatus</td>
+<td>Was <em>Balistapus undulatus</em> present in the catch? (yes/no)</td>
+</tr>
+<tr class="even">
+<td>BrowserMass_g</td>
+<td>Mass of browsing herbivores in the catch (grams)</td>
+</tr>
+<tr class="odd">
+<td>BrowserMassRatio</td>
+<td>Proportion of browsers in the catch by mass</td>
+</tr>
+<tr class="even">
+<td>ScraperMass_g</td>
+<td>Mass of scraping herbivores in the catch (grams)</td>
+</tr>
+<tr class="odd">
+<td>ScraperMassRatio</td>
+<td>Proportion of scrapers in the catch by mass</td>
+</tr>
+<tr class="even">
+<td>GrazerMass_g</td>
+<td>Mass of grazers in the catch (grams)</td>
+</tr>
+<tr class="odd">
+<td>GrazerMassRatio</td>
+<td>Proportion of grazers in the catch by mass</td>
+</tr>
+<tr class="even">
+<td>PredatorMass_g</td>
+<td>Mass of piscivorous predators in the catch (grams)</td>
+</tr>
+<tr class="odd">
+<td>PredatorMassRatio</td>
+<td>Proportion of piscivorous predators in the catch by mass</td>
+</tr>
+<tr class="even">
+<td>TotalCatch_g</td>
+<td>Total catch (grams)</td>
+</tr>
+<tr class="odd">
+<td>LowNoCatch</td>
+<td>Was the catch &lt; 1 kg? (LowNoCatch / Catch)</td>
+</tr>
+<tr class="even">
+<td>CPUE_kgPerTrap</td>
+<td>Catch per unit effort (kilograms per trap)</td>
+</tr>
+<tr class="odd">
+<td>CPUE_DistFromMean</td>
+<td>Catch stability (relative distance of CPUE from mean CPUE for each combination of site and trap type)</td>
+</tr>
+<tr class="even">
+<td>TotalValue_KSH</td>
+<td>Value of the catch (Kenya Shillings)</td>
+</tr>
+<tr class="odd">
+<td>ValuePUE</td>
+<td>Value per unit effort (Kenya Shillings per trap)</td>
+</tr>
+<tr class="even">
+<td>MeanLLmat</td>
+<td>Mean ratio of length to length at first maturity</td>
+</tr>
+<tr class="odd">
+<td>MeanTrophLevel</td>
+<td>Mean trophic level</td>
+</tr>
+<tr class="even">
+<td>MeanVulnerability</td>
+<td>Mean species vulnerability (0-100)</td>
+</tr>
+<tr class="odd">
+<td>MTC_degC</td>
+<td>Mean temperature of the catch (degrees Celsius)</td>
+</tr>
+<tr class="even">
+<td>FECount</td>
+<td>Functional richness (count of unique functional entities in the catch)</td>
+</tr>
+<tr class="odd">
+<td>FRic</td>
+<td>Functional richness (proportion of hull volume)</td>
+</tr>
+<tr class="even">
+<td>FEve</td>
+<td>Functional evenness</td>
+</tr>
+<tr class="odd">
+<td>FDiv</td>
+<td>Functional diversity</td>
+</tr>
+<tr class="even">
+<td>TotalCa_mg</td>
+<td>Total calcium (milligrams)</td>
+</tr>
+<tr class="odd">
+<td>CaPUE</td>
+<td>Calcium per unit effort (milligrams per trap)</td>
+</tr>
+<tr class="even">
+<td>CaConc_mgPer100g</td>
+<td>Calcium concentration (milligrams per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>CaPrice_KSHPermg</td>
+<td>Value of calcium (Kenya Shillings per milligram)</td>
+</tr>
+<tr class="even">
+<td>TotalFe_mg</td>
+<td>Total iron (milligrams)</td>
+</tr>
+<tr class="odd">
+<td>FePUE</td>
+<td>Iron per unit effort (milligrams per trap)</td>
+</tr>
+<tr class="even">
+<td>FeConc_mgPer100g</td>
+<td>Iron concentration (milligrams per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>FePrice_KSHPermg</td>
+<td>Value of iron (Kenya Shillings per milligram)</td>
+</tr>
+<tr class="even">
+<td>TotalOmega3_g</td>
+<td>Total Omega-3 polyunsaturated fatty acids (grams)</td>
+</tr>
+<tr class="odd">
+<td>Omega3PUE</td>
+<td>Omega-3 per unit effort (grams per trap)</td>
+</tr>
+<tr class="even">
+<td>Omega3Conc_gPer100g</td>
+<td>Omega-3 concentration (grams per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>Omega3Price_KSHPerg</td>
+<td>Value of omega-3 (Kenya Shillings per gram)</td>
+</tr>
+<tr class="even">
+<td>TotalProtein_g</td>
+<td>Total protein (grams)</td>
+</tr>
+<tr class="odd">
+<td>ProteinPUE</td>
+<td>Protein per unit effort (grams per trap)</td>
+</tr>
+<tr class="even">
+<td>ProteinConc_gPer100g</td>
+<td>Protein concentration (grams per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>ProteinPrice_KSHPerg</td>
+<td>Value of protein (Kenya Shillings per gram)</td>
+</tr>
+<tr class="even">
+<td>TotalVA_ug</td>
+<td>Total vitamin A (micrograms)</td>
+</tr>
+<tr class="odd">
+<td>VAPUE</td>
+<td>Vitamin A per unit effort (micrograms per trap)</td>
+</tr>
+<tr class="even">
+<td>VAConc_ugPer100g</td>
+<td>Vitamin A concentration (micrograms per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>VAPrice_KSHPerug</td>
+<td>Value of vitamin A (Kenya Shillings per microgram)</td>
+</tr>
+<tr class="even">
+<td>TotalSe_ug</td>
+<td>Total selenium (micrograms)</td>
+</tr>
+<tr class="odd">
+<td>SePUE</td>
+<td>Selenium per unit effort (micrograms per trap)</td>
+</tr>
+<tr class="even">
+<td>SeConc_ugPer100g</td>
+<td>Selenium concentration (micrograms per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>SePrice_KSHPerug</td>
+<td>Value of selenium (Kenya Shillings per microgram)</td>
+</tr>
+<tr class="even">
+<td>TotalZn_ug</td>
+<td>Total zinc (micrograms)</td>
+</tr>
+<tr class="odd">
+<td>ZnPUE</td>
+<td>Zinc per unit effort (micrograms per trap)</td>
+</tr>
+<tr class="even">
+<td>ZnConc_ugPer100g</td>
+<td>Zinc concentration (micrograms per 100 grams)</td>
+</tr>
+<tr class="odd">
+<td>ZnPrice_KSHPerug</td>
+<td>Value of zinc (Kenya Shillings per microgram)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="catch-data" class="section level3">
+<h3>Catch Data</h3>
+<p><strong>Filepath</strong>: <code>02_FishLife_Out/CatchData_GatedTraps_Galligan.csv</code></p>
+<p>Number of <strong>variables</strong>: 11</p>
+<p>Number of <strong>observations</strong>: 25789</p>
+<p><strong>Missing data</strong> code: <code>NA</code></p>
+<div id="variable-list-1" class="section level4">
+<h4>Variable List</h4>
+<table>
+<colgroup>
+<col width="16%" />
+<col width="83%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TripID</td>
+<td>Alphanumeric identifier for each fishing trip</td>
+</tr>
+<tr class="even">
+<td>TrapType</td>
+<td>Type of fish trap (gated / traditional)</td>
+</tr>
+<tr class="odd">
+<td>TrapLocation</td>
+<td>Fishing location</td>
+</tr>
+<tr class="even">
+<td>SoakTime_Days</td>
+<td>Duration of trap deployment (days)</td>
+</tr>
+<tr class="odd">
+<td>GapSize_cm</td>
+<td>Size of escape gap on traps used (centimeters)</td>
+</tr>
+<tr class="even">
+<td>Species</td>
+<td>Species of fish caught (scientific name)</td>
+</tr>
+<tr class="odd">
+<td>FD_HC</td>
+<td>Is this fish destined for a fish dealer (FD) or household consumption (HC)?</td>
+</tr>
+<tr class="even">
+<td>Length_cm</td>
+<td>Standard length of fish, from tip of snout to last vertebrae (centimeters)</td>
+</tr>
+<tr class="odd">
+<td>Depth_m</td>
+<td>Depth of trap deployment (meters)</td>
+</tr>
+<tr class="even">
+<td>Weight_g</td>
+<td>Weight (grams)</td>
+</tr>
+<tr class="odd">
+<td>LLmat</td>
+<td>Ratio of length to length at first maturity (Lmat)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="species-data" class="section level3">
+<h3>Species Data</h3>
+<p><strong>Filepath</strong>: <code>02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv</code></p>
+<p>Number of <strong>variables</strong>: 44</p>
+<p>Number of <strong>observations</strong>: 215</p>
+<p><strong>Missing data</strong> code: <code>NA</code></p>
+<div id="variable-list-2" class="section level4">
+<h4>Variable List</h4>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Species</td>
+<td>Species (scientific name)</td>
 </tr>
 <tr class="even">
 <td>Family</td>
 <td>Taxonomic family</td>
 </tr>
 <tr class="odd">
-<td>Genus</td>
-<td>Taxonomic genus</td>
-</tr>
-<tr class="even">
-<td>Species</td>
-<td>Scientific name of species (<em>Genus species</em>)</td>
-</tr>
-<tr class="odd">
 <td>FishGroups</td>
-<td>Coarse groups for species (i.e., Rabbitfishes)</td>
+<td>Coarse fish groupings</td>
 </tr>
 <tr class="even">
 <td>EnglishName</td>
-<td>Common name of fish species in English</td>
+<td>Species (common name in English)</td>
 </tr>
 <tr class="odd">
+<td>KiswahiliName</td>
+<td>Species (common name in Kiswahili)</td>
+</tr>
+<tr class="even">
 <td>Bycatch</td>
-<td>Is this species considered bycatch? (Yes/No)</td>
-</tr>
-<tr class="even">
-<td>FD_HC</td>
-<td>According to the fisher, will this fish be sold to a fish dealer (FD) or kept for household consumption (HC)?</td>
+<td>Is this species considered bycatch? (yes/no)</td>
 </tr>
 <tr class="odd">
-<td>Length_cm</td>
-<td>Total length (cm)</td>
+<td>Price_KSHPerkg</td>
+<td>Price (Kenya Shillings per kilogram)</td>
 </tr>
 <tr class="even">
-<td>Depth_m</td>
-<td>Water depth where trap was set (m)</td>
-</tr>
-<tr class="odd">
-<td>Weight_g</td>
-<td>Mass of fish (g)</td>
-</tr>
-<tr class="even">
-<td>Price_KSH/kg</td>
-<td>Value of fish (Kenya shillings per kg)</td>
-</tr>
-<tr class="odd">
 <td>FunGr_Diet</td>
-<td>Categorization into coarse functional groups by species based on diet</td>
-</tr>
-<tr class="even">
-<td>Latitude</td>
-<td>Fishing location (decimal degrees)</td>
+<td>Coarse diet-based functional groups (Condy et al., 2015; FishBase)</td>
 </tr>
 <tr class="odd">
-<td>Longitude</td>
-<td>Fishing location (decimal degrees)</td>
+<td>TrophLevel</td>
+<td>Trophic level based on food items (FishBase)</td>
+</tr>
+<tr class="even">
+<td>SE_TrophLevel</td>
+<td>Standard error of trophic level estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Vulnerability</td>
+<td>Vulnerability (0-100) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Lmat_cm</td>
+<td>Length at first maturity (centimeters) (FishLife)</td>
+</tr>
+<tr class="odd">
+<td>Lopt_cm</td>
+<td>Optimum length (centimeters) (FishLife)</td>
+</tr>
+<tr class="even">
+<td>Linf_cm</td>
+<td>Asymptotic length (centimeters) (FishLife)</td>
+</tr>
+<tr class="odd">
+<td>SizeCategory</td>
+<td>Functional trait: size (Mbaru et al., 2020)</td>
+</tr>
+<tr class="even">
+<td>Diet</td>
+<td>Functional trait: diet (Mbaru et al., 2020)</td>
+</tr>
+<tr class="odd">
+<td>Mobility</td>
+<td>Functional trait: mobility (Mbaru et al., 2020)</td>
+</tr>
+<tr class="even">
+<td>Active</td>
+<td>Functional trait: period of activity (Mbaru et al., 2020)</td>
+</tr>
+<tr class="odd">
+<td>Schooling</td>
+<td>Functional trait: schooling behavior (Mbaru et al., 2020)</td>
+</tr>
+<tr class="even">
+<td>Position</td>
+<td>Functional trait: position in water column (Mbaru et al., 2020)</td>
+</tr>
+<tr class="odd">
+<td>TempPrefMin_degC</td>
+<td>Minimum temperature preference (degrees Celsius) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>TempPrefMean_degC</td>
+<td>Mean temperature preference (degrees Celsius) (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>TempPrefMax_degC</td>
+<td>Maximum temperature preference (degrees Celsius) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Calcium_mgPer100g</td>
+<td>Calcium concentration (milligrams per 100 grams) (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Calcium_L95</td>
+<td>Lower 95% confidence interval for calcium estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Calcium_U95</td>
+<td>Upper 95% confidence interval for calcium estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Iron_mgPer100g</td>
+<td>Iron concentration (milligrams per 100 grams) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Iron_L95</td>
+<td>Lower 95% confidence interval for iron estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Iron_U95</td>
+<td>Upper 95% confidence interval for iron estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Omega3_gPer100g</td>
+<td>Omega-3 polyunsaturated fatty acid concentration (grams per 100 grams) (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Omega3_L95</td>
+<td>Lower 95% confidence interval for omega-3 estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Omega3_U95</td>
+<td>Upper 95% confidence interval for omega-3 estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Protein_gPer100g</td>
+<td>Protein concentration (grams per 100 grams) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Protein_L95</td>
+<td>Lower 95% confidence interval for protein estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Protein_U95</td>
+<td>Upper 95% confidence interval for protein estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>VitamA_ugPer100g</td>
+<td>Vitamin A concentration (micrograms per 100 grams) (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>VitaminA_L95</td>
+<td>Lower 95% confidence interval for vitamin A estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>VitaminA_U95</td>
+<td>Upper 95% confidence interval for vitamin A estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Selenium_ugPer100g</td>
+<td>Selenium concentration (micrograms per 100 grams) (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Selenium_L95</td>
+<td>Lower 95% confidence interval for selenium estimate (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Selenium_U95</td>
+<td>Upper 95% confidence interval for selenium estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Zinc_ugPer100g</td>
+<td>Zinc concentration (micrograms per 100 grams) (FishBase)</td>
+</tr>
+<tr class="odd">
+<td>Zinc_L95</td>
+<td>Lower 95% confidence interval for zinc estimate (FishBase)</td>
+</tr>
+<tr class="even">
+<td>Zinc_U95</td>
+<td>Upper 95% confidence interval for zinc estimate (FishBase)</td>
 </tr>
 </tbody>
 </table>
@@ -452,14 +1252,23 @@ pre code {
 <li><p>RStudio 2021.09.1+372 “Ghost Orchid” Release (8b9ced188245155642d024aa3630363df611088a, 2021-11-08) for macOS</p></li>
 <li><p>The following R packages:</p>
 <ul>
+<li><p><code>AICcmodavg</code></p></li>
 <li><p><code>data.table</code></p></li>
 <li><p><code>dplyr</code></p></li>
+<li><p><code>FishLife</code></p></li>
+<li><p><code>ggplot2</code></p></li>
+<li><p><code>ggpubr</code></p></li>
 <li><p><code>magrittr</code></p></li>
+<li><p><code>mFD</code></p></li>
+<li><p><code>rcurl</code></p></li>
 <li><p><code>readr</code></p></li>
 <li><p><code>readxl</code></p></li>
 <li><p><code>rfishbase</code></p></li>
+<li><p><code>rstatix</code></p></li>
+<li><p><code>strex</code></p></li>
 <li><p><code>stringr</code></p></li>
 <li><p><code>taxize</code></p></li>
+<li><p><code>tidyr</code></p></li>
 </ul></li>
 </ul>
 </div>
@@ -476,6 +1285,9 @@ pre code {
 <p>Gomes, I., Erzini, K., &amp; McClanahan, T. R. (2014). Trap modification opens new gates to achieve sustainable coral reef fisheries: Escape gaps in African traditional trap fisheries. <em>Aquatic Conservation: Marine and Freshwater Ecosystems</em>, <em>24</em>(5), 680–695. <a href="https://doi.org/10.1002/aqc.2389" class="uri">https://doi.org/10.1002/aqc.2389</a></p>
 <p>Mbaru, E. K., Graham, N. A. J., McClanahan, T. R., &amp; Cinner, J. E. (2020). Functional traits illuminate the selective impacts of different fishing gears on coral reefs. <em>Journal of Applied Ecology</em>, <em>57</em>(2), 241–252. <a href="https://doi.org/10.1111/1365-2664.13547" class="uri">https://doi.org/10.1111/1365-2664.13547</a></p>
 <p>Mbaru, E. K., &amp; McClanahan, T. R. (2013). Escape gaps in African basket traps reduce bycatch while increasing body sizes and incomes in a heavily fished reef lagoon. <em>Fisheries Research</em>, <em>148</em>, 90–99. <a href="https://doi.org/10.1016/j.fishres.2013.08.011" class="uri">https://doi.org/10.1016/j.fishres.2013.08.011</a></p>
+<p>Thorson, J. T. (2020). Predicting recruitment density dependence and intrinsic growth rate for all fishes worldwide using a data-integrated life-history model. <em>Fish and Fisheries</em>, <em>21</em>(2), 237–251. <a href="https://doi.org/10.1111/faf.12427" class="uri">https://doi.org/10.1111/faf.12427</a></p>
+<p>Thorson, J. T., Munch, S. B., Cope, J. M., &amp; Gao, J. (2017). Predicting life history parameters for all fishes worldwide. <em>Ecological Applications</em>, <em>27</em>(8), 2262–2276. <a href="https://doi.org/10.1002/eap.1606" class="uri">https://doi.org/10.1002/eap.1606</a></p>
+<p>Zuur, A. F., Ieno, E. N., &amp; Elphick, C. S. (2010). A protocol for data exploration to avoid common statistical problems. <em>Methods in Ecology and Evolution</em>, <em>1</em>, 3–14. <a href="https://doi.org/10.1111/j.2041-210X.2009.00001.x" class="uri">https://doi.org/10.1111/j.2041-210X.2009.00001.x</a></p>
 </div>
 </div>
 
