@@ -47,15 +47,15 @@ CatchData <- read_csv("02_FishLife_Out/CatchData_GatedTraps_Galligan.csv")
 ggplot(data = TripData, mapping = aes(x = TrapType, y = CPUE_kgPerTrap)) +
   geom_boxplot()
 
-# Remove all trips with CPUE greater than 50 kg per trap
-TripData_NoOutliers <- subset(TripData, TripData$CPUE_kgPerTrap <= 50)
+# Remove all trips with CPUE greater than 30 kg per trap
+TripData_NoOutliers <- subset(TripData, TripData$CPUE_kgPerTrap <= 30)
 
 # CPUE with outliers removed
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CPUE_kgPerTrap)) +
   geom_boxplot()
 
 # MTC_degC
-ggplot(data = TripData, mapping = aes(x = TrapType, y = MTC_degC)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MTC_degC)) +
   geom_boxplot()
 
 # Additional variables
