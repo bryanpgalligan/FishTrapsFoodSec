@@ -1334,7 +1334,7 @@ for(i in 1:nrow(TripData)){
   }
   
   # PredatorMass_g
-  y <- subset(x, x$FunGr_Diet == "Predator" & x$FunGr_Diet == "Piscivore")
+  y <- subset(x, x$FunGr_Diet == "Predator" | x$FunGr_Diet == "Piscivore")
   if(nrow(y) > 0){
     TripData$PredatorMass_g[i] <- sum(y$TotalCatch_g, na.rm = TRUE)
   } else{

@@ -59,16 +59,16 @@ ggplot(data = TripData, mapping = aes(x = TrapType, y = MTC_degC)) +
   geom_boxplot()
 
 # Additional variables
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = BrowserMass_g)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = BrowserMassRatio)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ScraperMass_g)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ScraperMassRatio)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = GrazerMass_g)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = GrazerMassRatio)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = PredatorMass_g)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = PredatorMassRatio)) +
   geom_boxplot()
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ValuePUE)) +
