@@ -111,3 +111,71 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPUE)) +
   geom_boxplot()
 
 
+
+
+##### 4.3 Distributions #####
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = BrowserMassRatio, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = ScraperMassRatio, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = GrazerMassRatio, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = PredatorMassRatio, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = CPUE_kgPerTrap, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = CPUE_DistFromMean, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = ValuePUE, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = MeanLLmat, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = MeanTrophLevel, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = MeanVulnerability, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = MTC_degC, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = FECount, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = FDiv, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = CaConc_mgPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = FeConc_mgPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = Omega3Conc_gPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = ProteinConc_gPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = VAConc_ugPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = SeConc_ugPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = ZnConc_ugPer100g, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+
+
+
+
