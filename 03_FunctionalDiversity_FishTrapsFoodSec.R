@@ -14,11 +14,25 @@
 ## Script Title:
 ##    03 Calculating Functional Diversity Indices
 
+## Script TOC:
+##    3.1 Load packages and data
+##    3.2 Enter new data
+##    3.3 Computing distances between species
+##    3.4 Compute multidimensional functional spaces and assess quality
+##    3.5 Test correlations between functional axes and traits
+##    3.6 Plot functional space
+##    3.7 Compute and plot functional diversity indices
+
 ## Last update: 15 Apr 22
 
 # This script adds the total count of unique functional entities (FECount), a measure of
 # functional richness based on total functional volume (FRic), a measure of functional
 # evenness (FEve), and a measure of functional diversity (FDiv) to TripData.
+
+
+
+
+##### 3.1 Load packages and data #####
 
 # Load packages
 library(mFD)
@@ -33,7 +47,9 @@ CatchData <- read_csv("02_FishLife_Out/CatchData_GatedTraps_Galligan.csv")
 SpeciesData <- read_csv("02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv")
 
 
-##### 3.1 Enter data #####
+
+
+##### 3.2 Enter new data #####
 
 # Make a traits dataframe
 FishTraits <- select(SpeciesData, c("Species", "SizeCategory", "Diet", "Mobility", "Active", "Schooling", "Position"))
@@ -225,7 +241,7 @@ AssemblageSummary$"asb_sp_richn"   # Species richness per assemblage
 
 
 
-##### 3.2 Computing distances between species #####
+##### 3.3 Computing distances between species #####
 
 # Gather species into functional entities (FEs)
 FunctionalEntities <- sp.to.fe(
@@ -408,7 +424,7 @@ FunDist <- funct.dist(
 
 
 
-##### 3.3 Compute multidimensional functional spaces and assess quality #####
+##### 3.4 Compute multidimensional functional spaces and assess quality #####
 
 # Compute quality of functional spaces
 FunSpacesQuality <- quality.fspaces(
@@ -434,7 +450,7 @@ quality.fspaces.plot(
 
 
 
-##### 3.4 Test correlations between functional axes and traits #####
+##### 3.5 Test correlations between functional axes and traits #####
 
 # Test for correlations
 TraitAxisCorrelations <- traits.faxes.cor(
@@ -453,7 +469,7 @@ ggsave(filename = "03_FunctionalDiversity_Out/TraitsAndPCoAAxes.png", device = "
 
 
 
-##### 3.5 Plot functional space #####
+##### 3.6 Plot functional space #####
 
 funct.space.plot(
   sp_faxes_coord = FunSpacesQuality$details_fspaces$sp_pc_coord[, c("PC1", "PC2", "PC3", "PC4")]
@@ -466,7 +482,7 @@ ggsave(filename = "03_FunctionalDiversity_Out/PositionSpeciesFunctionalAxes.png"
 
 
 
-##### 3.6 Compute and plot functional diversity indices #####
+##### 3.7 Compute and plot functional diversity indices #####
 
 # Remove sites from FEAssemblages where the number of FEs is not greater than
 # number of axes used to compute the convex hull, meaning FRic cannot be computed using those

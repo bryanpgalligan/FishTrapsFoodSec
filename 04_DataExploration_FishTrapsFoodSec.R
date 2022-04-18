@@ -14,7 +14,25 @@
 ## Script Title:
 ##    04 Data Exploration
 
-## Last update: 15 Apr 22
+## Script TOC:
+##    4.1 Load packages and data
+
+## Last update: 18 Apr 22
 
 # This script explores the data to avoid common statistical errors, following the procedures
-# explained by Zuur et al. (2010).
+# outlined by Zuur et al. (2010).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -16,7 +16,6 @@
 
 ## Last update: 15 Apr 22
 
-
 # This code uses Jim Thorsen's FishLife package to provide the most accurate estimates available
 #   for life history parameters. Unfortunately, it relies on an old version of rfishbase. First,
 #   restart R. Then install the old version of fishbase as below. You can then run this code. Once
