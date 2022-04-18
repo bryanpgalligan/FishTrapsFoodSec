@@ -1417,8 +1417,8 @@ for(i in 1:nrow(TripData)){
   TripData$MeanVulnerability[i] <- mean(x$Vulnerability, na.rm = TRUE)
   
   # Mean temperature of the catch
-  y <- subset(x, !(is.na(x$WeightedTemp)))
-  TripData$MTC_degC[i] <- sum(y$WeightedTemp) / sum(y$Weight_g, na.rm = TRUE)
+  z <- subset(x, !(is.na(x$WeightedTemp)))
+  TripData$MTC_degC[i] <- sum(z$WeightedTemp, na.rm = TRUE) / sum(z$Weight_g, na.rm = TRUE)
   
   # Total Calcium
   TripData$TotalCa_mg[i] <- sum(x$Ca, na.rm = TRUE)
