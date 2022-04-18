@@ -58,12 +58,56 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CPUE_kgPerTra
 ggplot(data = TripData, mapping = aes(x = TrapType, y = MTC_degC)) +
   geom_boxplot()
 
-TripData_Cold <- subset(TripData, TripData$MTC_degC <= 20)
+# Additional variables
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = BrowserMass_g)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ScraperMass_g)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = GrazerMass_g)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = PredatorMass_g)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ValuePUE)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MeanLLmat)) +
+  geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MeanTrophLevel)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MeanVulnerability)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FECount)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FDiv)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaPUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FePUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3PUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinPUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAPUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SePUE)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPUE)) +
+  geom_boxplot()
 
 
