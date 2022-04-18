@@ -519,7 +519,7 @@ for (i in 1:nrow(TripData)){
   c <- paste(a, b, sep = ".")
   
   # Index of target row
-  d <- which(c %in% rownames(FDIndices_Results))
+  d <- which(rownames(FDIndices_Results) == c)
   
   # Go to next iteration if there is no match
   if (length(d) < 1) next
