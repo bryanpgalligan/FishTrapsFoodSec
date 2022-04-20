@@ -59,6 +59,9 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MTC_degC)) +
   geom_boxplot()
 
 # Additional variables
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = B.undulatus)) +
+  geom_boxplot()
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = BrowserMassRatio)) +
   geom_boxplot()
 
@@ -114,6 +117,9 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPUE)) +
 
 
 ##### 4.3 Distributions #####
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = B.undulatus, color = TrapType)) +
+  geom_density(alpha = 0.4)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = BrowserMassRatio, color = TrapType)) +
   geom_density(alpha = 0.4)
