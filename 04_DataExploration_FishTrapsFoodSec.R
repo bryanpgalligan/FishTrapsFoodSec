@@ -59,6 +59,9 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MTC_degC)) +
   geom_boxplot()
 
 # Additional variables
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CPUE_DistFromMean)) +
+  geom_boxplot()
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = B.undulatus)) +
   geom_boxplot()
 
@@ -89,28 +92,62 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = MeanVulnerabi
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FECount)) +
   geom_boxplot()
 
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FRic)) +
+  geom_boxplot()
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FEve)) +
+  geom_boxplot()
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FDiv)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaPUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaConc_mgPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 50))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaPrice_KSHPermg)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FePUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FeConc_mgPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 3))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FePrice_KSHPermg)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3PUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3Conc_gPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 0.5))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3Price_KSHPerg)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinPUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinConc_gPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 10))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinPrice_KSHPerg)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAPUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAConc_ugPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 100))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAPrice_KSHPerug)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SePUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SeConc_ugPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 100))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SePrice_KSHPerug)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPUE)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnConc_ugPer100g)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(0, 5))
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPrice_KSHPerug)) +
   geom_boxplot()
 
 
@@ -155,6 +192,12 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = MTC_degC, color = TrapType)
   geom_density(alpha = 0.4)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = FECount, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = FRic, color = TrapType)) +
+  geom_density(alpha = 0.4)
+
+ggplot(data = TripData_NoOutliers, mapping = aes(x = FEve, color = TrapType)) +
   geom_density(alpha = 0.4)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = FDiv, color = TrapType)) +
