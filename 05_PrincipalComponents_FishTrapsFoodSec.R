@@ -258,6 +258,9 @@ df.pca <- df.pca[complete.cases(df.pca),]
 # Run the PCA
 res.pca <- PCA(df.pca[, 3:18], ncp = 10, graph = TRUE)
 
+
+
+
 ##### 5.7 Graph PCA #####
 
 # Scree plot
@@ -273,19 +276,25 @@ food <- list(name = c("CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
 fviz_pca_biplot(res.pca,
   label= "var", repel = TRUE,
   ylim = c(-5, 10),
-  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.4,
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
   addEllipses = TRUE,
   select.var = conservation,
   title = "PCA Biplot - Conservation")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/ConservationBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 # Food security biplot
 fviz_pca_biplot(res.pca,
   label= "var", repel = TRUE,
   ylim = c(-5, 10),
-  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.4,
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
   addEllipses = TRUE,
   select.var = food,
   title = "PCA Biplot - Food Security")
 
-
+# Save plot
+ggsave("05_PrincipalComponents_Out/FoodBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
