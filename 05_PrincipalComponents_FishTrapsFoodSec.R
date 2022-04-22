@@ -298,3 +298,61 @@ fviz_pca_biplot(res.pca,
 # Save plot
 ggsave("05_PrincipalComponents_Out/FoodBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
+
+
+
+##### 5.8 Nutrients PCA #####
+
+# Subset only active and supplementary variables (columns) for the PCA
+df.nut.pca <- TripData[, c("Site", "TrapType",
+  "CaConc_mgPer100g", "CaPrice_KSHPermg",
+  "FeConc_mgPer100g", "FePrice_KSHPermg",
+  "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
+  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
+  "VAConc_ugPer100g", "VAPrice_KSHPerug",
+  "SeConc_ugPer100g", "SePrice_KSHPerug",
+  "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+  )]
+
+# Empty list of rows containing infinite values in df.famd
+inf <- as.numeric(c())
+
+# Fill in list of rows containing infinite values in df.famd
+for(i in 1:ncol(df.nut.pca)){
+  
+  # Vector of infinite values' indices (if any)
+  a <- which(is.infinite(df.nut.pca[,i]) == TRUE)
+  
+  # Add indices to the list
+  if(length(a) >= 1){
+    inf <- append(inf, a, after = length(inf))
+  }
+  
+}
+
+# Remove duplicate indices from inf
+inf <- unique(inf)
+
+# Remove infinite values from df.famd
+df.nut.pca <- df.nut.pca[-inf,]
+
+# Subset df.famd for complete cases only
+df.nut.pca <- df.nut.pca[complete.cases(df.nut.pca),]
+
+# Subset only gated and traditional traps
+df.nut.pca <- subset(df.nut.pca, df.nut.pca$TrapType != "Multiple")
+
+# Run the PCA
+res.nut.pca <- PCA(df.nut.pca[, 3:16], ncp = 5, graph = TRUE)
+
+# Scree plot
+fviz_eig(res.nut.pca)
+
+# Nutrients biplot
+fviz_pca_biplot(res.nut.pca,
+  label= "var", repel = TRUE,
+  ylim = c(-5, 10),
+  col.ind = df.nut.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  title = "PCA Biplot - Nutrients")
