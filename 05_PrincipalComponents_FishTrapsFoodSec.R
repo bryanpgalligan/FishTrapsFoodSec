@@ -211,12 +211,81 @@ fviz_famd_ind(res.famd, axes = c(1,2),
   mean.point = FALSE # remove mean point for group
   )
 
-fviz_famd()
 
 
+##### 5.6 Run PCA #####
 
+# Subset only active and supplementary variables (columns) for the PCA
+df.pca <- TripData[, c("Site", "TrapType",
+  "ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
+  "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
+  "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
+  "FRic", "FEve", "FDiv",
+  "CaConc_mgPer100g", "CaPrice_KSHPermg" #,
+  # "FeConc_mgPer100g", "FePrice_KSHPermg",
+  # "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
+  # "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
+  # "VAConc_ugPer100g", "VAPrice_KSHPerug",
+  # "SeConc_ugPer100g", "SePrice_KSHPerug",
+  # "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+  )]
 
+# Empty list of rows containing infinite values in df.famd
+inf <- as.numeric(c())
 
+# Fill in list of rows containing infinite values in df.famd
+for(i in 1:ncol(df.pca)){
+  
+  # Vector of infinite values' indices (if any)
+  a <- which(is.infinite(df.pca[,i]) == TRUE)
+  
+  # Add indices to the list
+  if(length(a) >= 1){
+    inf <- append(inf, a, after = length(inf))
+  }
+  
+}
+
+# Remove duplicate indices from inf
+inf <- unique(inf)
+
+# Remove infinite values from df.famd
+df.pca <- df.pca[-inf,]
+
+# Subset df.famd for complete cases only
+df.pca <- df.pca[complete.cases(df.pca),]
+
+# Run the PCA
+res.pca <- PCA(df.pca[, 3:18], ncp = 10, graph = TRUE)
+
+##### 5.7 Graph PCA #####
+
+# Scree plot
+fviz_eig(res.pca)
+
+# Prepare lists of variables for each biplot
+conservation <- list(name = c("ScraperMassRatio", "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "FRic", 
+    "FEve", "FDiv"))
+food <- list(name = c("CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
+  "CaConc_mgPer100g", "CaPrice_KSHPermg"))
+
+# Conservation biplot
+fviz_pca_biplot(res.pca,
+  label= "var", repel = TRUE,
+  ylim = c(-5, 10),
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.4,
+  addEllipses = TRUE,
+  select.var = conservation,
+  title = "PCA Biplot - Conservation")
+
+# Food security biplot
+fviz_pca_biplot(res.pca,
+  label= "var", repel = TRUE,
+  ylim = c(-5, 10),
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.4,
+  addEllipses = TRUE,
+  select.var = food,
+  title = "PCA Biplot - Food Security")
 
 
 
