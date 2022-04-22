@@ -60,13 +60,14 @@ df.famd <- TripData[, c("Site", "TrapType",
   "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
   "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
   "FRic", "FEve", "FDiv",
-  "CaConc_mgPer100g", "CaPrice_KSHPermg",
-  "FeConc_mgPer100g", "FePrice_KSHPermg",
-  "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
-  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
-  "VAConc_ugPer100g", "VAPrice_KSHPerug",
-  "SeConc_ugPer100g", "SePrice_KSHPerug",
-  "ZnConc_ugPer100g", "ZnPrice_KSHPerug")]
+  "CaConc_mgPer100g", "CaPrice_KSHPermg" #,
+#  "FeConc_mgPer100g", "FePrice_KSHPermg",
+#  "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
+#  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
+#  "VAConc_ugPer100g", "VAPrice_KSHPerug",
+#  "SeConc_ugPer100g", "SePrice_KSHPerug",
+#  "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+  )]
 
 # Empty list of rows containing infinite values in df.famd
 inf <- as.numeric(c())
@@ -130,17 +131,87 @@ df.famd <- df.famd[complete.cases(df.famd),]
 
 ##### 5.3 FAMD #####
 
-# Run the factor analysis of mixed data (FAMD)
-res.famd <- FAMD(df.famd, sup.var = 1:2, graph = FALSE)
+# Run the factor analysis of mixed data (FAMD) with site and trap type as supplementary variables
+res.famd <- FAMD(df.famd, ncp = 10, sup.var = 1:2, graph = FALSE)
+
+# Eigenvalues/variances
+
+# Get eigenvalues
+eig.val <- get_eigenvalue(res.famd)
+eig.val
+
+# Draw the scree plot
+fviz_screeplot(res.famd)
+
+# Save the scree plot
+ggsave("05_PrincipalComponents_Out/FAMDScreePlot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 
 
 
+##### 5.4 Graph variables #####
+
+# Extract variables
+var <- get_famd_var(res.famd)
+
+
+## All variables
+
+# Plot variables
+fviz_famd_var(res.famd,	repel	=	TRUE)
+
+#	Contribution	of variables to	the	first	dimension
+fviz_contrib(res.famd, "var",	axes =	1)
+
+#	Contribution of variables to the	second	dimension
+fviz_contrib(res.famd, "var",	axes =	2)
+
+# Contribution of variables to the third dimension
+fviz_contrib(res.famd, "var", axes = 3)
+
+# Contribution of variables to the fourth dimension
+fviz_contrib(res.famd, "var", axes = 4)
+
+
+## Quantitative variables
+
+# Get quantitative variables
+quanti.var <- get_famd_var(res.famd, "quanti.var")
+
+# Colorblind friendly palette
+cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# Plot quantitative variables
+fviz_famd_var(res.famd, "quanti.var", axes = c(3, 4),
+  repel = TRUE,
+  col.var = "contrib", gradient.cols = cbPalette[c(1,3,5,7)])
+
+
+## Qualitative variables
+
+# Get qualitative variables
+quali.var <- get_famd_var(res.famd, "quali.var")
+
+# Plot qualitative variables
+fviz_famd_var(res.famd, "quali.var",
+  color.var = "contrib", gradient.cols = cbPalette[c(1,3,5,7)])
 
 
 
 
+##### 5.5 Graph trips #####
 
+# Get results for individual trips
+trips <- get_famd_ind(res.famd)
+
+# Plot individual trips
+fviz_famd_ind(res.famd, axes = c(1,2),
+  habillage = "TrapType", palette = cbPalette[c(3,5)],
+  label = "none",
+  mean.point = FALSE # remove mean point for group
+  )
+
+fviz_famd()
 
 
 
