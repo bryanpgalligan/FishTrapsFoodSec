@@ -273,6 +273,9 @@ fviz_eig(res.pca)
 # Correlation circle
 fviz_pca_var(res.pca, col.var = "black")
 
+# Save plot
+ggsave(filename = "05_PrincipalComponents_Out/PCACorrelationCircle.jpeg", device = "jpeg")
+
 # Quality of representation
 var <- get_pca_var(res.pca)
 corrplot(var$cos2, is.corr = FALSE)
