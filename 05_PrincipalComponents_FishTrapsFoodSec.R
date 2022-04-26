@@ -32,6 +32,7 @@ library(FactoMineR)
 library(factoextra)
 library(readr)
 library(missMDA)
+library(corrplot)
 
 # NB: This trip data file has been processed to remove outliers that are likely the result of measurement
 # error.
@@ -252,19 +253,29 @@ inf <- unique(inf)
 # Remove infinite values from df.famd
 df.pca <- df.pca[-inf,]
 
-# Subset df.famd for complete cases only
+# Subset df.pca for complete cases only
 df.pca <- df.pca[complete.cases(df.pca),]
 
 # Run the PCA
-res.pca <- PCA(df.pca[, 3:18], ncp = 10, graph = TRUE)
+res.pca <- PCA(df.pca[, 3:18], ncp = 6, graph = TRUE)
 
 
 
 
 ##### 5.7 Graph PCA #####
 
+# Eigenvalues
+eig.val <- get_eigenvalue(res.pca)
+
 # Scree plot
 fviz_eig(res.pca)
+
+# Correlation circle
+fviz_pca_var(res.pca, col.var = "black")
+
+# Quality of representation
+var <- get_pca_var(res.pca)
+corrplot(var$cos2, is.corr = FALSE)
 
 # Prepare lists of variables for each biplot
 conservation <- list(name = c("ScraperMassRatio", "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "FRic", 
@@ -297,6 +308,72 @@ fviz_pca_biplot(res.pca,
 
 # Save plot
 ggsave("05_PrincipalComponents_Out/FoodBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+# Now, create three more biplots, each with two dimensions, making sure each variable
+# is plotted either once or twice. Variables will be included based on their cos2 values.
+
+# We'll use 0.2 as the minimum cos2 value for inclusion
+
+# Prepare lists of variables for each biplot
+dims12.food <- list(name = c("CPUE_kgPerTrap", "ValuePUE", "MTC_degC", "CaPrice_KSHPermg"))
+dims12.cons <- list(name = c("BrowserMassRatio", "MeanTrophLevel", "MeanVulnerability",
+  "FEve", "FDiv"))
+dims34 <- list(name = c("ScraperMassRatio", "CPUE_kgPerTrap", "CPUE_DistFromMean", "MeanLLmat",
+  "MTC_degC", "FRic", "FEve", "CaPrice_KSHPermg"))
+dims56 <- list(name = c("ScraperMassRatio", "GrazerMassRatio", "CaConc_mgPer100g"))
+
+# Dims 1 and 2 biplot for food security
+fviz_pca_biplot(res.pca,
+  label= "var", repel = TRUE,
+  ylim = c(-5, 10),
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  select.var = dims12.food,
+  title = "PCA Biplot - Food Security")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/Biplot1Food_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+# Dims 1 and 2 biplot for conservation
+fviz_pca_biplot(res.pca,
+  label= "var", repel = TRUE,
+  ylim = c(-5, 10),
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  select.var = dims12.cons,
+  title = "PCA Biplot - Conservation")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/Biplot1Conservation_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+# Dims 3 and 4 biplot
+fviz_pca_biplot(res.pca,
+  axes = c(3, 4),
+  label= "var", repel = TRUE,
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  select.var = dims34,
+  title = "PCA Biplot")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/Biplot2_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+# Dims 5 and 6 biplot
+fviz_pca_biplot(res.pca,
+  axes = c(5, 6),
+  ylim = c(-5, 10),
+  label= "var", repel = TRUE,
+  col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  select.var = dims56,
+  title = "PCA Biplot")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/Biplot3_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 
 
