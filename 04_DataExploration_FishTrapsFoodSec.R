@@ -11,6 +11,8 @@
 ##    02 Adding Life History Values Using FishLife
 ##    03 Calculating Functional Diversity Indices
 ##    04 Data Exploration
+##    05 Principal Components Analysis
+##    06 Additional Analysis
 
 ## Script Title:
 ##    04 Data Exploration
@@ -22,6 +24,8 @@
 
 ## Script TOC:
 ##    4.1 Load packages and data
+##    4.2 Outliers
+##    4.3 Distributions
 
 
 

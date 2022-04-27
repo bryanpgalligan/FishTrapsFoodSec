@@ -17,11 +17,13 @@
 ## Script Title:
 ##    06 Additional Analysis
 
-## Last update: 26 Apr 22
+## Last update: 27 Apr 22
 
 # This script analyzes the data to supplement principal component methods.
 
 ## Script TOC:
+##    6.1 Load Packages and Data
+##    6.2 CPUE
 
 
 

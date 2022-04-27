@@ -11,6 +11,8 @@
 ##    02 Adding Life History Values Using FishLife
 ##    03 Calculating Functional Diversity Indices
 ##    04 Data Exploration
+##    05 Principal Components Analysis
+##    06 Additional Analysis
 
 ## Script Title:
 ##    01 Data Cleaning

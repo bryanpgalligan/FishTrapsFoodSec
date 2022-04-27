@@ -12,15 +12,25 @@
 ##    03 Calculating Functional Diversity Indices
 ##    04 Data Exploration
 ##    05 PCA Analysis
+##    06 Additional Analysis
 
 ## Script Title:
 ##    05 PCA Analysis
 
-## Last update: 22 Apr 22
+## Last update: 26 Apr 22
 
 # This script analyzes the data using principal components methods.
 
 ## Script TOC:
+##    5.1 Packages and data
+##    5.2 Data manipulation
+##    5.3 Factor analysis of mixed data (FAMD)
+##    5.4 Graph variables (FAMD)
+##    5.5 Graph trips (FAMD)
+##    5.6 Run PCA (Principal Components Analysis)
+##    5.7 Graph PCA
+##    5.8 Nutrients PCA
+
 
 
 
@@ -150,7 +160,7 @@ ggsave("05_PrincipalComponents_Out/FAMDScreePlot_FishTrapsFoodSec.jpeg", device 
 
 
 
-##### 5.4 Graph variables #####
+##### 5.4 Graph variables (FAMD) #####
 
 # Extract variables
 var <- get_famd_var(res.famd)
@@ -200,7 +210,7 @@ fviz_famd_var(res.famd, "quali.var",
 
 
 
-##### 5.5 Graph trips #####
+##### 5.5 Graph trips (FAMD) #####
 
 # Get results for individual trips
 trips <- get_famd_ind(res.famd)
