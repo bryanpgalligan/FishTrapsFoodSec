@@ -50,7 +50,7 @@ ggplot(data = TripData.sub.traptype, aes(CPUE_kgPerTrap, fill = factor(TrapType)
   theme(panel.background = element_blank(),
     axis.line = element_line()) +
   ylab("Density") +
-  xlab("Catch Per Unit Effort (kg / trap") +
+  xlab("Catch Per Unit Effort (kg / trap)") +
   labs(fill = "Trap Type") +
   scale_fill_brewer(palette = "Set3", direction = -1)
 
@@ -64,7 +64,7 @@ TrapType <- c("Gated", "Traditional")
 Kurtosis <- c()
 Skewness <- c()
 
-# Subset three datasets for this analysis (one for each trap type)
+# Subset data for this analysis (one for each trap type)
 TripData.sub.gated <- subset(TripData, TripData$TrapType == "Gated")
 TripData.sub.trad <- subset(TripData, TripData$TrapType == "Traditional")
 
@@ -80,5 +80,41 @@ CatchStability <- data.frame(Skewness, Kurtosis, row.names = TrapType)
 # Save kurtosis and skewness
 write.csv(CatchStability, file = "06_AdditionalAnalysis_Out/CatchStability.csv")
 
+# Transform CPUE data
+cpue.sqrt.gated <- sqrt(TripData.sub.gated$CPUE_kgPerTrap)
+cpue.sqrt.trad <- sqrt(TripData.sub.trad$CPUE_kgPerTrap)
 
+# Plot transformed CPUE data
+ggplot(data = TripData.sub.traptype, aes(sqrt(CPUE_kgPerTrap), fill = factor(TrapType))) +
+  geom_density(alpha = 0.4) +
+  #coord_cartesian(xlim = c(0, 50)) +
+  theme(panel.background = element_blank(),
+    axis.line = element_line()) +
+  ylab("Density") +
+  xlab("Square Root Transformed Catch Per Unit Effort (kg / trap)") +
+  labs(fill = "Trap Type") +
+  scale_fill_brewer(palette = "Set3", direction = -1)
+
+# Save plot
+ggsave(filename = "06_AdditionalAnalysis_Out/CPUETransformedDensity_FishTrapsFoodSec.jpeg",
+  device = "jpeg")
+
+## Save kurtosis and skewness of transformed CPUE
+
+# Create vectors to prepare a data frame to save results
+TrapType <- c("Gated", "Traditional")
+Kurtosis <- c()
+Skewness <- c()
+
+# Calculate kurtosis and skewness of sqrt transformed CPUE
+Kurtosis[1] <- kurtosis(cpue.sqrt.gated, na.rm = TRUE)
+Skewness[1] <- skewness(cpue.sqrt.gated, na.rm = TRUE)
+Kurtosis[2] <- kurtosis(cpue.sqrt.trad, na.rm = TRUE)
+Skewness[2] <- skewness(cpue.sqrt.trad, na.rm = TRUE)
+
+# Create a data frame with results
+CatchStabilityTransformed <- data.frame(Skewness, Kurtosis, row.names = TrapType)
+
+# Save transformed kurtosis and skewness
+write.csv(CatchStabilityTransformed, file = "06_AdditionalAnalysis_Out/CatchStability_SqrtTransformed.csv")
 
