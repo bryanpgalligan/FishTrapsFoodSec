@@ -106,11 +106,20 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FDiv)) +
   geom_boxplot()
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaConc_mgPer100g)) +
-  geom_boxplot() #+
-  #coord_cartesian(ylim = c(0, 50))
+  geom_boxplot()
+
+# There are some clear outliers. After investigation, they seem to be the result of data
+# entry errors. Remove all trips with Calcium concentration >= 250 mg per 100 g.
+# This amounts to six trips.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$CaConc_mgPer100g < 250)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaPrice_KSHPermg)) +
   geom_boxplot()
+
+# There are three obvious outliers here. These are probably the result of data entry errors.
+# Remove all trips with Calcium prices >= 2 KSH per mg. This amounts to five trips (two of which
+# have infinity as a value).
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$CaPrice_KSHPermg < 2)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FeConc_mgPer100g)) +
   geom_boxplot() +
@@ -119,41 +128,68 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FeConc_mgPer1
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FePrice_KSHPermg)) +
   geom_boxplot()
 
+# There are two obvious outliers here, probably the result of data entry errors. Remove all
+# trips with Fe price >= 75 KSH per mg.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$FePrice_KSHPermg < 75)
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3Conc_gPer100g)) +
   geom_boxplot() +
   coord_cartesian(ylim = c(0, 0.5))
 
+# There are six obvious outliers here, probably the result of data entry errors. Remove all
+# trips with Omega 3 concentrations >= 0.2 g per 100 g.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$Omega3Conc_gPer100g < 0.2)
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = Omega3Price_KSHPerg)) +
   geom_boxplot()
 
+# There are some obvious issues: a few zeros and some high outliers (above 175 KSH per g).
+# Likely the result of data entry errors. Remove them all.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$Omega3Price_KSHPerg > 0)
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$Omega3Price_KSHPerg < 175)
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinConc_gPer100g)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(0, 10))
+  geom_boxplot()
+
+# There are some outliers here, with the very obvious ones above 15 g per 100 g, likely ther result
+# of data entry errors.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$ProteinConc_gPer100g < 15)
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ProteinPrice_KSHPerg)) +
   geom_boxplot()
 
+# There are three obvious outliers here, all above 1.5 KSH per g. Remove.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$ProteinPrice_KSHPerg < 1.5)
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAConc_ugPer100g)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(0, 100))
+  geom_boxplot()
+
+# There are some outliers, but no (super) obvious breaks. We'll leave this the way it is.
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = VAPrice_KSHPerug)) +
   geom_boxplot()
 
+# There is one outlier, above 1.5 KSH per ug. Remove it.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$VAPrice_KSHPerug < 1.5)
+
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SeConc_ugPer100g)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(0, 100))
+  geom_boxplot()
+
+# Some outliers, but no obvious breaks.
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SePrice_KSHPerug)) +
   geom_boxplot()
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnConc_ugPer100g)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(0, 5))
+  geom_boxplot()
+
+# Some outliers, but no obvious breaks.
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPrice_KSHPerug)) +
   geom_boxplot()
 
+# There is one obvious outlier, above 40 KSH per ug. Remove it.
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$ZnPrice_KSHPerug < 40)
 
 
 
