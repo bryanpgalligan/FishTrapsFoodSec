@@ -17,7 +17,7 @@
 ## Script Title:
 ##    05 PCA Analysis
 
-## Last update: 26 Apr 22
+## Last update: 3 May 22
 
 # This script analyzes the data using principal components methods.
 
@@ -32,6 +32,7 @@
 ##    5.8 Nutrients PCA
 ##    5.9 Food security PCA
 ##    5.10 Conservation PCA
+##    5.11 Data for modeling
 
 
 
@@ -45,6 +46,7 @@ library(factoextra)
 library(readr)
 library(missMDA)
 library(corrplot)
+library(dplyr)
 
 # NB: This trip data file has been processed to remove outliers that are likely the result of measurement
 # error.
@@ -563,5 +565,64 @@ fviz_pca_biplot(res.cons.pca,
 
 # Save plot
 ggsave("05_PrincipalComponents_Out/ConservationOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+
+
+
+##### 5.11 Data for modeling #####
+
+# Save a data frame for linear modeling
+
+# Make row names in df.cons.pca and df.food.pca a column
+df.cons.pca$TripID <- rownames(df.cons.pca)
+df.food.pca$TripID <- rownames(df.food.pca)
+
+# Combine data frames
+TripData_ForModeling <- inner_join(df.cons.pca, df.food.pca, by = "TripID",
+  suffix = c("", ".y"), keep = TRUE)
+
+# Remove non-modeled variables
+TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType")]
+
+# Extract food pca coordinates
+food.dims <- data.frame(res.food.pca[["ind"]][["coord"]])
+
+# Make Trip ID a column
+food.dims$TripID <- rownames(food.dims)
+
+# Add food dimensions to TripData_ForModeling
+TripData_ForModeling <- inner_join(TripData_ForModeling, food.dims, by = "TripID",
+  suffix = c("", ".y"), keep = TRUE)
+
+# Rename food dim 1, representing CPUE, value PUE, and Ca concentration
+colnames(TripData_ForModeling)[4] <- "FoodDim1"
+
+# Remove surplus variables
+TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType", "FoodDim1")]
+
+# Extract conservation pca coordinates
+cons.dims <- data.frame(res.cons.pca[["ind"]][["coord"]])
+
+# Make Trip ID a column
+cons.dims$TripID <- rownames(cons.dims)
+
+# Add conservation dimensions to TripData_ForModeling
+TripData_ForModeling <- inner_join(TripData_ForModeling, cons.dims, by = "TripID",
+  suffix = c("", ".y"), keep = TRUE)
+
+# Rename conservation dim 1, representing browser mass ratio and mean trophic level
+colnames(TripData_ForModeling)[5] <- "ConsDim1"
+
+# Rename conservation dim 2, representing scraper mass ratio and mean L / Lmat
+colnames(TripData_ForModeling)[6] <- "ConsDim2"
+
+# Remove surplus variables
+TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType", "FoodDim1",
+  "ConsDim1", "ConsDim2")]
+
+# Save data
+write.csv(TripData_ForModeling, file = "05_PrincipalComponents_Out/TripData_ForModeling.csv",
+  row.names = FALSE)
+
 
 
