@@ -30,6 +30,8 @@
 ##    5.6 Run PCA (Principal Components Analysis)
 ##    5.7 Graph PCA
 ##    5.8 Nutrients PCA
+##    5.9 Food security PCA
+##    5.10 Conservation PCA
 
 
 
@@ -80,27 +82,27 @@ df.famd <- TripData[, c("Site", "TrapType",
 #  "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
   )]
 
-# Empty list of rows containing infinite values in df.famd
-inf <- as.numeric(c())
-
-# Fill in list of rows containing infinite values in df.famd
-for(i in 1:ncol(df.famd)){
-  
-  # Vector of infinite values' indices (if any)
-  a <- which(is.infinite(df.famd[,i]) == TRUE)
-  
-  # Add indices to the list
-  if(length(a) >= 1){
-    inf <- append(inf, a, after = length(inf))
-  }
-  
-}
-
-# Remove duplicate indices from inf
-inf <- unique(inf)
-
-# Remove infinite values from df.famd
-df.famd <- df.famd[-inf,]
+# # Empty list of rows containing infinite values in df.famd
+# inf <- as.numeric(c())
+# 
+# # Fill in list of rows containing infinite values in df.famd
+# for(i in 1:ncol(df.famd)){
+#   
+#   # Vector of infinite values' indices (if any)
+#   a <- which(is.infinite(df.famd[,i]) == TRUE)
+#   
+#   # Add indices to the list
+#   if(length(a) >= 1){
+#     inf <- append(inf, a, after = length(inf))
+#   }
+#   
+# }
+# 
+# # Remove duplicate indices from inf
+# inf <- unique(inf)
+# 
+# # Remove infinite values from df.famd
+# df.famd <- df.famd[-inf,]
 
 # # As of 4/22/22, many of these columns have only one or three missing values. That can be an issue
 # # for the mice() function, which underlies the imputation functions in the missMDA package. Here,
@@ -241,27 +243,27 @@ df.pca <- TripData[, c("Site", "TrapType",
   # "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
   )]
 
-# Empty list of rows containing infinite values in df.famd
-inf <- as.numeric(c())
-
-# Fill in list of rows containing infinite values in df.famd
-for(i in 1:ncol(df.pca)){
-  
-  # Vector of infinite values' indices (if any)
-  a <- which(is.infinite(df.pca[,i]) == TRUE)
-  
-  # Add indices to the list
-  if(length(a) >= 1){
-    inf <- append(inf, a, after = length(inf))
-  }
-  
-}
-
-# Remove duplicate indices from inf
-inf <- unique(inf)
-
-# Remove infinite values from df.famd
-df.pca <- df.pca[-inf,]
+# # Empty list of rows containing infinite values in df.famd
+# inf <- as.numeric(c())
+# 
+# # Fill in list of rows containing infinite values in df.famd
+# for(i in 1:ncol(df.pca)){
+#   
+#   # Vector of infinite values' indices (if any)
+#   a <- which(is.infinite(df.pca[,i]) == TRUE)
+#   
+#   # Add indices to the list
+#   if(length(a) >= 1){
+#     inf <- append(inf, a, after = length(inf))
+#   }
+#   
+# }
+# 
+# # Remove duplicate indices from inf
+# inf <- unique(inf)
+# 
+# # Remove infinite values from df.famd
+# df.pca <- df.pca[-inf,]
 
 # Subset df.pca for complete cases only
 df.pca <- df.pca[complete.cases(df.pca),]
@@ -404,27 +406,27 @@ df.nut.pca <- TripData[, c("Site", "TrapType",
   "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
   )]
 
-# Empty list of rows containing infinite values in df.famd
-inf <- as.numeric(c())
-
-# Fill in list of rows containing infinite values in df.famd
-for(i in 1:ncol(df.nut.pca)){
-  
-  # Vector of infinite values' indices (if any)
-  a <- which(is.infinite(df.nut.pca[,i]) == TRUE)
-  
-  # Add indices to the list
-  if(length(a) >= 1){
-    inf <- append(inf, a, after = length(inf))
-  }
-  
-}
-
-# Remove duplicate indices from inf
-inf <- unique(inf)
-
-# Remove infinite values from df.famd
-df.nut.pca <- df.nut.pca[-inf,]
+# # Empty list of rows containing infinite values in df.famd
+# inf <- as.numeric(c())
+# 
+# # Fill in list of rows containing infinite values in df.famd
+# for(i in 1:ncol(df.nut.pca)){
+#   
+#   # Vector of infinite values' indices (if any)
+#   a <- which(is.infinite(df.nut.pca[,i]) == TRUE)
+#   
+#   # Add indices to the list
+#   if(length(a) >= 1){
+#     inf <- append(inf, a, after = length(inf))
+#   }
+#   
+# }
+# 
+# # Remove duplicate indices from inf
+# inf <- unique(inf)
+# 
+# # Remove infinite values from df.famd
+# df.nut.pca <- df.nut.pca[-inf,]
 
 # Subset df.famd for complete cases only
 df.nut.pca <- df.nut.pca[complete.cases(df.nut.pca),]
@@ -446,3 +448,120 @@ fviz_pca_biplot(res.nut.pca,
   col.var = "black",
   addEllipses = TRUE,
   title = "PCA Biplot - Nutrients")
+
+
+
+
+##### 5.9 Food security PCA #####
+
+# Subset only active and supplementary variables (columns) for the PCA
+df.food.pca <- TripData[, c("Site", "TrapType",
+  #"ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
+  "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
+  "MeanLLmat",
+  #"MeanTrophLevel", "MeanVulnerability", "MTC_degC",
+  #"FRic", "FEve", "FDiv",
+  "CaConc_mgPer100g", #"CaPrice_KSHPermg",
+  # "FeConc_mgPer100g", #"FePrice_KSHPermg",
+  # "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
+  # "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
+  "VAConc_ugPer100g" #, "VAPrice_KSHPerug",
+  # "SeConc_ugPer100g", #"SePrice_KSHPerug",
+  # "ZnConc_ugPer100g", #"ZnPrice_KSHPerug"
+  )]
+
+# Subset df.food.pca to remove trips with mixed trap types
+df.food.pca <- subset(df.food.pca, df.food.pca$TrapType != "Multiple")
+
+# Subset df.food.pca for complete cases only
+df.food.pca <- df.food.pca[complete.cases(df.food.pca),]
+
+# Run the PCA
+res.food.pca <- PCA(df.food.pca[, 3:8], ncp = 2, graph = TRUE, scale.unit = TRUE)
+
+# Eigenvalues
+eig.val <- get_eigenvalue(res.food.pca)
+
+# Scree plot
+fviz_eig(res.food.pca)
+
+# Correlation circle
+fviz_pca_var(res.food.pca, col.var = "black")
+
+# Save plot
+ggsave(filename = "05_PrincipalComponents_Out/Food_PCACorrelationCircle.jpeg", device = "jpeg")
+
+# Quality of representation
+var <- get_pca_var(res.food.pca)
+corrplot(var$cos2, is.corr = FALSE)
+
+# Prepare biplot
+fviz_pca_biplot(res.food.pca,
+  label= "var", repel = TRUE,
+  col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  title = "PCA Biplot - Food Security")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/FoodOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+
+
+
+
+##### 5.10 Conservation PCA #####
+
+# Subset only active and supplementary variables (columns) for the PCA
+df.cons.pca <- TripData[, c("Site", "TrapType",
+  "ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
+  #"CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
+  "MeanLLmat",
+  "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
+  "FRic", "FEve", "FDiv" #,
+  # "CaConc_mgPer100g", #"CaPrice_KSHPermg",
+  # # "FeConc_mgPer100g", #"FePrice_KSHPermg",
+  # # "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
+  # # "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
+  # "VAConc_ugPer100g" #, "VAPrice_KSHPerug",
+  # # "SeConc_ugPer100g", #"SePrice_KSHPerug",
+  # # "ZnConc_ugPer100g", #"ZnPrice_KSHPerug"
+  )]
+
+# Subset df.cons.pca to remove trips with mixed trap types
+df.cons.pca <- subset(df.cons.pca, df.cons.pca$TrapType != "Multiple")
+
+# Subset df.cons.pca for complete cases only
+df.cons.pca <- df.cons.pca[complete.cases(df.cons.pca),]
+
+# Run the PCA
+res.cons.pca <- PCA(df.cons.pca[, 3:8], ncp = 3, graph = TRUE, scale.unit = TRUE)
+
+# Eigenvalues
+eig.val <- get_eigenvalue(res.cons.pca)
+
+# Scree plot
+fviz_eig(res.cons.pca)
+
+# Correlation circle
+fviz_pca_var(res.cons.pca, col.var = "black")
+
+# Save plot
+ggsave(filename = "05_PrincipalComponents_Out/Conservation_PCACorrelationCircle.jpeg", device = "jpeg")
+
+# Quality of representation
+var <- get_pca_var(res.cons.pca)
+corrplot(var$cos2, is.corr = FALSE)
+
+# Prepare biplot
+fviz_pca_biplot(res.cons.pca,
+  label= "var", repel = TRUE,
+  col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha = 0.6,
+  col.var = "black",
+  addEllipses = TRUE,
+  title = "PCA Biplot - Conservation")
+
+# Save plot
+ggsave("05_PrincipalComponents_Out/ConservationOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
+
+
