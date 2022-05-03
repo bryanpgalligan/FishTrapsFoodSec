@@ -135,7 +135,7 @@ write.csv(CatchStabilityTransformed, file = "06_AdditionalAnalysis_Out/CatchStab
 
 ##### 6.3 TrapType and Food #####
 
-trap.food.model <- glmmTMB(FoodDim1 ~ TrapType + (1|Site),
+trap.food.model <- glmmTMB(FoodDim1 ~ TrapType, #+ (1|Site),
   data = PCAData,
   family = gaussian())
 
@@ -158,8 +158,8 @@ ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.2)) +
   labs(title = "", x = "Trap Type", y = "Food Security") +
-  theme_bw() +
-  annotate(geom = "text", x = "Traditional", y = 0.7, label = "p < 0.000")
+  theme_bw() 
+  #annotate(geom = "text", x = "Traditional", y = 0.7, label = "p < 0.000")
 
 # Gated traps have higher CPUE and value PUE, but lower Ca concentrations
 
@@ -169,7 +169,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/TrapFoodPrediction.jpeg", device = 
 
 ##### 6.4 TrapType and Conservation 1 #####
 
-trap.cons1.model <- glmmTMB(ConsDim1 ~ TrapType + (1|Site),
+trap.cons1.model <- glmmTMB(ConsDim1 ~ TrapType,# + (1|Site),
   data = PCAData,
   family = gaussian())
 
@@ -192,8 +192,8 @@ ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.2)) +
   labs(title = "", x = "Trap Type", y = "Conservation Dim. 1") +
-  theme_bw() +
-  annotate(geom = "text", x = "Gated", y = 0.7, label = "p = 0.003")
+  theme_bw()
+  #annotate(geom = "text", x = "Gated", y = 0.7, label = "p = 0.003")
 
 # Traditional traps have higher mean trophic level and lower browser mass ratio
 
@@ -205,7 +205,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons1Prediction.jpeg", device =
 
 ##### 6.5 TrapType and Conservation 2 #####
 
-trap.cons2.model <- glmmTMB(ConsDim2 ~ TrapType + (1|Site),
+trap.cons2.model <- glmmTMB(ConsDim2 ~ TrapType,# + (1|Site),
   data = PCAData,
   family = gaussian())
 
