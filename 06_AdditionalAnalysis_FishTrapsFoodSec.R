@@ -24,6 +24,11 @@
 ## Script TOC:
 ##    6.1 Load Packages and Data
 ##    6.2 CPUE
+##    6.3 TrapType and Food
+##    6.4 TrapType and Conservation 1
+##    6.5 TrapType and Conservation 2
+##    6.6 Food and Conservation 1
+##    6.7 Food and Conservation 2
 
 
 
@@ -34,10 +39,15 @@
 library(ggplot2)
 library(readr)
 library(moments)
+library(glmmTMB)
+library(ggeffects)
+library(DHARMa)
 
 # Load trip data
 TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv")
 
+# Load PCA data for modeling
+PCAData <- read_csv("05_PrincipalComponents_Out/TripData_ForModeling.csv")
 
 
 #### 6.2 CPUE #####
@@ -119,4 +129,165 @@ CatchStabilityTransformed <- data.frame(Skewness, Kurtosis, row.names = TrapType
 
 # Save transformed kurtosis and skewness
 write.csv(CatchStabilityTransformed, file = "06_AdditionalAnalysis_Out/CatchStability_SqrtTransformed.csv")
+
+
+
+
+##### 6.3 TrapType and Food #####
+
+trap.food.model <- glmmTMB(FoodDim1 ~ TrapType + (1|Site),
+  data = PCAData,
+  family = gaussian())
+
+# Simulate residuals
+simulateResiduals(trap.food.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Density plot of FoodDim1
+ggplot(data = PCAData, mapping = aes(FoodDim1)) +
+  geom_density()
+
+# This is not too far from normal...
+
+# Get model predictions
+prediction <- ggpredict(trap.food.model, terms = c("TrapType"))
+
+# Plot the prediction
+ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.2)) +
+  labs(title = "", x = "Trap Type", y = "Food Security") +
+  theme_bw() +
+  annotate(geom = "text", x = "Traditional", y = 0.7, label = "p < 0.000")
+
+# Gated traps have higher CPUE and value PUE, but lower Ca concentrations
+
+# Save the plot
+ggsave(filename = "06_AdditionalAnalysis_Out/TrapFoodPrediction.jpeg", device = "jpeg")
+
+
+##### 6.4 TrapType and Conservation 1 #####
+
+trap.cons1.model <- glmmTMB(ConsDim1 ~ TrapType + (1|Site),
+  data = PCAData,
+  family = gaussian())
+
+# Simulate residuals
+simulateResiduals(trap.cons1.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Density plot of ConsDim1
+ggplot(data = PCAData, mapping = aes(ConsDim1)) +
+  geom_density()
+
+# This is not look a normal distribution...
+
+# Get model predictions
+prediction <- ggpredict(trap.cons1.model, terms = c("TrapType"))
+
+# Plot the prediction
+ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.2)) +
+  labs(title = "", x = "Trap Type", y = "Conservation Dim. 1") +
+  theme_bw() +
+  annotate(geom = "text", x = "Gated", y = 0.7, label = "p = 0.003")
+
+# Traditional traps have higher mean trophic level and lower browser mass ratio
+
+# Save the plot
+ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons1Prediction.jpeg", device = "jpeg")
+
+
+
+
+##### 6.5 TrapType and Conservation 2 #####
+
+trap.cons2.model <- glmmTMB(ConsDim2 ~ TrapType + (1|Site),
+  data = PCAData,
+  family = gaussian())
+
+# Simulate residuals
+simulateResiduals(trap.cons2.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Density plot of ConsDim2
+ggplot(data = PCAData, mapping = aes(ConsDim2)) +
+  geom_density()
+
+# This looks like a normal distribution...
+
+# Get model predictions
+prediction <- ggpredict(trap.cons2.model, terms = c("TrapType"))
+
+# Plot the prediction
+ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.2)) +
+  labs(title = "", x = "Trap Type", y = "Conservation Dim. 2") +
+  theme_bw() +
+  annotate(geom = "text", x = "Traditional", y = 0.3, label = "p < 0.000")
+
+# Save the plot
+ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons2Prediction.jpeg", device = "jpeg")
+
+
+
+
+##### 6.6 Food and Conservation 1 #####
+
+food.cons1.model <- glmmTMB(ConsDim1 ~ FoodDim1 + TrapType + (FoodDim1/TrapType) + (1|Site),
+  data = PCAData,
+  family = gaussian())
+
+# Simulate residuals
+simulateResiduals(food.cons1.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Get model predictions
+prediction <- ggpredict(food.cons1.model, terms = c("FoodDim1"))
+
+# Plot the prediction
+ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_line() +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
+  labs(title = "", x = "Food Security", y = "Conservation Dim. 1") +
+  theme_bw() +
+  annotate(geom = "text", x = 4, y = 0.65, label = "p = 0.418")
+
+# Save the plot
+ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
+
+
+
+
+##### 6.7 Food and Conservation 2 #####
+
+food.cons2.model <- glmmTMB(ConsDim2 ~ FoodDim1 + TrapType + (FoodDim1/TrapType) + (1|Site),
+  data = PCAData,
+  family = gaussian())
+
+# Simulate residuals
+simulateResiduals(food.cons2.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Get model predictions
+prediction <- ggpredict(food.cons2.model, terms = c("FoodDim1"))
+
+# Plot the prediction
+ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_line() +
+  geom_point(mapping = aes(x = FoodDim1, y = ConsDim2), data = PCAData, alpha = 0.1) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
+  labs(title = "", x = "Food Security", y = "Conservation Dim. 2") +
+  theme_bw() +
+  annotate(geom = "text", x = 4, y = 7, label = "p = 0.089")
+
+# Save the plot
+ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
 
