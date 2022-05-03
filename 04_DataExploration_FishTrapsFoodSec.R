@@ -106,8 +106,8 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = FDiv)) +
   geom_boxplot()
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaConc_mgPer100g)) +
-  geom_boxplot() +
-  coord_cartesian(ylim = c(0, 50))
+  geom_boxplot() #+
+  #coord_cartesian(ylim = c(0, 50))
 
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = CaPrice_KSHPermg)) +
   geom_boxplot()

@@ -267,7 +267,7 @@ df.pca <- df.pca[-inf,]
 df.pca <- df.pca[complete.cases(df.pca),]
 
 # Run the PCA
-res.pca <- PCA(df.pca[, 3:18], ncp = 6, graph = TRUE)
+res.pca <- PCA(df.pca[, 3:18], ncp = 6, graph = TRUE, scale.unit = TRUE)
 
 
 
@@ -303,7 +303,7 @@ fviz_pca_biplot(res.pca,
   col.ind = df.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
   col.var = "black",
   addEllipses = TRUE,
-  select.var = conservation,
+  #select.var = conservation,
   title = "PCA Biplot - Conservation")
 
 # Save plot
@@ -433,7 +433,7 @@ df.nut.pca <- df.nut.pca[complete.cases(df.nut.pca),]
 df.nut.pca <- subset(df.nut.pca, df.nut.pca$TrapType != "Multiple")
 
 # Run the PCA
-res.nut.pca <- PCA(df.nut.pca[, 3:16], ncp = 5, graph = TRUE)
+res.nut.pca <- PCA(df.nut.pca[, 3:16], ncp = 5, graph = TRUE, scale.unit = TRUE)
 
 # Scree plot
 fviz_eig(res.nut.pca)
@@ -441,7 +441,7 @@ fviz_eig(res.nut.pca)
 # Nutrients biplot
 fviz_pca_biplot(res.nut.pca,
   label= "var", repel = TRUE,
-  ylim = c(-5, 10),
+  #ylim = c(-5, 10),
   col.ind = df.nut.pca$TrapType, palette = cbPalette[c(2,4,7)], alpha = 0.6,
   col.var = "black",
   addEllipses = TRUE,
