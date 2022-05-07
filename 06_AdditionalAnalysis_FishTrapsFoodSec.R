@@ -24,11 +24,12 @@
 ## Script TOC:
 ##    6.1 Load Packages and Data
 ##    6.2 CPUE
-##    6.3 TrapType and Food
-##    6.4 TrapType and Conservation 1
-##    6.5 TrapType and Conservation 2
-##    6.6 Food and Conservation 1
-##    6.7 Food and Conservation 2
+##    6.3 TrapType and Food 1
+##    6.4 TrapType and Food 2
+##    6.5 TrapType and Conservation 1
+##    6.6 TrapType and Conservation 2
+##    6.7 Food and Conservation 1
+##    6.8 Food and Conservation 2
 
 
 
@@ -134,17 +135,17 @@ write.csv(CatchStabilityTransformed, file = "06_AdditionalAnalysis_Out/CatchStab
 
 
 
-##### 6.3 TrapType and Food #####
+##### 6.3 TrapType and Food 1 #####
 
 # Linear model
-trap.food.model <- lm(FoodDim1 ~ TrapType,
+trap.food1.model <- lm(FoodDim1 ~ TrapType,
   data = PCAData)
 
 # Model output
-summary(trap.food.model)
+summary(trap.food1.model)
 
 # Simulate residuals
-simulateResiduals(trap.food.model, plot = TRUE)
+simulateResiduals(trap.food1.model, plot = TRUE)
 
 # There seem to be some problems in the residuals
 
@@ -155,13 +156,16 @@ ggplot(data = PCAData, mapping = aes(FoodDim1)) +
 # This is not too far from normal...
 
 # Get model predictions
-prediction <- ggpredict(trap.food.model, terms = c("TrapType"))
+prediction <- ggpredict(trap.food1.model, terms = c("TrapType"))
 
 # Plot the prediction
 plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
-  labs(title = "", x = "", y = "") +
+  labs(x = "", y = "", title = "") +
+  # labs(x = "", title = "",
+  #   y = paste("Value and Catch per Trap ", sprintf("\u2192"),
+  #     "\n", sprintf("\u2190"), " Calcium Concentration", sep = "")) +
   scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.3, 0.34),
     labels = c("Calcium Concentration", -0.2, 0.0, 0.2, "Value Per Unit Effort", "Catch Per Unit Effort")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
@@ -169,8 +173,8 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
-    axis.ticks = element_blank()) +
-  coord_cartesian(ylim = c(-0.35, 0.35))
+    axis.ticks.y = element_blank()) +
+  coord_cartesian(ylim = c(-0.35, 0.35), xlim = c(1, 2))
 
 # Gated traps have higher CPUE and value PUE, but lower Ca concentrations
 
@@ -179,7 +183,51 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
 #   height = 5, width = 3, units = "in")
 
 
-##### 6.4 TrapType and Conservation 1 #####
+
+##### 6.4 TrapType and Food 2 #####
+
+# Linear model
+trap.food2.model <- lm(FoodDim2 ~ TrapType,
+  data = PCAData)
+
+# Model output
+summary(trap.food2.model)
+
+# Simulate residuals
+simulateResiduals(trap.food2.model, plot = TRUE)
+
+# There seem to be some problems in the residuals
+
+# Density plot of FoodDim2
+ggplot(data = PCAData, mapping = aes(FoodDim2)) +
+  geom_density()
+
+# This is not too far from normal...
+
+# Get model predictions
+prediction <- ggpredict(trap.food2.model, terms = c("TrapType"))
+
+# Plot the prediction
+plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
+  labs(title = "", x = "", y = "") +
+  scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.27, 0.34),
+    labels = c(-0.2, 0.0, 0.2, "Vitamin A", expression(paste("Mean ", frac(L,L[mat]), sep = "")))) +
+  annotate(geom = "text", x = "Traditional", y = 0.25,
+    label = expression("p = 1.01 x 10"^-7)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    axis.ticks = element_blank()) +
+  coord_cartesian(ylim = c(-0.35, 0.35))
+
+# Gated traps have higher vitamin A and mean L/Lmat
+
+
+
+
+##### 6.5 TrapType and Conservation 1 #####
 
 # Linear model
 trap.cons1.model <- lm(ConsDim1 ~ TrapType,
@@ -203,7 +251,7 @@ ggplot(data = PCAData, mapping = aes(ConsDim1)) +
 prediction <- ggpredict(trap.cons1.model, terms = c("TrapType"))
 
 # Plot the prediction
-plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
+plot.1c <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
@@ -225,7 +273,7 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
 
 
 
-##### 6.5 TrapType and Conservation 2 #####
+##### 6.6 TrapType and Conservation 2 #####
 
 # Linear Model
 trap.cons2.model <- lm(ConsDim2 ~ TrapType,
@@ -249,7 +297,7 @@ ggplot(data = PCAData, mapping = aes(ConsDim2)) +
 prediction <- ggpredict(trap.cons2.model, terms = c("TrapType"))
 
 # Plot the prediction
-plot.1c <- ggplot(prediction, aes(y = predicted, x = x)) +
+plot.1d <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
@@ -269,13 +317,14 @@ plot.1c <- ggplot(prediction, aes(y = predicted, x = x)) +
 # ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons2Prediction.jpeg", device = "jpeg")
 
 # Plot 1
-ggarrange(plot.1a, plot.1b, plot.1c, nrow = 1)
+ggarrange(plot.1a, plot.1b, plot.1c, plot.1d, nrow = 1,
+  widths = c(1.3, 1.1, 1.3, 1.35))
 
 # Save Plot 1
 ggsave(filename = "06_AdditionalAnalysis_Out/TrapModelPredictions.jpeg", device = "jpeg",
-  height = 4, width = 12, units = "in")
+  height = 4, width = 16, units = "in")
 
-##### 6.6 Food and Conservation 1 #####
+##### 6.7 Food and Conservation 1 #####
 
 # Linear Model
 food.cons1.model <- glmmTMB(ConsDim1 ~ FoodDim1 * TrapType,
@@ -309,7 +358,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device =
 
 
 
-##### 6.7 Food and Conservation 2 #####
+##### 6.8 Food and Conservation 2 #####
 
 food.cons2.model <- glmmTMB(ConsDim2 ~ FoodDim1*TrapType,
   data = PCAData,
