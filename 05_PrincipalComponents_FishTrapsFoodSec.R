@@ -47,6 +47,7 @@ library(readr)
 library(missMDA)
 library(corrplot)
 library(dplyr)
+library(ggpubr)
 
 # NB: This trip data file has been processed to remove outliers that are likely the result of measurement
 # error.
@@ -167,9 +168,6 @@ eig.val
 
 # Draw the scree plot
 fviz_screeplot(res.famd)
-
-# Save the scree plot
-ggsave("05_PrincipalComponents_Out/FAMDScreePlot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 
 
@@ -297,9 +295,6 @@ fviz_eig(res.pca)
 # Correlation circle
 fviz_pca_var(res.pca, col.var = "black")
 
-# Save plot
-ggsave(filename = "05_PrincipalComponents_Out/PCACorrelationCircle.jpeg", device = "jpeg")
-
 # Quality of representation
 var <- get_pca_var(res.pca)
 corrplot(var$cos2, is.corr = FALSE)
@@ -320,9 +315,6 @@ fviz_pca_biplot(res.pca,
   #select.var = conservation,
   title = "PCA Biplot - Conservation")
 
-# Save plot
-ggsave("05_PrincipalComponents_Out/ConservationBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
-
 # Food security biplot
 fviz_pca_biplot(res.pca,
   label= "var", repel = TRUE,
@@ -332,9 +324,6 @@ fviz_pca_biplot(res.pca,
   addEllipses = TRUE,
   select.var = food,
   title = "PCA Biplot - Food Security")
-
-# Save plot
-ggsave("05_PrincipalComponents_Out/FoodBiplot_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 # Now, create three more biplots, each with two dimensions, making sure each variable
 # is plotted either once or twice. Variables will be included based on their cos2 values.
@@ -359,9 +348,6 @@ fviz_pca_biplot(res.pca,
   select.var = dims12.food,
   title = "PCA Biplot - Food Security")
 
-# Save plot
-ggsave("05_PrincipalComponents_Out/Biplot1Food_FishTrapsFoodSec.jpeg", device = "jpeg")
-
 # Dims 1 and 2 biplot for conservation
 fviz_pca_biplot(res.pca,
   label= "var", repel = TRUE,
@@ -371,9 +357,6 @@ fviz_pca_biplot(res.pca,
   addEllipses = TRUE,
   select.var = dims12.cons,
   title = "PCA Biplot - Conservation")
-
-# Save plot
-ggsave("05_PrincipalComponents_Out/Biplot1Conservation_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 # Dims 3 and 4 biplot
 fviz_pca_biplot(res.pca,
@@ -385,9 +368,6 @@ fviz_pca_biplot(res.pca,
   select.var = dims34,
   title = "PCA Biplot")
 
-# Save plot
-ggsave("05_PrincipalComponents_Out/Biplot2_FishTrapsFoodSec.jpeg", device = "jpeg")
-
 # Dims 5 and 6 biplot
 fviz_pca_biplot(res.pca,
   axes = c(5, 6),
@@ -398,9 +378,6 @@ fviz_pca_biplot(res.pca,
   addEllipses = TRUE,
   select.var = dims56,
   title = "PCA Biplot")
-
-# Save plot
-ggsave("05_PrincipalComponents_Out/Biplot3_FishTrapsFoodSec.jpeg", device = "jpeg")
 
 
 
@@ -495,29 +472,24 @@ fviz_eig(res.food.pca)
 # Correlation circle
 fviz_pca_var(res.food.pca, col.var = "black")
 
-# Save plot
-ggsave(filename = "05_PrincipalComponents_Out/Food_PCACorrelationCircle.jpeg", device = "jpeg")
-
 # Quality of representation
 var <- get_pca_var(res.food.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
 # Prepare lists of variables for each biplot
-names <- list(name = c("CPUE", "Value", "Maturity", "Calicum", "Vitamin A"))
+names <- list(name = c("CPUE", "Value", "Maturity", "Calcium", "Vitamin A"))
 
 # Prepare biplot
-fviz_pca_biplot(res.food.pca,
+plot.a <- fviz_pca_biplot(res.food.pca,
   label= "var", repel = TRUE,
   col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
   col.var = "black", alpha.var = 0.5,
   addEllipses = TRUE,
   select.var = names,
-  title = "PCA Biplot - Food Security",
-  ylim = c(-4, 6))
-
-# Save plot
-ggsave("05_PrincipalComponents_Out/FoodOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
-
+  title = "",
+  ylim = c(-4, 6),
+  legend.title = "Trap Type") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 
 
@@ -550,9 +522,6 @@ fviz_eig(res.cons.pca)
 # Correlation circle
 fviz_pca_var(res.cons.pca, col.var = "black")
 
-# Save plot
-ggsave(filename = "05_PrincipalComponents_Out/Conservation_PCACorrelationCircle.jpeg", device = "jpeg")
-
 # Quality of representation
 var <- get_pca_var(res.cons.pca)
 corrplot(var$cos2, is.corr = FALSE)
@@ -561,17 +530,21 @@ corrplot(var$cos2, is.corr = FALSE)
 names <- list(name = c("Scrapers", "Browsers", "Maturity", "Trophic Level"))
 
 # Prepare biplot
-fviz_pca_biplot(res.cons.pca,
+plot.b <- fviz_pca_biplot(res.cons.pca,
   label= "var", repel = TRUE,
   col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
   col.var = "black", alpha.var = 0.5,
   ylim = c(-4, 5),
   select.var = names,
   addEllipses = TRUE,
-  title = "PCA Biplot - Conservation")
+  title = "",
+  legend.title = "Trap Type") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Save plot
-ggsave("05_PrincipalComponents_Out/ConservationOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
+ggarrange(plot.a, plot.b, legend = "bottom", common.legend = TRUE)
+ggsave(filename = "05_PrincipalComponents_Out/PCA_Biplots.jpeg", device = "jpeg",
+  height = 4, width = 8, units = "in")
 
 
 
