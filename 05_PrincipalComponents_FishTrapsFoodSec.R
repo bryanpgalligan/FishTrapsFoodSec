@@ -594,10 +594,10 @@ TripData_ForModeling <- inner_join(TripData_ForModeling, cons.dims, by = "TripID
   suffix = c("", ".y"), keep = TRUE)
 
 # Rename conservation dim 1, representing browser mass ratio and mean trophic level
-colnames(TripData_ForModeling)[5] <- "ConsDim1"
+colnames(TripData_ForModeling)[6] <- "ConsDim1"
 
 # Rename conservation dim 2, representing scraper mass ratio and mean L / Lmat
-colnames(TripData_ForModeling)[6] <- "ConsDim2"
+colnames(TripData_ForModeling)[7] <- "ConsDim2"
 
 # Remove surplus variables
 TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType",
