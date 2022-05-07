@@ -317,12 +317,12 @@ plot.1d <- ggplot(prediction, aes(y = predicted, x = x)) +
 # ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons2Prediction.jpeg", device = "jpeg")
 
 # Plot 1
-ggarrange(plot.1a, plot.1b, plot.1c, plot.1d, nrow = 1,
-  widths = c(1.3, 1.1, 1.3, 1.35))
+ggarrange(plot.1a, plot.1b, plot.1c, plot.1d, nrow = 2, ncol = 2,
+  align = "hv", widths = c(1, 1,2))
 
 # Save Plot 1
 ggsave(filename = "06_AdditionalAnalysis_Out/TrapModelPredictions.jpeg", device = "jpeg",
-  height = 4, width = 16, units = "in")
+  height = 8, width = 8, units = "in")
 
 ##### 6.7 Food and Conservation 1 #####
 
