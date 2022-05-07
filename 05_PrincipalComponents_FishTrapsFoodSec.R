@@ -65,17 +65,27 @@ TripData <- as.data.frame(TripData)
 # Assign row names
 rownames(TripData) <- TripData$TripID
 
+# Make column names readable
+colnames(TripData)[19] <- "Browsers" #Browser mass ratio
+colnames(TripData)[21] <- "Scrapers" #Scraper mass ratio
+colnames(TripData)[28] <- "CPUE"
+colnames(TripData)[31] <- "Value"
+colnames(TripData)[32] <- "Maturity"
+colnames(TripData)[33] <- "Trophic Level"
+colnames(TripData)[42] <- "Calcium"
+colnames(TripData)[58] <- "Vitamin A"
+
 # Delete now redundant TripID column
 TripData <- TripData[,-1]
 
 # Subset only active and supplementary variables (columns) for the FAMD
 df.famd <- TripData[, c("Site", "TrapType",
   "B.undulatus", "LowNoCatch",
-  "ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
-  "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
-  "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
+  "Scrapers", "Browsers", "GrazerMassRatio", "PredatorMassRatio",
+  "CPUE", "CPUE_DistFromMean", "Value",
+  "Maturity", "Trophic Level", "MeanVulnerability", "MTC_degC",
   "FRic", "FEve", "FDiv",
-  "CaConc_mgPer100g", "CaPrice_KSHPermg" #,
+  "Calcium", "CaPrice_KSHPermg" #,
 #  "FeConc_mgPer100g", "FePrice_KSHPermg",
 #  "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
 #  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
@@ -232,11 +242,11 @@ fviz_famd_ind(res.famd, axes = c(1,2),
 
 # Subset only active and supplementary variables (columns) for the PCA
 df.pca <- TripData[, c("Site", "TrapType",
-  "ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
-  "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
-  "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
+  "Scrapers", "Browsers", "GrazerMassRatio", "PredatorMassRatio",
+  "CPUE", "CPUE_DistFromMean", "Value",
+  "Maturity", "Trophic Level", "MeanVulnerability", "MTC_degC",
   "FRic", "FEve", "FDiv",
-  "CaConc_mgPer100g", "CaPrice_KSHPermg" #,
+  "Calcium", "CaPrice_KSHPermg" #,
   # "FeConc_mgPer100g", "FePrice_KSHPermg",
   # "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
   # "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
@@ -295,10 +305,10 @@ var <- get_pca_var(res.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
 # Prepare lists of variables for each biplot
-conservation <- list(name = c("ScraperMassRatio", "MeanLLmat", "MeanTrophLevel", "MeanVulnerability", "FRic", 
+conservation <- list(name = c("Scrapers", "Maturity", "Trophic Level", "MeanVulnerability", "FRic", 
     "FEve", "FDiv"))
-food <- list(name = c("CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
-  "CaConc_mgPer100g", "CaPrice_KSHPermg"))
+food <- list(name = c("CPUE", "CPUE_DistFromMean", "Value",
+  "Calcium", "CaPrice_KSHPermg"))
 
 # Conservation biplot
 fviz_pca_biplot(res.pca,
@@ -332,12 +342,12 @@ ggsave("05_PrincipalComponents_Out/FoodBiplot_FishTrapsFoodSec.jpeg", device = "
 # We'll use 0.2 as the minimum cos2 value for inclusion
 
 # Prepare lists of variables for each biplot
-dims12.food <- list(name = c("CPUE_kgPerTrap", "ValuePUE", "MTC_degC", "CaPrice_KSHPermg"))
-dims12.cons <- list(name = c("BrowserMassRatio", "MeanTrophLevel", "MeanVulnerability",
+dims12.food <- list(name = c("CPUE", "Value", "MTC_degC", "CaPrice_KSHPermg"))
+dims12.cons <- list(name = c("Browsers", "Trophic Level", "MeanVulnerability",
   "FEve", "FDiv"))
-dims34 <- list(name = c("ScraperMassRatio", "CPUE_kgPerTrap", "CPUE_DistFromMean", "MeanLLmat",
+dims34 <- list(name = c("Scrapers", "CPUE", "CPUE_DistFromMean", "Maturity",
   "MTC_degC", "FRic", "FEve", "CaPrice_KSHPermg"))
-dims56 <- list(name = c("ScraperMassRatio", "GrazerMassRatio", "CaConc_mgPer100g"))
+dims56 <- list(name = c("Scrapers", "GrazerMassRatio", "Calcium"))
 
 # Dims 1 and 2 biplot for food security
 fviz_pca_biplot(res.pca,
@@ -399,13 +409,13 @@ ggsave("05_PrincipalComponents_Out/Biplot3_FishTrapsFoodSec.jpeg", device = "jpe
 
 # Subset only active and supplementary variables (columns) for the PCA
 df.nut.pca <- TripData[, c("Site", "TrapType",
-  "CaConc_mgPer100g", "CaPrice_KSHPermg",
-  "FeConc_mgPer100g", "FePrice_KSHPermg",
-  "Omega3Conc_gPer100g", "Omega3Price_KSHPerg",
-  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
-  "VAConc_ugPer100g", "VAPrice_KSHPerug",
-  "SeConc_ugPer100g", "SePrice_KSHPerug",
-  "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+  "Calcium", #"CaPrice_KSHPermg",
+  "FeConc_mgPer100g", #"FePrice_KSHPermg",
+  "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
+  "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
+  "Vitamin A", #"VAPrice_KSHPerug",
+  "SeConc_ugPer100g", #"SePrice_KSHPerug",
+  "ZnConc_ugPer100g" #"ZnPrice_KSHPerug"
   )]
 
 # # Empty list of rows containing infinite values in df.famd
@@ -437,10 +447,14 @@ df.nut.pca <- df.nut.pca[complete.cases(df.nut.pca),]
 df.nut.pca <- subset(df.nut.pca, df.nut.pca$TrapType != "Multiple")
 
 # Run the PCA
-res.nut.pca <- PCA(df.nut.pca[, 3:16], ncp = 5, graph = TRUE, scale.unit = TRUE)
+res.nut.pca <- PCA(df.nut.pca[, 3:9], ncp = 5, graph = TRUE, scale.unit = TRUE)
 
 # Scree plot
 fviz_eig(res.nut.pca)
+
+# Quality of representation
+var <- get_pca_var(res.nut.pca)
+corrplot(var$cos2, is.corr = FALSE)
 
 # Nutrients biplot
 fviz_pca_biplot(res.nut.pca,
@@ -458,18 +472,9 @@ fviz_pca_biplot(res.nut.pca,
 
 # Subset only active and supplementary variables (columns) for the PCA
 df.food.pca <- TripData[, c("Site", "TrapType",
-  #"ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
-  "CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
-  "MeanLLmat",
-  #"MeanTrophLevel", "MeanVulnerability", "MTC_degC",
-  #"FRic", "FEve", "FDiv",
-  "CaConc_mgPer100g", #"CaPrice_KSHPermg",
-  # "FeConc_mgPer100g", #"FePrice_KSHPermg",
-  # "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
-  # "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
-  "VAConc_ugPer100g" #, "VAPrice_KSHPerug",
-  # "SeConc_ugPer100g", #"SePrice_KSHPerug",
-  # "ZnConc_ugPer100g", #"ZnPrice_KSHPerug"
+  "CPUE", "CPUE_DistFromMean", "Value",
+  "Maturity",
+  "Calcium", "Vitamin A"
   )]
 
 # Subset df.food.pca to remove trips with mixed trap types
@@ -497,13 +502,18 @@ ggsave(filename = "05_PrincipalComponents_Out/Food_PCACorrelationCircle.jpeg", d
 var <- get_pca_var(res.food.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
+# Prepare lists of variables for each biplot
+names <- list(name = c("CPUE", "Value", "Maturity", "Calicum", "Vitamin A"))
+
 # Prepare biplot
 fviz_pca_biplot(res.food.pca,
   label= "var", repel = TRUE,
-  col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha = 0.6,
-  col.var = "black",
+  col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
+  col.var = "black", alpha.var = 0.5,
   addEllipses = TRUE,
-  title = "PCA Biplot - Food Security")
+  select.var = names,
+  title = "PCA Biplot - Food Security",
+  ylim = c(-4, 6))
 
 # Save plot
 ggsave("05_PrincipalComponents_Out/FoodOnly_Biplot_FishTrapsFoodSec.jpeg", device = "jpeg")
@@ -516,18 +526,10 @@ ggsave("05_PrincipalComponents_Out/FoodOnly_Biplot_FishTrapsFoodSec.jpeg", devic
 
 # Subset only active and supplementary variables (columns) for the PCA
 df.cons.pca <- TripData[, c("Site", "TrapType",
-  "ScraperMassRatio", "BrowserMassRatio", "GrazerMassRatio", "PredatorMassRatio",
-  #"CPUE_kgPerTrap", "CPUE_DistFromMean", "ValuePUE",
-  "MeanLLmat",
-  "MeanTrophLevel", "MeanVulnerability", "MTC_degC",
-  "FRic", "FEve", "FDiv" #,
-  # "CaConc_mgPer100g", #"CaPrice_KSHPermg",
-  # # "FeConc_mgPer100g", #"FePrice_KSHPermg",
-  # # "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
-  # # "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
-  # "VAConc_ugPer100g" #, "VAPrice_KSHPerug",
-  # # "SeConc_ugPer100g", #"SePrice_KSHPerug",
-  # # "ZnConc_ugPer100g", #"ZnPrice_KSHPerug"
+  "Scrapers", "Browsers",
+  "Maturity",
+  "Trophic Level", "MeanVulnerability", "MTC_degC",
+  "FRic", "FEve", "FDiv"
   )]
 
 # Subset df.cons.pca to remove trips with mixed trap types
@@ -555,11 +557,16 @@ ggsave(filename = "05_PrincipalComponents_Out/Conservation_PCACorrelationCircle.
 var <- get_pca_var(res.cons.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
+# Prepare lists of variables for the biplot
+names <- list(name = c("Scrapers", "Browsers", "Maturity", "Trophic Level"))
+
 # Prepare biplot
 fviz_pca_biplot(res.cons.pca,
   label= "var", repel = TRUE,
-  col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha = 0.6,
-  col.var = "black",
+  col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
+  col.var = "black", alpha.var = 0.5,
+  ylim = c(-4, 5),
+  select.var = names,
   addEllipses = TRUE,
   title = "PCA Biplot - Conservation")
 
@@ -597,8 +604,11 @@ TripData_ForModeling <- inner_join(TripData_ForModeling, food.dims, by = "TripID
 # Rename food dim 1, representing CPUE, value PUE, and Ca concentration
 colnames(TripData_ForModeling)[4] <- "FoodDim1"
 
+# Rename food dim 2, representing maturity and Vitamin A
+colnames(TripData_ForModeling)[5] <- "FoodDim2"
+
 # Remove surplus variables
-TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType", "FoodDim1")]
+TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType", "FoodDim1", "FoodDim2")]
 
 # Extract conservation pca coordinates
 cons.dims <- data.frame(res.cons.pca[["ind"]][["coord"]])
@@ -617,7 +627,8 @@ colnames(TripData_ForModeling)[5] <- "ConsDim1"
 colnames(TripData_ForModeling)[6] <- "ConsDim2"
 
 # Remove surplus variables
-TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType", "FoodDim1",
+TripData_ForModeling <- TripData_ForModeling[, c("TripID", "Site", "TrapType",
+  "FoodDim1", "FoodDim2",
   "ConsDim1", "ConsDim2")]
 
 # Save data
