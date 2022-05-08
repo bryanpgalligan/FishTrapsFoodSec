@@ -28,9 +28,10 @@
 ##    6.4 TrapType and Food 2
 ##    6.5 TrapType and Conservation 1
 ##    6.6 TrapType and Conservation 2
-##    6.7 Food and Conservation 1
-##    6.8 Food and Conservation 2
-##    6.9 Lmat and calcium concentration
+##    6.7 TrapType and Scrapers
+##    6.8 Food and Conservation 1
+##    6.9 Food and Conservation 2
+##    6.10 Lmat and calcium concentration
 
 
 
@@ -182,9 +183,6 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
 
 # Gated traps have higher CPUE and value PUE, but lower Ca concentrations
 
-# Save the plot
-# ggsave(filename = "06_AdditionalAnalysis_Out/TrapFoodPrediction.jpeg", device = "jpeg",
-#   height = 5, width = 3, units = "in")
 
 
 
@@ -227,6 +225,10 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
   coord_cartesian(ylim = c(-0.35, 0.35))
 
 # Gated traps have higher vitamin A and mean L/Lmat
+
+# Save food security plots
+ggarrange(plot.1a, plot.1b)
+ggsave("06_AdditionalAnalysis_Out/Fig4_FoodSecModels.jpeg", device = "jpeg")
 
 
 
@@ -328,7 +330,15 @@ ggarrange(plot.1a, plot.1b, plot.1c, plot.1d, nrow = 2, ncol = 2,
 ggsave(filename = "06_AdditionalAnalysis_Out/TrapModelPredictions.jpeg", device = "jpeg",
   height = 8, width = 8, units = "in")
 
-##### 6.7 Food and Conservation 1 #####
+
+
+
+##### 6.7 TrapType and Scrapers #####
+
+
+
+
+##### 6.8 Food and Conservation 1 #####
 
 # Linear Model
 food.cons1.model <- glmmTMB(ConsDim1 ~ FoodDim1 * TrapType,
@@ -362,7 +372,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device =
 
 
 
-##### 6.8 Food and Conservation 2 #####
+##### 6.9 Food and Conservation 2 #####
 
 # Linear model
 food.cons2.model <- glmmTMB(ConsDim2 ~ FoodDim1*TrapType,
@@ -396,7 +406,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device =
 
 
 
-##### 6.9 Lmat and calcium concentration #####
+##### 6.10 Lmat and calcium concentration #####
 
 # Linear model
 lmat.calc.model <- lm(Calcium_mgPer100g ~ Lmat_cm, data = SpeciesData)
