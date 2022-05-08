@@ -215,7 +215,7 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
   scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.3, 0.34),
-    labels = c(-0.2, 0.0, 0.2, "Vitamin A", "Maturity")) +
+    labels = c(-0.2, 0.0, 0.2, "Maturity", "Vitamin A")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
     label = expression("p = 1.01 x 10"^-7)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
