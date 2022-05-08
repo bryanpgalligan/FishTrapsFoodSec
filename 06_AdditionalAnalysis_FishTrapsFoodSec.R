@@ -30,6 +30,7 @@
 ##    6.6 TrapType and Conservation 2
 ##    6.7 Food and Conservation 1
 ##    6.8 Food and Conservation 2
+##    6.9 Lmat and calcium concentration
 
 
 
@@ -47,6 +48,9 @@ library(ggpubr)
 
 # Load trip data
 TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv")
+
+# Load species data
+SpeciesData <- read_csv("02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv")
 
 # Load PCA data for modeling
 PCAData <- read_csv("05_PrincipalComponents_Out/TripData_ForModeling.csv")
@@ -360,6 +364,7 @@ ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device =
 
 ##### 6.8 Food and Conservation 2 #####
 
+# Linear model
 food.cons2.model <- glmmTMB(ConsDim2 ~ FoodDim1*TrapType,
   data = PCAData,
   family = gaussian())
@@ -387,4 +392,54 @@ ggplot(prediction, aes(y = predicted, x = x)) +
 
 # Save the plot
 ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
+
+
+
+
+##### 6.9 Lmat and calcium concentration #####
+
+# Linear model
+lmat.calc.model <- lm(Calcium_mgPer100g ~ Lmat_cm, data = SpeciesData)
+
+# Model summary
+summary(lmat.calc.model)
+
+# Simulate residuals
+simulateResiduals(lmat.calc.model, plot = TRUE)
+
+# The residuals don't look great...
+
+# Plot distribution of calcium
+ggplot(data = SpeciesData, mapping = aes(x = Calcium_mgPer100g)) +
+  geom_density()
+
+# Plot distribution of Lmat
+ggplot(data = SpeciesData, mapping = aes(x = Lmat_cm)) +
+  geom_density()
+
+# Get model prediction
+prediction <- ggpredict(lmat.calc.model, terms = c("Lmat_cm"))
+
+# Plot the prediction
+ggplot(prediction, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lmat_cm, y = Calcium_mgPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 75), ylim = c(0, 210)) +
+  labs(title = "",
+    x = expression(paste("Length at First Maturity (", L[mat], ") (cm)", sep = "")),
+    y = expression(paste("Calcium Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 60, y = 140,
+    label = expression("p = 6.49 x 10"^-8)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"))
+
+# Save plot
+ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
+
+
+
+
 
