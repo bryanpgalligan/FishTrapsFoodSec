@@ -44,7 +44,6 @@ library(ggplot2)
 library(FactoMineR)
 library(factoextra)
 library(readr)
-library(missMDA)
 library(corrplot)
 library(dplyr)
 library(ggpubr)
@@ -73,6 +72,11 @@ colnames(TripData)[28] <- "CPUE"
 colnames(TripData)[31] <- "Value"
 colnames(TripData)[32] <- "Maturity"
 colnames(TripData)[33] <- "Trophic Level"
+colnames(TripData)[34] <- "Vulnerability"
+colnames(TripData)[35] <- "Temperature"
+colnames(TripData)[37] <- "Fun. Richness"
+colnames(TripData)[38] <- "Fun. Evenness"
+colnames(TripData)[39] <- "Fun. Divergence"
 colnames(TripData)[42] <- "Calcium"
 colnames(TripData)[58] <- "Vitamin A"
 
@@ -84,7 +88,7 @@ df.famd <- TripData[, c("Site", "TrapType",
   "B.undulatus", "LowNoCatch",
   "Scrapers", "Browsers", "GrazerMassRatio", "PredatorMassRatio",
   "CPUE", "CPUE_DistFromMean", "Value",
-  "Maturity", "Trophic Level", "MeanVulnerability", "MTC_degC",
+  "Maturity", "Trophic Level", "Vulnerability", "Temperature",
   "FRic", "FEve", "FDiv",
   "Calcium", "CaPrice_KSHPermg" #,
 #  "FeConc_mgPer100g", "FePrice_KSHPermg",
@@ -242,7 +246,7 @@ fviz_famd_ind(res.famd, axes = c(1,2),
 df.pca <- TripData[, c("Site", "TrapType",
   "Scrapers", "Browsers", "GrazerMassRatio", "PredatorMassRatio",
   "CPUE", "CPUE_DistFromMean", "Value",
-  "Maturity", "Trophic Level", "MeanVulnerability", "MTC_degC",
+  "Maturity", "Trophic Level", "Vulnerability", "Temperature",
   "FRic", "FEve", "FDiv",
   "Calcium", "CaPrice_KSHPermg" #,
   # "FeConc_mgPer100g", "FePrice_KSHPermg",
@@ -300,7 +304,7 @@ var <- get_pca_var(res.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
 # Prepare lists of variables for each biplot
-conservation <- list(name = c("Scrapers", "Maturity", "Trophic Level", "MeanVulnerability", "FRic", 
+conservation <- list(name = c("Scrapers", "Maturity", "Trophic Level", "Vulnerability", "FRic", 
     "FEve", "FDiv"))
 food <- list(name = c("CPUE", "CPUE_DistFromMean", "Value",
   "Calcium", "CaPrice_KSHPermg"))
@@ -331,11 +335,11 @@ fviz_pca_biplot(res.pca,
 # We'll use 0.2 as the minimum cos2 value for inclusion
 
 # Prepare lists of variables for each biplot
-dims12.food <- list(name = c("CPUE", "Value", "MTC_degC", "CaPrice_KSHPermg"))
-dims12.cons <- list(name = c("Browsers", "Trophic Level", "MeanVulnerability",
+dims12.food <- list(name = c("CPUE", "Value", "Temperature", "CaPrice_KSHPermg"))
+dims12.cons <- list(name = c("Browsers", "Trophic Level", "Vulnerability",
   "FEve", "FDiv"))
 dims34 <- list(name = c("Scrapers", "CPUE", "CPUE_DistFromMean", "Maturity",
-  "MTC_degC", "FRic", "FEve", "CaPrice_KSHPermg"))
+  "Temperature", "FRic", "FEve", "CaPrice_KSHPermg"))
 dims56 <- list(name = c("Scrapers", "GrazerMassRatio", "Calcium"))
 
 # Dims 1 and 2 biplot for food security
@@ -480,7 +484,7 @@ corrplot(var$cos2, is.corr = FALSE)
 names <- list(name = c("CPUE", "Value", "Maturity", "Calcium", "Vitamin A"))
 
 # Prepare biplot
-plot.a <- fviz_pca_biplot(res.food.pca,
+fviz_pca_biplot(res.food.pca,
   label= "var", repel = TRUE,
   col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
   col.var = "black", alpha.var = 0.5,
@@ -491,6 +495,9 @@ plot.a <- fviz_pca_biplot(res.food.pca,
   legend.title = "Trap Type") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
+# Save biplot
+ggsave("05_PrincipalComponents_Out/Fig2_FoodSecBiplot.jpeg", device = "jpeg")
+
 
 
 
@@ -500,8 +507,8 @@ plot.a <- fviz_pca_biplot(res.food.pca,
 df.cons.pca <- TripData[, c("Site", "TrapType",
   "Scrapers", "Browsers",
   "Maturity",
-  "Trophic Level", "MeanVulnerability", "MTC_degC",
-  "FRic", "FEve", "FDiv"
+  "Trophic Level", "Vulnerability", "Temperature",
+  "Fun. Richness", "Fun. Evenness", "Fun. Divergence"
   )]
 
 # Subset df.cons.pca to remove trips with mixed trap types
@@ -511,7 +518,7 @@ df.cons.pca <- subset(df.cons.pca, df.cons.pca$TrapType != "Multiple")
 df.cons.pca <- df.cons.pca[complete.cases(df.cons.pca),]
 
 # Run the PCA
-res.cons.pca <- PCA(df.cons.pca[, 3:8], ncp = 3, graph = TRUE, scale.unit = TRUE)
+res.cons.pca <- PCA(df.cons.pca[, 3:11], ncp = 3, graph = TRUE, scale.unit = TRUE)
 
 # Eigenvalues
 eig.val <- get_eigenvalue(res.cons.pca)
@@ -526,25 +533,42 @@ fviz_pca_var(res.cons.pca, col.var = "black")
 var <- get_pca_var(res.cons.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
-# Prepare lists of variables for the biplot
-names <- list(name = c("Scrapers", "Browsers", "Maturity", "Trophic Level"))
+# Prepare lists of variables for each biplot
+vars.plot1 <- list(name = c("Browsers", "Trophic Level", "Temperature", "Vulnerability", "Fun. Divergence",
+  "Maturity", "Fun. Evenness", "Fun. Richness"))
+vars.plot2 <- list(name = c("Browsers", "Trophic Level", "Temperature", "Vulnerability", "Fun. Divergence",
+  "Scrapers"))
 
-# Prepare biplot
-plot.b <- fviz_pca_biplot(res.cons.pca,
+# Prepare biplot for dims 1 and 2
+plot1 <- fviz_pca_biplot(res.cons.pca,
+  axes = c(1, 2),
   label= "var", repel = TRUE,
   col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
   col.var = "black", alpha.var = 0.5,
   ylim = c(-4, 5),
-  select.var = names,
+  select.var = vars.plot1,
+  addEllipses = TRUE,
+  title = "",
+  legend.title = "Trap Type") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# Prepare biplot for dims 1 and 3
+plot2 <- fviz_pca_biplot(res.cons.pca,
+  axes = c(1, 3),
+  label= "var", repel = TRUE,
+  col.ind = df.cons.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
+  col.var = "black", alpha.var = 0.5,
+  ylim = c(-4, 5),
+  select.var = vars.plot2,
   addEllipses = TRUE,
   title = "",
   legend.title = "Trap Type") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Save plot
-ggarrange(plot.a, plot.b, legend = "bottom", common.legend = TRUE)
-ggsave(filename = "05_PrincipalComponents_Out/PCA_Biplots.jpeg", device = "jpeg",
-  height = 4, width = 8, units = "in")
+ggarrange(plot1, plot2, legend = "right", common.legend = TRUE)
+ggsave(filename = "05_PrincipalComponents_Out/Fig3_ConservationBiplots.jpeg", device = "jpeg",
+  height = 5, width = 14, units = "in")
 
 
 
