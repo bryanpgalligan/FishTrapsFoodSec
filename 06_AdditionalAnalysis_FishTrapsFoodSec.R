@@ -261,23 +261,17 @@ plot.2a <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
-  scale_y_continuous(breaks = c(-0.34, -0.3, -0.2, 0, 0.2, 0.26, 0.3, 0.34),
+  scale_y_continuous(breaks = c(-0.5, -0.46, -0.4, -0.2, 0, 0.2, 0.4, 0.46, 0.5, 0.54),
     labels = c("Browsers", "Fun. Divergence",
-      -0.2, 0.0, 0.2,
+      -0.4, -0.2, 0.0, 0.2, 0.4,
       "Vulnerability", "Temperature", "Trophic Level")) +
-
-# browsers, div
-# trophic, temp, vuln 
-  
-  
-  
-    annotate(geom = "text", x = "Gated", y = 0.25,
+  annotate(geom = "text", x = "Gated", y = 0.3,
     label = expression("   p < 2.0 x 10"^-16)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
     axis.ticks = element_blank()) +
-  coord_cartesian(ylim = c(-0.35, 0.35))
+  coord_cartesian(ylim = c(-0.5, 0.5))
 
 # Traditional traps have higher mean trophic level and lower browser mass ratio
 
@@ -311,37 +305,76 @@ ggplot(data = PCAData, mapping = aes(ConsDim2)) +
 prediction <- ggpredict(trap.cons2.model, terms = c("TrapType"))
 
 # Plot the prediction
-plot.1d <- ggplot(prediction, aes(y = predicted, x = x)) +
+plot.2b <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
-  scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.27, 0.34),
-    labels = c("", -0.2, 0.0, 0.2, "Scraping Herbivores", expression(paste("Mean ", frac(L,L[mat]), sep = "")))) +
-  annotate(geom = "text", x = "Traditional", y = 0.25,
-    label = expression("p = 2.92 x 10"^-4)) +
+  scale_y_continuous(breaks = c(-0.5, -0.46, -0.4, -0.2, 0, 0.2, 0.4, 0.46, 0.5, 0.54),
+    labels = c("Fun. Richness", "",
+      -0.4, -0.2, 0.0, 0.2, 0.4,
+      "", "Fun. Evenness", "Maturity")) +
+  annotate(geom = "text", x = "Traditional", y = 0.3,
+    label = "p = 0.08") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
     axis.ticks.y = element_blank()) +
-  coord_cartesian(ylim = c(-0.35, 0.35))
+  coord_cartesian(ylim = c(-0.5, 0.5))
 
-# Gated traps have a higher mean L / Lmat and higher Scraper Mass Ratio
-  
-# Save the plot
-# ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons2Prediction.jpeg", device = "jpeg")
-
-# Plot 1
-ggarrange(plot.1a, plot.1b, plot.1c, plot.1d, nrow = 2, ncol = 2,
-  align = "hv", widths = c(1, 1,2))
-
-# Save Plot 1
-ggsave(filename = "06_AdditionalAnalysis_Out/TrapModelPredictions.jpeg", device = "jpeg",
-  height = 8, width = 8, units = "in")
+# Gated traps have a higher mean L / Lmat and FEve but lower FRic
 
 
 
 
 ##### 6.7 TrapType and Scrapers #####
+
+# Subset trip data to exclude traptype = multiple
+df <- subset(TripData, TripData$TrapType != "Multiple")
+
+# Linear Model
+trap.scrapers.model <- glmmTMB(ScraperMassRatio ~ TrapType + (1|Site),
+  data = df,
+  family = "gaussian")
+
+# Model summary
+summary(trap.scrapers.model)
+
+# Simulate residuals
+simulateResiduals(trap.cons2.model, plot = TRUE)
+
+# The residuals look okay
+
+# Density plot of ConsDim2
+ggplot(data = df, mapping = aes(ScraperMassRatio)) +
+  geom_density()
+
+# This looks like a normal distribution...
+
+# Get model predictions
+prediction <- ggpredict(trap.scrapers.model, terms = c("TrapType"))
+
+# Plot the prediction
+plot.2c <- ggplot(prediction, aes(y = predicted, x = x)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
+  labs(title = "", x = "", y = "") +
+  scale_y_continuous(breaks = c(0, 0.02, 0.04, 0.06, 0.08, 0.1),
+    labels = c("", 0.02, 0.04, 0.06, 0.08, "Scrapers")) +
+  annotate(geom = "text", x = "Traditional", y = 0.08,
+    label = "p = 0.22") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    axis.ticks.y = element_blank()) +
+  coord_cartesian(ylim = c(0, 0.1))
+
+# Proportion of scrapers in the catch is consistently low, with little variation
+# between trap types
+
+# Save conservation predictions plot
+ggarrange(plot.2a, plot.2b, plot.2c, nrow = 1)
+ggsave("06_AdditionalAnalysis_Out/Fig5_ConsModels.jpeg", device = "jpeg",
+  height = 5, width = 12, units = "in")
 
 
 
