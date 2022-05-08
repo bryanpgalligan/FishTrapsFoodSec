@@ -172,7 +172,7 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
   #   y = paste("Value and Catch per Trap ", sprintf("\u2192"),
   #     "\n", sprintf("\u2190"), " Calcium Concentration", sep = "")) +
   scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.3, 0.34),
-    labels = c("Calcium Concentration", -0.2, 0.0, 0.2, "Value Per Unit Effort", "Catch Per Unit Effort")) +
+    labels = c("Calcium", -0.2, 0.0, 0.2, "Value", "CPUE")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
     label = expression("p = 4.92 x 10"^-5)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -214,8 +214,8 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
-  scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.27, 0.34),
-    labels = c(-0.2, 0.0, 0.2, "Vitamin A", expression(paste("Mean ", frac(L,L[mat]), sep = "")))) +
+  scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.3, 0.34),
+    labels = c(-0.2, 0.0, 0.2, "Vitamin A", "Maturity")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
     label = expression("p = 1.01 x 10"^-7)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -257,14 +257,22 @@ ggplot(data = PCAData, mapping = aes(ConsDim1)) +
 prediction <- ggpredict(trap.cons1.model, terms = c("TrapType"))
 
 # Plot the prediction
-plot.1c <- ggplot(prediction, aes(y = predicted, x = x)) +
+plot.2a <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
-  scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.34),
-    labels = c("Browsing Herbivores", -0.2, 0.0, 0.2, "Mean Trophic Level")) +
-  annotate(geom = "text", x = "Gated", y = 0.25,
-    label = expression("   p = 9.81 x 10"^-13)) +
+  scale_y_continuous(breaks = c(-0.34, -0.3, -0.2, 0, 0.2, 0.26, 0.3, 0.34),
+    labels = c("Browsers", "Fun. Divergence",
+      -0.2, 0.0, 0.2,
+      "Vulnerability", "Temperature", "Trophic Level")) +
+
+# browsers, div
+# trophic, temp, vuln 
+  
+  
+  
+    annotate(geom = "text", x = "Gated", y = 0.25,
+    label = expression("   p < 2.0 x 10"^-16)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
