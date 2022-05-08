@@ -567,7 +567,7 @@ plot2 <- fviz_pca_biplot(res.cons.pca,
 
 # Save plot
 ggarrange(plot1, plot2, legend = "right", common.legend = TRUE)
-ggsave(filename = "05_PrincipalComponents_Out/Fig3_ConservationBiplots.jpeg", device = "jpeg",
+ggsave(filename = "05_PrincipalComponents_Out/Fig4_ConservationBiplots.jpeg", device = "jpeg",
   height = 5, width = 14, units = "in")
 
 
