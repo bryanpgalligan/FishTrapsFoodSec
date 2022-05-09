@@ -228,7 +228,7 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
 
 # Save food security plots
 ggarrange(plot.1a, plot.1b)
-ggsave("06_AdditionalAnalysis_Out/Fig3_FoodSecModels.jpeg", device = "jpeg")
+ggsave("06_AdditionalAnalysis_Out/Fig4_FoodSecModels.jpeg", device = "jpeg")
 
 
 
@@ -373,7 +373,7 @@ plot.2c <- ggplot(prediction, aes(y = predicted, x = x)) +
 
 # Save conservation predictions plot
 ggarrange(plot.2a, plot.2b, plot.2c, nrow = 1)
-ggsave("06_AdditionalAnalysis_Out/Fig5_ConsModels.jpeg", device = "jpeg",
+ggsave("06_AdditionalAnalysis_Out/Fig6_ConsModels.jpeg", device = "jpeg",
   height = 5, width = 12, units = "in")
 
 
