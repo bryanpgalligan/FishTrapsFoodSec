@@ -28,6 +28,35 @@
 
 
 
+##### 7.1 Packages and data #####
+
+# Load packages
+library(readr)
+library(ggplot2)
+library(ggOceanMapsData)
+library(ggOceanMaps)
+
+# Load trip data
+TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv")
+
+
+
+
+##### 7.2 Make basemap #####
+
+# Basemap
+basemap(limits = c(39, 42, -5, -1)) +
+  labs(x = "", y = "", title = "")
+
+# Save map
+ggsave("07_Mapping_Out/Fig2_FishTrapsMap.jpeg", device = "jpeg")
+
+unique(RawData$Site)
+
+
+
+
+unique(RawData$SPECIES)
 
 
 
