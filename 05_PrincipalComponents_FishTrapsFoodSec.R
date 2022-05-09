@@ -13,6 +13,7 @@
 ##    04 Data Exploration
 ##    05 PCA Analysis
 ##    06 Additional Analysis
+##    07 Mapping
 
 ## Script Title:
 ##    05 PCA Analysis

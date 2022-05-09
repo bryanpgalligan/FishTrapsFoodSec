@@ -13,11 +13,12 @@
 ##    04 Data Exploration
 ##    05 PCA Analysis
 ##    06 Additional Analysis
+##    07 Mapping
 
 ## Script Title:
 ##    06 Additional Analysis
 
-## Last update: 3 May 22
+## Last update: 9 May 22
 
 # This script analyzes the data to supplement principal component methods.
 
