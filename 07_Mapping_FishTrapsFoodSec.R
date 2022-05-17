@@ -18,12 +18,13 @@
 ## Script Title:
 ##    07 Mapping
 
-## Last update: 9 May 22
+## Last update: 17 May 22
 
 # This script creates a map of study sites
 
 ## Script TOC:
 ##    7.1 Packages and data
+##    7.2 Make map
 
 
 
@@ -42,11 +43,22 @@ TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Gall
 
 
 
-##### 7.2 Make basemap #####
+##### 7.2 Make map #####
 
-# Basemap
-basemap(limits = c(39, 42, -5, -1)) +
-  labs(x = "", y = "", title = "")
+# Data frame of site locations
+sites <- as.data.frame(unique(TripData$Site))
+colnames(sites) <- "site"
+
+# Add columns for lat and lon
+sites$lat <- c(-4.00604923, NA, -4.05215875, -4.660707, NA, NA, NA, -4.48622, -4.454932,
+  -4.343498, -3.292405, -4.179676, -3.955419)
+sites$lon <- c(39.72754486, NA, 39.70645155, 39.219428, NA, NA, NA, 39.478735, 39.498806,
+  39.566646, 40.116701, 39.631405, 39.757086)
+
+# Map
+basemap(limits = c(39, 41, -5, -3), land.col = "gray80") +
+  labs(x = "", y = "", title = "") +
+  geom_spatial_point(data = sites, aes(x = lon, y = lat))
 
 # Save map
 ggsave("07_Mapping_Out/Fig2_FishTrapsMap.jpeg", device = "jpeg")
