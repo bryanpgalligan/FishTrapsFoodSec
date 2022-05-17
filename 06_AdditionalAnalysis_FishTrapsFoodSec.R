@@ -332,10 +332,14 @@ plot.2b <- ggplot(prediction, aes(y = predicted, x = x)) +
 # Subset trip data to exclude traptype = multiple
 df <- subset(TripData, TripData$TrapType != "Multiple")
 
-# Linear Model
+
+##### WIP - switch to bayesian modeling approach with zoib on this particular model #####
+
+
+# Linear Model with beta distribution because response variable is a proportion
 trap.scrapers.model <- glmmTMB(ScraperMassRatio ~ TrapType + (1|Site),
   data = df,
-  family = "gaussian")
+  family = beta_family())
 
 # Model summary
 summary(trap.scrapers.model)
