@@ -18,7 +18,7 @@
 ## Script Title:
 ##    04 Data Exploration
 
-## Last update: 18 Apr 22
+## Last update: 17 May 22
 
 # This script explores the data to avoid common statistical errors, following the procedures
 # outlined by Zuur et al. (2010).
@@ -27,6 +27,7 @@
 ##    4.1 Load packages and data
 ##    4.2 Outliers
 ##    4.3 Distributions
+##    4.4 Summary statistics
 
 
 
@@ -36,6 +37,7 @@
 # Load packages
 library(readr)
 library(ggplot2)
+library(plotrix) # for standard error function
 
 # Load data
 TripData <- read_csv("03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv",
@@ -269,6 +271,60 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = ZnConc_ugPer100g, color = T
 # Save a copy of TripData ready for analysis
 write.csv(TripData_NoOutliers, "04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv",
   row.names = FALSE)
+
+
+
+
+##### 4.4 Summary statistics #####
+
+# Find mean effort (site-days per month) and SE of mean
+
+# you have 105 months and 840 site days
+
+# List of all site days in study
+site.days <- unique(TripData_NoOutliers[c("Date", "Site")])
+
+# Convert date column to only month and year
+site.days$Date <- format(as.Date(site.days$Date), "%Y-%m")
+
+# New data frame of all months Oct 2010 - June 2019
+effort <- as.data.frame(seq(as.Date("2010-10-01"), by = "month", length.out = 105))
+colnames(effort) <- "Month"
+
+# Format effort month column to by YYYY-MM
+effort$Month <- format(as.Date(effort$Month), "%Y-%m")
+
+# Add empty column for number of site days
+effort$Effort <- NA
+
+# Fill in effort column
+for (i in 1:nrow(effort)){
+  
+  # Extract month
+  a <- effort$Month[i]
+  
+  # Count number of site days
+  b <- nrow(subset(site.days, site.days$Date == a))
+  
+  # Save number of site days to effort
+  if (b > 0){
+    effort$Effort[i] <- b
+  } else {
+    effort$Effort[i] <- 0
+  }
+  
+}
+
+# Remove first and last months because they are partial months
+effort <- effort[2:104, ]
+
+# Find mean and SE
+mean(effort$Effort)
+std.error(effort$Effort)
+
+
+
+
 
 
 
