@@ -50,9 +50,9 @@ sites <- as.data.frame(unique(TripData$Site))
 colnames(sites) <- "site"
 
 # Add columns for lat and lon
-sites$lat <- c(-4.00604923, NA, -4.05215875, -4.660707, NA, NA, NA, -4.48622, -4.454932,
+sites$lat <- c(-4.00604923, NA, -4.05215875, -4.660707, -4.677975, -4.477255, -4.53367, -4.48622, -4.454932,
   -4.343498, -3.292405, -4.179676, -3.955419)
-sites$lon <- c(39.72754486, NA, 39.70645155, 39.219428, NA, NA, NA, 39.478735, 39.498806,
+sites$lon <- c(39.72754486, NA, 39.70645155, 39.219428, 39.213766, 39.487254, 39.464128, 39.478735, 39.498806,
   39.566646, 40.116701, 39.631405, 39.757086)
 
 # Map
@@ -62,13 +62,6 @@ basemap(limits = c(39, 41, -5, -3), land.col = "gray80") +
 
 # Save map
 ggsave("07_Mapping_Out/Fig2_FishTrapsMap.jpeg", device = "jpeg")
-
-unique(RawData$Site)
-
-
-
-
-unique(RawData$SPECIES)
 
 
 
