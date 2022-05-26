@@ -48,12 +48,17 @@ library(ggeffects)
 library(DHARMa)
 library(glmmTMB)
 library(ggpubr)
+library(mgcv)
+library(tidymv)
 
 # Load trip data
 TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv")
 
 # Load species data
 SpeciesData <- read_csv("02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv")
+
+# Load catch data
+CatchData <- read_csv("02_FishLife_Out/CatchData_GatedTraps_Galligan.csv")
 
 # Load PCA data for modeling
 PCAData <- read_csv("05_PrincipalComponents_Out/TripData_ForModeling.csv")
@@ -500,6 +505,103 @@ ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
 
 
 ##### 6.11 LLopt and nutrient yields #####
+
+# Colorblind friendly palette
+cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+ca.gamm.trad <- gamm(CaPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+ca.gamm.gated <- gamm(CaPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+ca.predict.trad <- predict_gam(ca.gamm.trad$gam)
+ca.predict.gated <- predict_gam(ca.gamm.gated$gam)
+
+ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = ca.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = ca.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = ca.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = ca.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    legend.title = element_blank(),
+    axis.line = element_line(colour = "black"))
+
+
+
+
+
+# Plot LLopt and CaPUE
+ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE, color = TrapType)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "gam") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1000)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"))
+
+# Plot LLopt and CPUE
+ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CPUE_kgPerTrap, color = TrapType)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "gam") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 20)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"))
+
+
+# Empty vectors for calicum and calcium concentration
+CatchData$Calcium_mg <- NA
+CatchData$CaConc_mgPer100g <- NA
+
+# Add Ca_mg to CatchData
+for (i in 1:nrow(CatchData)){
+  
+  # Extract species index in SpeciesData
+  a <- which(SpeciesData$Species == CatchData$Species[i])
+  
+  # Extract calcium concentration
+  b <- SpeciesData$Calcium_mgPer100g[a]
+  
+  # Fill in Calcium_mg
+  CatchData$Calcium_mg[i] <- SpeciesData$Calcium_mgPer100g[a] * (CatchData$Weight_g[i] / 100)
+  
+  # Fill in CaConc_mgPer100g
+  CatchData$CaConc_mgPer100g[i] <- SpeciesData$Calcium_mgPer100g[a]
+  
+}
+
+# Plot LLopt and Calcium by fish
+ggplot(data = CatchData, mapping = aes(x = LLopt, y = CaConc_mgPer100g, color = TrapType)) +
+  geom_point(alpha = 0.01) +
+  geom_smooth() +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 200)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"))
+
 
 
 
