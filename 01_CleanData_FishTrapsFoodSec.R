@@ -1156,6 +1156,7 @@ TripData$CPUE_DistFromMean <- NA
 TripData$TotalValue_KSH <- NA
 TripData$ValuePUE <- NA
 TripData$MeanLLmat <- NA
+TripData$MeanLLopt <- NA
 TripData$MeanTrophLevel <- NA
 TripData$MeanVulnerability <- NA
 TripData$MTC_degC <- NA
