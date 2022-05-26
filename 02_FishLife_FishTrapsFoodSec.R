@@ -89,8 +89,9 @@ for(i in 1:nrow(SpeciesData)){
 write.csv(SpeciesData, file = "02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv",
   row.names = FALSE)
 
-# Add LLmat to CatchData
+# Add LLmat and LLopt to CatchData
 CatchData$LLmat <- NA
+CatchData$LLopt <- NA
 for(i in 1:nrow(CatchData)){
   
   # Extract Species
@@ -102,13 +103,19 @@ for(i in 1:nrow(CatchData)){
   # Save LLmat
   CatchData$LLmat[i] <- CatchData$Length_cm[i] / b
   
+  # Extract Lopt_cm
+  c <- SpeciesData$Lopt_cm[SpeciesData$Species == a]
+  
+  # Save LLopt
+  CatchData$LLopt[i] <- CatchData$Length_cm[i] / c
+  
 }
 
 # Save CatchData
 write.csv(CatchData, file = "02_FishLife_Out/CatchData_GatedTraps_Galligan.csv",
   row.names = FALSE)
 
-# Add MeanLLmat to TripData
+# Add MeanLLmat and MeanLLopt to TripData
 for(i in 1:nrow(TripData)){
   
   # Extract TripID
@@ -122,6 +129,12 @@ for(i in 1:nrow(TripData)){
   
   # Save to TripData
   TripData$MeanLLmat[i] <- b
+  
+  # Mean of LLopt for this trip
+  c <- mean(x$LLopt)
+  
+  # Save to TripData
+  TripData$MeanLLopt[i] <- c
   
 }
 
