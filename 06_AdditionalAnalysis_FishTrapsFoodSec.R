@@ -33,6 +33,7 @@
 ##    6.8 Food and Conservation 1
 ##    6.9 Food and Conservation 2
 ##    6.10 Lmat and calcium concentration
+##    6.11 LLopt and nutrient yields
 
 
 
@@ -494,6 +495,21 @@ ggplot(prediction, aes(x = x, y = predicted)) +
 
 # Save plot
 ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
+
+
+
+
+##### 6.11 LLopt and nutrient yields #####
+
+
+
+
+
+
+
+
+
+
 
 
 
