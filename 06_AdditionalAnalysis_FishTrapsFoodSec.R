@@ -544,6 +544,7 @@ a <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
     inherit.aes = FALSE) +
   geom_hline(yintercept = 700, linetype = 2) +
   xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Calcium Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -553,7 +554,8 @@ a <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and calcium
 ca.lm <- lm(Calcium_mgPer100g ~ Lopt_cm, data = SpeciesData)
@@ -570,9 +572,10 @@ b <- ggplot(ca.predict, aes(x = x, y = predicted)) +
     data = SpeciesData, alpha = 0.3) +
   coord_cartesian(xlim = c(0, 100), ylim = c(0, 250)) +
   labs(title = "",
-    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    x = "",
+    #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Calcium Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 200,
+  annotate(geom = "text", x = 80, y = 212.5,
     label = expression("p = 6.39 x 10"^-9)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -616,6 +619,7 @@ c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FePUE
     inherit.aes = FALSE) +
   geom_hline(yintercept = 7, linetype = 2) +
   xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Iron Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -625,7 +629,8 @@ c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FePUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and iron
 fe.lm <- lm(Iron_mgPer100g ~ Lopt_cm, data = SpeciesData)
@@ -642,9 +647,10 @@ d <- ggplot(fe.predict, aes(x = x, y = predicted)) +
     data = SpeciesData, alpha = 0.3) +
   coord_cartesian(xlim = c(0, 100), ylim = c(0, 2)) +
   labs(title = "",
-    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    x = "",
+    #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Iron Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 1.75,
+  annotate(geom = "text", x = 80, y = 1.7,
     label = "p = 0.155") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -688,6 +694,7 @@ e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega
     inherit.aes = FALSE) +
   geom_hline(yintercept = 0.7, linetype = 2) +
   xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Omega-3 Yield ", bgroup("(", frac(g, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -697,7 +704,8 @@ e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and omega-3
 pufa.lm <- lm(Omega3_gPer100g ~ Lopt_cm, data = SpeciesData)
@@ -714,9 +722,10 @@ f <- ggplot(pufa.predict, aes(x = x, y = predicted)) +
     data = SpeciesData, alpha = 0.3) +
   coord_cartesian(xlim = c(0, 100), ylim = c(0, 1)) +
   labs(title = "",
-    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    x = "",
+    #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Omega-3 Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 0.75,
+  annotate(geom = "text", x = 80, y = 0.85,
     label = "p = 0.282") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -760,6 +769,7 @@ g <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
     inherit.aes = FALSE) +
   geom_hline(yintercept = 13, linetype = 2) +
   xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Protein Yield ", bgroup("(", frac(g, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -769,7 +779,8 @@ g <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and protein
 protein.lm <- lm(Protein_gPer100g ~ Lopt_cm, data = SpeciesData)
@@ -786,7 +797,8 @@ h <- ggplot(protein.predict, aes(x = x, y = predicted)) +
     data = SpeciesData, alpha = 0.3) +
   coord_cartesian(xlim = c(0, 100), ylim = c(15, 25)) +
   labs(title = "",
-    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    x = "",
+    #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Protein Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 23,
     label = "p = 0.0122") +
@@ -830,7 +842,8 @@ i <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VAPUE
     alpha = 0.2, linetype = 0,
     inherit.aes = FALSE) +
   geom_hline(yintercept = 300, linetype = 2) +
-  xlab("") +
+  #xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Vitamin A Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -840,7 +853,8 @@ i <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VAPUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and vitamin A
 va.lm <- lm(VitaminA_ugPer100g ~ Lopt_cm, data = SpeciesData)
@@ -859,7 +873,7 @@ j <- ggplot(va.predict, aes(x = x, y = predicted)) +
   labs(title = "",
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Vitamin A Concentration ", bgroup("(", frac(paste("\u00b5" , 'g', sep = ""), '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 300,
+  annotate(geom = "text", x = 80, y = 340,
     label = "p = 0.754") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -902,7 +916,8 @@ k <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SePUE
     alpha = 0.2, linetype = 0,
     inherit.aes = FALSE) +
   geom_hline(yintercept = 20, linetype = 2) +
-  xlab("") +
+  #xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Selenium Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -912,7 +927,8 @@ k <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SePUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and selenium
 se.lm <- lm(Selenium_ugPer100g ~ Lopt_cm, data = SpeciesData)
@@ -931,7 +947,7 @@ l <- ggplot(se.predict, aes(x = x, y = predicted)) +
   labs(title = "",
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Selenium Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 80,
+  annotate(geom = "text", x = 80, y = 85,
     label = expression("p = 5.09 x 10"^-4)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -974,7 +990,8 @@ m <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnPUE
     alpha = 0.2, linetype = 0,
     inherit.aes = FALSE) +
   geom_hline(yintercept = 3, linetype = 2) +
-  xlab("") +
+  #xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Zinc Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
@@ -984,7 +1001,8 @@ m <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnPUE
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and zinc
 zn.lm <- lm(Zinc_ugPer100g ~ Lopt_cm, data = SpeciesData)
@@ -1003,7 +1021,7 @@ n <- ggplot(zn.predict, aes(x = x, y = predicted)) +
   labs(title = "",
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Zinc Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
-  annotate(geom = "text", x = 80, y = 4,
+  annotate(geom = "text", x = 80, y = 4.25,
     label = expression("p = 8.23 x 10"^-4)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
@@ -1015,17 +1033,23 @@ n <- ggplot(zn.predict, aes(x = x, y = predicted)) +
 
 ## Combine plots
 
-# Combine yield plots
-col1 <- ggarrange(a, c, e, g, i, k, m,
-  ncol = 1,
-  common.legend = TRUE, legend = "bottom")
+# Combine yield plots (except protein)
+ggarrange(a, c, e, i, k, m,
+  common.legend = TRUE, legend = "right")
+# annotate_figure(figure,
+#   bottom = text_grob(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")"))),
+#     vjust = -0.2))
 
-# Combine concentration plots
-col2 <- ggarrange(b, d, f, h, j, l, n,
-  ncol = 1)
+# Save plot
+ggsave(filename = "06_AdditionalAnalysis_Out/NutrientYieldLLoptGAMMs.jpeg", device = "jpeg",
+  height = 9, width = 12, units = "in")
 
-# Combine both columns
-ggarrange(col1, col2)
+# Combine concentration plots (except protein)
+ggarrange(b, d, f, j, l, n)
+
+# Save plot
+ggsave(filename = "06_AdditionalAnalysis_Out/NutrientConcentrationLoptLMs.jpeg", device = "jpeg",
+  height = 9, width = 12, units = "in")
 
 
 
