@@ -1052,5 +1052,37 @@ ggsave(filename = "06_AdditionalAnalysis_Out/NutrientConcentrationLoptLMs.jpeg",
   height = 9, width = 12, units = "in")
 
 
+## Check LLopt and length
+
+# Empty column for trip-level LLopt
+CatchData$TripLLopt <- NA
+
+# Add LLopt to CatchData
+for (i in 1:nrow(CatchData)){
+  
+  # Extract TripID
+  a <- CatchData$TripID[i]
+  
+  # Find trip-level LLopt
+  b <- TripData$MeanLLopt[TripData$TripID == a]
+  
+  # Save to CatchData
+  if (length(b) > 0){
+    CatchData$TripLLopt[i] <- b
+  }
+  
+}
+
+# Plot the data
+ggplot(data = CatchData, aes(x = TripLLopt, y = Length_cm, color = TrapType)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth() +
+  theme_minimal()
+
+
+
+
+
+
 
 
