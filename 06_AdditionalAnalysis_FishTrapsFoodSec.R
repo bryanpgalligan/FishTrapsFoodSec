@@ -1080,7 +1080,12 @@ ggplot(data = CatchData, aes(x = TripLLopt, y = Length_cm, color = TrapType)) +
   theme_minimal()
 
 
+## Check relationship between CPUE and LLopt
 
+ggplot(data = TripData.sub.traptype, aes(x = MeanLLopt, y = CPUE_kgPerTrap, color = TrapType)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth() +
+  theme_minimal()
 
 
 
