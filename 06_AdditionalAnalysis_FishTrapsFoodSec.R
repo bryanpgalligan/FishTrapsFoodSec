@@ -509,18 +509,25 @@ ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
 # Colorblind friendly palette
 cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
+
+## Calcium
+
+# GAMM for calcium yield - traditional traps
 ca.gamm.trad <- gamm(CaPUE ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.trad)
 
+# GAMM for calcium yield - gated traps
 ca.gamm.gated <- gamm(CaPUE ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.gated)
 
+# Generate model predictions
 ca.predict.trad <- predict_gam(ca.gamm.trad$gam)
 ca.predict.gated <- predict_gam(ca.gamm.gated$gam)
 
-ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE)) +
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+a <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE)) +
   geom_point(alpha = 0.1, aes(color = TrapType)) +
   scale_color_manual(values = cbPalette[c(2,4)]) +
   geom_line(data = ca.predict.trad,
@@ -535,84 +542,490 @@ ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE)) +
     aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
     alpha = 0.2, linetype = 0,
     inherit.aes = FALSE) +
+  geom_hline(yintercept = 700, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Calcium Yield ", bgroup("(", frac(mg, trap), ")")))) +
+  labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
   coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     legend.key = element_rect(fill = "white"),
-    legend.title = element_blank(),
     axis.line = element_line(colour = "black"))
 
+# LM for LLopt and calcium
+ca.lm <- lm(Calcium_mgPer100g ~ Lopt_cm, data = SpeciesData)
+summary(ca.lm)
 
+# LM prediction
+ca.predict <- ggpredict(ca.lm, "Lopt_cm")
 
-
-
-# Plot LLopt and CaPUE
-ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE, color = TrapType)) +
-  geom_point(alpha = 0.2) +
-  geom_smooth(method = "gam") +
+# Plot prediction and data
+b <- ggplot(ca.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Calcium_mgPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 250)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Calcium Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 200,
+    label = expression("p = 6.39 x 10"^-9)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1000)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
-    axis.line = element_line(colour = "black"))
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
-# Plot LLopt and CPUE
-ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CPUE_kgPerTrap, color = TrapType)) +
-  geom_point(alpha = 0.2) +
-  geom_smooth(method = "gam") +
+
+## Iron
+
+# GAMM for iron yield - traditional traps
+fe.gamm.trad <- gamm(FePUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for iron yield - gated traps
+fe.gamm.gated <- gamm(FePUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+fe.predict.trad <- predict_gam(fe.gamm.trad$gam)
+fe.predict.gated <- predict_gam(fe.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FePUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = fe.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = fe.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = fe.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = fe.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 7, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Iron Yield ", bgroup("(", frac(mg, trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 20)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 20)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
     axis.line = element_line(colour = "black"))
 
+# LM for LLopt and iron
+fe.lm <- lm(Iron_mgPer100g ~ Lopt_cm, data = SpeciesData)
+summary(fe.lm)
 
-# Empty vectors for calicum and calcium concentration
-CatchData$Calcium_mg <- NA
-CatchData$CaConc_mgPer100g <- NA
+# LM prediction
+fe.predict <- ggpredict(fe.lm, "Lopt_cm")
 
-# Add Ca_mg to CatchData
-for (i in 1:nrow(CatchData)){
-  
-  # Extract species index in SpeciesData
-  a <- which(SpeciesData$Species == CatchData$Species[i])
-  
-  # Extract calcium concentration
-  b <- SpeciesData$Calcium_mgPer100g[a]
-  
-  # Fill in Calcium_mg
-  CatchData$Calcium_mg[i] <- SpeciesData$Calcium_mgPer100g[a] * (CatchData$Weight_g[i] / 100)
-  
-  # Fill in CaConc_mgPer100g
-  CatchData$CaConc_mgPer100g[i] <- SpeciesData$Calcium_mgPer100g[a]
-  
-}
-
-# Plot LLopt and Calcium by fish
-ggplot(data = CatchData, mapping = aes(x = LLopt, y = CaConc_mgPer100g, color = TrapType)) +
-  geom_point(alpha = 0.01) +
-  geom_smooth() +
+# Plot prediction and data
+d <- ggplot(fe.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Iron_mgPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 2)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Iron Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 1.75,
+    label = "p = 0.155") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 200)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+## Omega-3 Polyunsaturated Fatty Acids (PUFA)
+
+# GAMM for Omega-3 yield - traditional traps
+pufa.gamm.trad <- gamm(Omega3PUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for calcium yield - gated traps
+pufa.gamm.gated <- gamm(Omega3PUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+pufa.predict.trad <- predict_gam(pufa.gamm.trad$gam)
+pufa.predict.gated <- predict_gam(pufa.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (adequate intake for children 1-3 years)
+e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega3PUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = pufa.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = pufa.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = pufa.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = pufa.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 0.7, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Omega-3 Yield ", bgroup("(", frac(g, trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 5)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
     axis.line = element_line(colour = "black"))
 
+# LM for LLopt and omega-3
+pufa.lm <- lm(Omega3_gPer100g ~ Lopt_cm, data = SpeciesData)
+summary(pufa.lm)
+
+# LM prediction
+pufa.predict <- ggpredict(pufa.lm, "Lopt_cm")
+
+# Plot prediction and data
+f <- ggplot(pufa.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Omega3_gPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 1)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Omega-3 Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 0.75,
+    label = "p = 0.282") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Protein
+
+# GAMM for protein yield - traditional traps
+protein.gamm.trad <- gamm(ProteinPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for protein yield - gated traps
+protein.gamm.gated <- gamm(ProteinPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+protein.predict.trad <- predict_gam(protein.gamm.trad$gam)
+protein.predict.gated <- predict_gam(protein.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years for a reference weight)
+g <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = ca.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = ca.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = ca.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = ca.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 13, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Protein Yield ", bgroup("(", frac(g, trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"))
+
+# LM for LLopt and protein
+protein.lm <- lm(Protein_gPer100g ~ Lopt_cm, data = SpeciesData)
+summary(protein.lm)
+
+# LM prediction
+protein.predict <- ggpredict(protein.lm, "Lopt_cm")
+
+# Plot prediction and data
+h <- ggplot(protein.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Protein_gPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(15, 25)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Protein Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 23,
+    label = "p = 0.0122") +
+  scale_x_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Vitamin A
+
+# GAMM for vitamin A yield - traditional traps
+va.gamm.trad <- gamm(VAPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for vitamin A yield - gated traps
+va.gamm.gated <- gamm(VAPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+va.predict.trad <- predict_gam(va.gamm.trad$gam)
+va.predict.gated <- predict_gam(va.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+i <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VAPUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = va.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = va.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = va.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = va.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 300, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Vitamin A Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 2500)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"))
+
+# LM for LLopt and vitamin A
+va.lm <- lm(VitaminA_ugPer100g ~ Lopt_cm, data = SpeciesData)
+summary(va.lm)
+
+# LM prediction
+va.predict <- ggpredict(va.lm, "Lopt_cm")
+
+# Plot prediction and data
+j <- ggplot(va.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = VitaminA_ugPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 400)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Vitamin A Concentration ", bgroup("(", frac(paste("\u00b5" , 'g', sep = ""), '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 300,
+    label = "p = 0.754") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Selenium
+
+# GAMM for slenium yield - traditional traps
+se.gamm.trad <- gamm(SePUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for calcium yield - gated traps
+se.gamm.gated <- gamm(SePUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+se.predict.trad <- predict_gam(se.gamm.trad$gam)
+se.predict.gated <- predict_gam(se.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+k <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SePUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = se.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = se.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = se.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = se.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 20, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Selenium Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"))
+
+# LM for LLopt and selenium
+se.lm <- lm(Selenium_ugPer100g ~ Lopt_cm, data = SpeciesData)
+summary(se.lm)
+
+# LM prediction
+se.predict <- ggpredict(se.lm, "Lopt_cm")
+
+# Plot prediction and data
+l <- ggplot(se.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Selenium_ugPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 100)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Selenium Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 80,
+    label = expression("p = 5.09 x 10"^-4)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Zinc
+
+# GAMM for zinc yield - traditional traps
+zn.gamm.trad <- gamm(ZnPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for zinc yield - gated traps
+zn.gamm.gated <- gamm(ZnPUE ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+zn.predict.trad <- predict_gam(zn.gamm.trad$gam)
+zn.predict.gated <- predict_gam(zn.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+m <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnPUE)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = zn.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = zn.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = zn.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = zn.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_hline(yintercept = 3, linetype = 2) +
+  xlab("") +
+  ylab(expression(paste("Zinc Yield ", bgroup("(", frac(mg, trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 60)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"))
+
+# LM for LLopt and zinc
+zn.lm <- lm(Zinc_ugPer100g ~ Lopt_cm, data = SpeciesData)
+summary(zn.lm)
+
+# LM prediction
+zn.predict <- ggpredict(zn.lm, "Lopt_cm")
+
+# Plot prediction and data
+n <- ggplot(zn.predict, aes(x = x, y = predicted)) +
+  geom_smooth(method = "lm") +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
+  geom_point(mapping = aes(x = Lopt_cm, y = Zinc_ugPer100g),
+    data = SpeciesData, alpha = 0.3) +
+  coord_cartesian(xlim = c(0, 100), ylim = c(0, 5)) +
+  labs(title = "",
+    x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
+    y = expression(paste("Zinc Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 80, y = 4,
+    label = expression("p = 8.23 x 10"^-4)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Combine plots
 
+# Combine yield plots
+col1 <- ggarrange(a, c, e, g, i, k, m,
+  ncol = 1,
+  common.legend = TRUE, legend = "bottom")
+
+# Combine concentration plots
+col2 <- ggarrange(b, d, f, h, j, l, n,
+  ncol = 1)
+
+# Combine both columns
+ggarrange(col1, col2)
 
 
 
