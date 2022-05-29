@@ -1084,6 +1084,9 @@ ggplot(data = CatchData, aes(x = TripLLopt, y = Length_cm, color = TrapType)) +
 
 ggplot(data = TripData.sub.traptype, aes(x = MeanLLopt, y = CPUE_kgPerTrap, color = TrapType)) +
   geom_point(alpha = 0.2) +
+  coord_cartesian(xlim = c(0, 2)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
   geom_smooth() +
   theme_minimal()
 
