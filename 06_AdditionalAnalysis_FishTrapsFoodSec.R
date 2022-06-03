@@ -1082,14 +1082,51 @@ ggplot(data = CatchData, aes(x = TripLLopt, y = Length_cm, color = TrapType)) +
 
 ## Check relationship between CPUE and LLopt
 
-ggplot(data = TripData.sub.traptype, aes(x = MeanLLopt, y = CPUE_kgPerTrap, color = TrapType)) +
-  geom_point(alpha = 0.2) +
-  coord_cartesian(xlim = c(0, 2)) +
+# GAMM for CPUE - traditional traps
+cpue.gamm.trad <- gamm(CPUE_kgPerTrap ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for CPUE - gated traps
+cpue.gamm.gated <- gamm(CPUE_kgPerTrap ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+cpue.predict.trad <- predict_gam(cpue.gamm.trad$gam)
+cpue.predict.gated <- predict_gam(cpue.gamm.gated$gam)
+
+# Plot data and model predictions with daily value (RDA for children 1-3 years)
+ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CPUE_kgPerTrap)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = cpue.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = cpue.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = cpue.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = cpue.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  #xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Catch Per Unit Effort ", bgroup("(", frac(kg, trap), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 30)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
-  geom_smooth() +
-  theme_minimal()
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
+ggsave("06_AdditionalAnalysis_Out/CPUELLopt_GAMM.jpeg", device = "jpeg")
 
 
 
