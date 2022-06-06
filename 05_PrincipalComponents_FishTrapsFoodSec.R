@@ -72,14 +72,15 @@ colnames(TripData)[21] <- "Scrapers" #Scraper mass ratio
 colnames(TripData)[28] <- "CPUE"
 colnames(TripData)[31] <- "Value"
 colnames(TripData)[32] <- "Maturity"
-colnames(TripData)[33] <- "Trophic Level"
-colnames(TripData)[34] <- "Vulnerability"
-colnames(TripData)[35] <- "Temperature"
-colnames(TripData)[37] <- "Fun. Richness"
-colnames(TripData)[38] <- "Fun. Evenness"
-colnames(TripData)[39] <- "Fun. Divergence"
-colnames(TripData)[42] <- "Calcium"
-colnames(TripData)[58] <- "Vitamin A"
+colnames(TripData)[34] <- "Trophic Level"
+colnames(TripData)[35] <- "Vulnerability"
+colnames(TripData)[36] <- "Temperature"
+colnames(TripData)[38] <- "Fun. Richness"
+colnames(TripData)[39] <- "Fun. Evenness"
+colnames(TripData)[40] <- "Fun. Divergence"
+colnames(TripData)[42] <- "Calcium Yield"
+colnames(TripData)[43] <- "Calcium Concentration"
+colnames(TripData)[59] <- "Vitamin A Concentration"
 
 # Delete now redundant TripID column
 TripData <- TripData[,-1]
@@ -391,13 +392,13 @@ fviz_pca_biplot(res.pca,
 
 # Subset only active and supplementary variables (columns) for the PCA
 df.nut.pca <- TripData[, c("Site", "TrapType",
-  "Calcium", #"CaPrice_KSHPermg",
-  "FeConc_mgPer100g", #"FePrice_KSHPermg",
-  "Omega3Conc_gPer100g", #"Omega3Price_KSHPerg",
-  "ProteinConc_gPer100g", #"ProteinPrice_KSHPerg",
-  "Vitamin A", #"VAPrice_KSHPerug",
-  "SeConc_ugPer100g", #"SePrice_KSHPerug",
-  "ZnConc_ugPer100g" #"ZnPrice_KSHPerug"
+  "Calcium Concentration", "Calcium Yield",
+  "FeConc_mgPer100g", "FePUE",
+  "Omega3Conc_gPer100g", "Omega3PUE",
+  "ProteinConc_gPer100g", "ProteinPUE",
+  "Vitamin A Concentration", "VAPUE",
+  "SeConc_ugPer100g", "SePUE",
+  "ZnConc_ugPer100g", "ZnPUE"
   )]
 
 # # Empty list of rows containing infinite values in df.famd
@@ -429,7 +430,7 @@ df.nut.pca <- df.nut.pca[complete.cases(df.nut.pca),]
 df.nut.pca <- subset(df.nut.pca, df.nut.pca$TrapType != "Multiple")
 
 # Run the PCA
-res.nut.pca <- PCA(df.nut.pca[, 3:9], ncp = 5, graph = TRUE, scale.unit = TRUE)
+res.nut.pca <- PCA(df.nut.pca[, 3:16], ncp = 5, graph = TRUE, scale.unit = TRUE)
 
 # Scree plot
 fviz_eig(res.nut.pca)
@@ -456,7 +457,7 @@ fviz_pca_biplot(res.nut.pca,
 df.food.pca <- TripData[, c("Site", "TrapType",
   "CPUE", "CPUE_DistFromMean", "Value",
   "Maturity",
-  "Calcium", "Vitamin A"
+  "Calcium Yield", "Calcium Concentration", "Vitamin A Concentration"
   )]
 
 # Subset df.food.pca to remove trips with mixed trap types
@@ -466,7 +467,7 @@ df.food.pca <- subset(df.food.pca, df.food.pca$TrapType != "Multiple")
 df.food.pca <- df.food.pca[complete.cases(df.food.pca),]
 
 # Run the PCA
-res.food.pca <- PCA(df.food.pca[, 3:8], ncp = 2, graph = TRUE, scale.unit = TRUE)
+res.food.pca <- PCA(df.food.pca[, 3:9], ncp = 2, graph = TRUE, scale.unit = TRUE)
 
 # Eigenvalues
 eig.val <- get_eigenvalue(res.food.pca)
@@ -482,7 +483,7 @@ var <- get_pca_var(res.food.pca)
 corrplot(var$cos2, is.corr = FALSE)
 
 # Prepare lists of variables for each biplot
-names <- list(name = c("CPUE", "Value", "Maturity", "Calcium", "Vitamin A"))
+names <- list(name = c("CPUE", "Value", "Maturity", "Calcium Yield", "Calcium Concentration", "Vitamin A Concentration"))
 
 # Prepare biplot
 fviz_pca_biplot(res.food.pca,
@@ -492,7 +493,7 @@ fviz_pca_biplot(res.food.pca,
   addEllipses = TRUE,
   select.var = names,
   title = "",
-  ylim = c(-4, 6),
+  ylim = c(-4, 7),
   legend.title = "Trap Type") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
