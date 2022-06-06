@@ -1626,3 +1626,58 @@ write.csv(tbl.nutyield, file = "06_AdditionalAnalysis_Out/NutrientYieldsTable.cs
 
 
 
+
+
+
+
+
+##### 6.14 Trophic level and nutrient concentration LMs #####
+
+## Check relationships between nutrient concentrations and trophic level
+
+## Calcium
+
+# Run the LM
+summary(lm(Calcium_mgPer100g ~ TrophLevel,
+  data = SpeciesData))
+
+# Plot the data
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Calcium_mgPer100g)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  labs(title = "",
+    x = "Trophic Level",
+    y = expression(paste("Calcium Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
+  annotate(geom = "text", x = 4.0, y = 175,
+    label = "p = 0.10") +
+  coord_cartesian(xlim = c(1.9, 4.5), ylim = c(0, 200)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+## Iron
+
+
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Iron_mgPer100g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Omega3_gPer100g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = VitaminA_ugPer100g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Selenium_ugPer100g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Zinc_ugPer100g)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+
+
+
