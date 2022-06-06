@@ -35,7 +35,6 @@
 ##    6.10 Lmat and calcium concentration
 ##    6.11 LLopt and nutrient yields
 ##    6.12 LLopt and nutrient concentrations
-##    6.13 Catch composition
 
 
 
@@ -1219,7 +1218,7 @@ b <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FeCon
   ylab(expression(paste("Calcium Concentration ", bgroup("(", frac(mg, '100 g'), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 0.55)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 0.55)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -1266,7 +1265,7 @@ c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega
   ylab(expression(paste("Omega-3 Concentration ", bgroup("(", frac(g, '100 g'), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 0.21)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 0.21)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -1283,7 +1282,7 @@ vaconc.gamm.trad <- gamm(VAConc_ugPer100g ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.trad)
 
-# GAMM for calcium concentration - gated traps
+# GAMM for vitamin A concentration - gated traps
 vaconc.gamm.gated <- gamm(VAConc_ugPer100g ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.gated)
@@ -1309,11 +1308,11 @@ d <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VACon
     alpha = 0.2, linetype = 0,
     inherit.aes = FALSE) +
   xlab("") +
-  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
   ylab(expression(paste("Vitamin A Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 80)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 80)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -1323,10 +1322,109 @@ d <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VACon
     plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
+## Selenium
+
+# GAMM for selenium concentration - traditional traps
+seconc.gamm.trad <- gamm(SeConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for selenium concentration - gated traps
+seconc.gamm.gated <- gamm(SeConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+seconc.predict.trad <- predict_gam(seconc.gamm.trad$gam)
+seconc.predict.gated <- predict_gam(seconc.gamm.gated$gam)
+
+# Plot data and model predictions
+e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SeConc_ugPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = seconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = seconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = seconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = seconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Selenium Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 25)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 
-##### 6.13 Catch composition #####
+## Zinc
 
+# GAMM for zinc concentration - traditional traps
+znconc.gamm.trad <- gamm(ZnConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for zinc concentration - gated traps
+znconc.gamm.gated <- gamm(ZnConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+znconc.predict.trad <- predict_gam(znconc.gamm.trad$gam)
+znconc.predict.gated <- predict_gam(znconc.gamm.gated$gam)
+
+# Plot data and model predictions
+f <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnConc_ugPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = znconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = znconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = znconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = znconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Zinc Concentration ", bgroup("(", frac(mg, '100g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1.3)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+## Combine plots
+
+# Combine plots
+ggarrange(a, b, c, d, e, f,
+  common.legend = TRUE, legend = "right")
+
+# Save plot
+ggsave(filename = "06_AdditionalAnalysis_Out/NutrientConcentrationLLoptGAMMs.jpeg", device = "jpeg",
+  height = 9, width = 12, units = "in")
 
 
 
