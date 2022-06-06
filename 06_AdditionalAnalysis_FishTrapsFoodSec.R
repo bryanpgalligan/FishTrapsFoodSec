@@ -179,10 +179,10 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
   # labs(x = "", title = "",
   #   y = paste("Value and Catch per Trap ", sprintf("\u2192"),
   #     "\n", sprintf("\u2190"), " Calcium Concentration", sep = "")) +
-  scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.3, 0.34),
-    labels = c("Calcium", -0.2, 0.0, 0.2, "Value", "CPUE")) +
+  scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.3, 0.34, 0.38),
+    labels = c("", -0.2, 0.0, 0.2, "CPUE", "Calcium Yield", "Value")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
-    label = expression("p = 4.92 x 10"^-5)) +
+    label = expression("p = 2.79 x 10"^-7)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
@@ -222,20 +222,19 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
   geom_point() +
   geom_errorbar(aes(ymin = conf.low, ymax = conf.high, width = 0.1)) +
   labs(title = "", x = "", y = "") +
-  scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.3, 0.34),
-    labels = c(-0.2, 0.0, 0.2, "Maturity", "Vitamin A")) +
+  scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.3, 0.34, 0.38),
+    labels = c(-0.2, 0.0, 0.2, "Maturity", "Calcium Concentration", "Vitamin A Concentration")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
-    label = expression("p = 1.01 x 10"^-7)) +
+    label = expression("p = 5.74 x 10"^-5)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
     axis.ticks = element_blank()) +
   coord_cartesian(ylim = c(-0.35, 0.35))
 
-# Gated traps have higher vitamin A and mean L/Lmat
-
 # Save food security plots
-ggarrange(plot.1a, plot.1b)
+ggarrange(plot.1a, plot.1b,
+  widths = c(1, 1.2))
 ggsave("06_AdditionalAnalysis_Out/Fig4_FoodSecModels.jpeg", device = "jpeg")
 
 
@@ -278,10 +277,8 @@ plot.2a <- ggplot(prediction, aes(y = predicted, x = x)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
-    axis.ticks = element_blank()) +
+    axis.ticks.y = element_blank()) +
   coord_cartesian(ylim = c(-0.5, 0.5))
-
-# Traditional traps have higher mean trophic level and lower browser mass ratio
 
 # Save the plot
 # ggsave(filename = "06_AdditionalAnalysis_Out/TrapCons1Prediction.jpeg", device = "jpeg")
@@ -322,7 +319,7 @@ plot.2b <- ggplot(prediction, aes(y = predicted, x = x)) +
       -0.4, -0.2, 0.0, 0.2, 0.4,
       "", "Fun. Evenness", "Maturity")) +
   annotate(geom = "text", x = "Traditional", y = 0.3,
-    label = "p = 0.08") +
+    label = "p = 0.09") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
@@ -339,14 +336,10 @@ plot.2b <- ggplot(prediction, aes(y = predicted, x = x)) +
 # Subset trip data to exclude traptype = multiple
 df <- subset(TripData, TripData$TrapType != "Multiple")
 
-
-##### WIP - switch to bayesian modeling approach with zoib on this particular model #####
-
-
 # Linear Model with beta distribution because response variable is a proportion
 trap.scrapers.model <- glmmTMB(ScraperMassRatio ~ TrapType + (1|Site),
   data = df,
-  family = beta_family())
+  family = gaussian)
 
 # Model summary
 summary(trap.scrapers.model)
@@ -384,7 +377,8 @@ plot.2c <- ggplot(prediction, aes(y = predicted, x = x)) +
 # between trap types
 
 # Save conservation predictions plot
-ggarrange(plot.2a, plot.2b, plot.2c, nrow = 1)
+ggarrange(plot.2a, plot.2b, plot.2c, nrow = 1,
+  widths = c(1.05, 1, 0.85))
 ggsave("06_AdditionalAnalysis_Out/Fig6_ConsModels.jpeg", device = "jpeg",
   height = 5, width = 12, units = "in")
 
