@@ -35,6 +35,7 @@
 ##    6.10 Lmat and calcium concentration
 ##    6.11 LLopt and nutrient yields
 ##    6.12 LLopt and nutrient concentrations
+##    6.13 Tables of nutrient yields and concentrations
 
 
 
@@ -51,6 +52,7 @@ library(glmmTMB)
 library(ggpubr)
 library(mgcv)
 library(tidymv)
+library(plotrix)
 
 # Load trip data
 TripData <- read_csv("04_DataExploration_Out/TripDataForAnalysis_GatedTraps_Galligan.csv")
@@ -1419,6 +1421,206 @@ ggarrange(a, b, c, d, e, f,
 # Save plot
 ggsave(filename = "06_AdditionalAnalysis_Out/NutrientConcentrationLLoptGAMMs.jpeg", device = "jpeg",
   height = 9, width = 12, units = "in")
+
+
+
+
+##### 6.13 Tables of nutrient yields and concentrations #####
+
+
+# Table data 
+GatedTrapConcentration <- c(
+  mean(TripData.sub.gated$CaConc_mgPer100g),
+  mean(TripData.sub.gated$FeConc_mgPer100g),
+  mean(TripData.sub.gated$Omega3Conc_gPer100g),
+  mean(TripData.sub.gated$VAConc_ugPer100g),
+  mean(TripData.sub.gated$SeConc_ugPer100g),
+  mean(TripData.sub.gated$ZnConc_ugPer100g))
+
+SE_GTC <- c(
+  std.error(TripData.sub.gated$CaConc_mgPer100g),
+  std.error(TripData.sub.gated$FeConc_mgPer100g),
+  std.error(TripData.sub.gated$Omega3Conc_gPer100g),
+  std.error(TripData.sub.gated$VAConc_ugPer100g),
+  std.error(TripData.sub.gated$SeConc_ugPer100g),
+  std.error(TripData.sub.gated$ZnConc_ugPer100g)
+)
+
+TraditionalTrapConcentration <- c(
+  mean(TripData.sub.trad$CaConc_mgPer100g),
+  mean(TripData.sub.trad$FeConc_mgPer100g),
+  mean(TripData.sub.trad$Omega3Conc_gPer100g),
+  mean(TripData.sub.trad$VAConc_ugPer100g),
+  mean(TripData.sub.trad$SeConc_ugPer100g),
+  mean(TripData.sub.trad$ZnConc_ugPer100g)
+)
+
+SE_TTC <- c(
+  std.error(TripData.sub.trad$CaConc_mgPer100g),
+  std.error(TripData.sub.trad$FeConc_mgPer100g),
+  std.error(TripData.sub.trad$Omega3Conc_gPer100g),
+  std.error(TripData.sub.trad$VAConc_ugPer100g),
+  std.error(TripData.sub.trad$SeConc_ugPer100g),
+  std.error(TripData.sub.trad$ZnConc_ugPer100g)
+)
+
+GatedTrapYield <- c(
+  mean(TripData.sub.gated$CaPUE),
+  mean(TripData.sub.gated$FePUE),
+  mean(TripData.sub.gated$Omega3PUE),
+  mean(TripData.sub.gated$VAPUE),
+  mean(TripData.sub.gated$SePUE),
+  mean(TripData.sub.gated$ZnPUE)
+)
+
+SE_GTY <- c(
+  std.error(TripData.sub.gated$CaPUE),
+  std.error(TripData.sub.gated$FePUE),
+  std.error(TripData.sub.gated$Omega3PUE),
+  std.error(TripData.sub.gated$VAPUE),
+  std.error(TripData.sub.gated$SePUE),
+  std.error(TripData.sub.gated$ZnPUE)
+)
+
+TraditionalTrapYield <- c(
+  mean(TripData.sub.trad$CaPUE),
+  mean(TripData.sub.trad$FePUE),
+  mean(TripData.sub.trad$Omega3PUE),
+  mean(TripData.sub.trad$VAPUE),
+  mean(TripData.sub.trad$SePUE),
+  mean(TripData.sub.trad$ZnPUE)
+)
+
+SE_TTY <- c(
+  std.error(TripData.sub.trad$CaPUE),
+  std.error(TripData.sub.trad$FePUE),
+  std.error(TripData.sub.trad$Omega3PUE),
+  std.error(TripData.sub.trad$VAPUE),
+  std.error(TripData.sub.trad$SePUE),
+  std.error(TripData.sub.trad$ZnPUE)
+)
+
+RDI <- c(700, 7, 0.7, 300, 20, 3)
+
+## Make the table for concentrations
+
+# Table rows - concentrations
+Calcium <- c(GatedTrapConcentration[1], SE_GTC[1], TraditionalTrapConcentration[1], SE_TTC[1])
+Iron <- c(GatedTrapConcentration[2], SE_GTC[2], TraditionalTrapConcentration[2], SE_TTC[2])
+Omega3 <- c(GatedTrapConcentration[3], SE_GTC[3], TraditionalTrapConcentration[3], SE_TTC[3])
+VitaminA <- c(GatedTrapConcentration[4], SE_GTC[4], TraditionalTrapConcentration[4], SE_TTC[4])
+Selenium <- c(GatedTrapConcentration[5], SE_GTC[5], TraditionalTrapConcentration[5], SE_TTC[5])
+Zinc <- c(GatedTrapConcentration[6], SE_GTC[6], TraditionalTrapConcentration[6], SE_TTC[6])
+
+# Combine rows to make data frame
+tbl.nutconc <- as.data.frame(rbind(Calcium, Iron, Omega3, VitaminA, Selenium, Zinc))
+rownames(tbl.nutconc) <- c("Calcium (mg)", "Iron (mg)", "Omega-3 (g)",
+  paste("Vitamin A (", "\u00b5", "g)", sep = ""),
+  paste("Selenium (", "\u00b5", "g)", sep = ""),
+  "Zinc (mg)")
+
+# Add columns for linear mixed models (Concentration ~ TrapType + (1|Site))
+tbl.nutconc$Estimate <- NA
+tbl.nutconc$StandardError <- NA
+tbl.nutconc$p.value <- NA
+
+# Vector of variable names to plug into model
+responses <- c("CaConc_mgPer100g", "FeConc_mgPer100g", "Omega3Conc_gPer100g", "VAConc_ugPer100g", "SeConc_ugPer100g", "ZnConc_ugPer100g")
+
+# Add linear model results to table
+for (i in 1:length(responses)){
+  
+  # Run the model
+  x <- glmmTMB(get(responses[i]) ~ TrapType + (1|Site),
+    data = TripData.sub.traptype)
+  
+  # Save model summary
+  y <- summary(x)
+  
+  # Extract model results
+  z <- y[["coefficients"]][["cond"]]
+  
+  # Save results to tbl.nutconc
+  tbl.nutconc$Estimate[i] <- z[2, 1]
+  tbl.nutconc$StandardError[i] <- z[2, 2]
+  tbl.nutconc$p.value[i] <- z[2, 4]
+  
+}
+
+# Make column names
+colnames(tbl.nutconc) <- c(
+  "Gated Trap Concentration (100g^-1)",
+  "±SE",
+  "Traditional Trap Concentration (100g^-1)",
+  "±SE",
+  "GLMM Estimate",
+  "±SE",
+  "Pr(>|z|)"
+)
+
+# Save table
+write.csv(tbl.nutconc, file = "06_AdditionalAnalysis_Out/NutrientConcentrationsTable.csv")
+
+## Table of nutrient yields
+
+# Table rows - yields
+Calcium <- c(RDI[1], GatedTrapYield[1], SE_GTY[1], TraditionalTrapYield[1], SE_TTY[1])
+Iron <- c(RDI[2], GatedTrapYield[2], SE_GTY[2], TraditionalTrapYield[2], SE_TTY[2])
+Omega3 <- c(RDI[3], GatedTrapYield[3], SE_GTY[3], TraditionalTrapYield[3], SE_TTY[3])
+VitaminA <- c(RDI[4], GatedTrapYield[4], SE_GTY[4], TraditionalTrapYield[4], SE_TTY[4])
+Selenium <- c(RDI[5], GatedTrapYield[5], SE_GTY[5], TraditionalTrapYield[5], SE_TTY[5])
+Zinc <- c(RDI[6], GatedTrapYield[6], SE_GTY[6], TraditionalTrapYield[6], SE_TTY[6])
+
+# Combine rows to make data frame
+tbl.nutyield <- as.data.frame(rbind(Calcium, Iron, Omega3, VitaminA, Selenium, Zinc))
+rownames(tbl.nutyield) <- c("Calcium (mg)", "Iron (mg)", "Omega-3 (g)",
+  paste("Vitamin A (", "\u00b5", "g)", sep = ""),
+  paste("Selenium (", "\u00b5", "g)", sep = ""),
+  "Zinc (mg)")
+
+# Add columns for linear mixed models (Yield ~ TrapType + (1|Site))
+tbl.nutyield$Estimate <- NA
+tbl.nutyield$StandardError <- NA
+tbl.nutyield$p.value <- NA
+
+# Vector of variable names to plug into model
+responses <- c("CaPUE", "FePUE", "Omega3PUE", "VAPUE", "SePUE", "ZnPUE")
+
+# Add linear model results to table
+for (i in 1:length(responses)){
+  
+  # Run the model
+  x <- glmmTMB(get(responses[i]) ~ TrapType + (1|Site),
+    data = TripData.sub.traptype)
+  
+  # Save model summary
+  y <- summary(x)
+  
+  # Extract model results
+  z <- y[["coefficients"]][["cond"]]
+  
+  # Save results to tbl.nutconc
+  tbl.nutyield$Estimate[i] <- z[2, 1]
+  tbl.nutyield$StandardError[i] <- z[2, 2]
+  tbl.nutyield$p.value[i] <- z[2, 4]
+  
+}
+
+# Make column names
+colnames(tbl.nutyield) <- c(
+  "Recommended Daily Intake (child 1-3 years)",
+  "Gated Trap Yield (trap^-1)",
+  "±SE",
+  "Traditional Trap Yield (trap^-1)",
+  "±SE",
+  "GLMM Estimate",
+  "±SE",
+  "Pr(>|z|)"
+)
+
+# Save table
+write.csv(tbl.nutyield, file = "06_AdditionalAnalysis_Out/NutrientYieldsTable.csv")
+
 
 
 
