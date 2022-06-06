@@ -600,10 +600,10 @@ food.dims$TripID <- rownames(food.dims)
 TripData_ForModeling <- inner_join(TripData_ForModeling, food.dims, by = "TripID",
   suffix = c("", ".y"), keep = TRUE)
 
-# Rename food dim 1, representing CPUE, value PUE, and Ca concentration
+# Rename food dim 1, representing CPUE, value PUE, and Ca yield
 colnames(TripData_ForModeling)[4] <- "FoodDim1"
 
-# Rename food dim 2, representing maturity and Vitamin A
+# Rename food dim 2, representing Vitamin A concentration, Ca concentration, and maturity
 colnames(TripData_ForModeling)[5] <- "FoodDim2"
 
 # Remove surplus variables
@@ -619,10 +619,10 @@ cons.dims$TripID <- rownames(cons.dims)
 TripData_ForModeling <- inner_join(TripData_ForModeling, cons.dims, by = "TripID",
   suffix = c("", ".y"), keep = TRUE)
 
-# Rename conservation dim 1, representing browser mass ratio and mean trophic level
+# Rename conservation dim 1, representing browsers, trophic level, MTC, vulnerability, and Fun. divergence
 colnames(TripData_ForModeling)[6] <- "ConsDim1"
 
-# Rename conservation dim 2, representing scraper mass ratio and mean L / Lmat
+# Rename conservation dim 2, representing L/Lopt, Fun. evenness, and fun. richness
 colnames(TripData_ForModeling)[7] <- "ConsDim2"
 
 # Remove surplus variables
