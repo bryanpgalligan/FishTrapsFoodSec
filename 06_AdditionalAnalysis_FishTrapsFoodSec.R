@@ -34,6 +34,8 @@
 ##    6.9 Food and Conservation 2
 ##    6.10 Lmat and calcium concentration
 ##    6.11 LLopt and nutrient yields
+##    6.12 LLopt and nutrient concentrations
+##    6.13 Catch composition
 
 
 
@@ -548,7 +550,7 @@ a <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
   ylab(expression(paste("Calcium Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1000)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -623,7 +625,7 @@ c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FePUE
   ylab(expression(paste("Iron Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 20)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 20)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -698,7 +700,7 @@ e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega
   ylab(expression(paste("Omega-3 Yield ", bgroup("(", frac(g, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 5)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 5)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -773,7 +775,7 @@ g <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaPUE
   ylab(expression(paste("Protein Yield ", bgroup("(", frac(g, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1000)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -847,7 +849,7 @@ i <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VAPUE
   ylab(expression(paste("Vitamin A Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 2500)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 2500)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -921,7 +923,7 @@ k <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SePUE
   ylab(expression(paste("Selenium Yield ", bgroup("(", frac(paste("\u00b5", g, sep = ""), trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 1000)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 1000)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -995,7 +997,7 @@ m <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnPUE
   ylab(expression(paste("Zinc Yield ", bgroup("(", frac(mg, trap), ")")))) +
   labs(color = "Trap Type") +
   guides(colour = guide_legend(override.aes = list(alpha = 1))) +
-  coord_cartesian(xlim = c(0, 2), ylim = c(0, 60)) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 60)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -1127,6 +1129,205 @@ ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CPUE_kgPer
     plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 ggsave("06_AdditionalAnalysis_Out/CPUELLopt_GAMM.jpeg", device = "jpeg")
+
+
+
+
+##### 6.12 LLopt and nutrient concentrations #####
+
+## Calcium
+
+# GAMM for calcium concentration - traditional traps
+caconc.gamm.trad <- gamm(CaConc_mgPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for calcium concentration - gated traps
+caconc.gamm.gated <- gamm(CaConc_mgPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+caconc.predict.trad <- predict_gam(caconc.gamm.trad$gam)
+caconc.predict.gated <- predict_gam(caconc.gamm.gated$gam)
+
+# Plot data and model predictions
+a <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = CaConc_mgPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = caconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = caconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = caconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = caconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Calcium Concentration ", bgroup("(", frac(mg, '100 g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 1.5), ylim = c(0, 35)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+## Iron
+
+# GAMM for iron concentration - traditional traps
+feconc.gamm.trad <- gamm(FeConc_mgPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for iron concentration - gated traps
+feconc.gamm.gated <- gamm(FeConc_mgPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+feconc.predict.trad <- predict_gam(feconc.gamm.trad$gam)
+feconc.predict.gated <- predict_gam(feconc.gamm.gated$gam)
+
+# Plot data and model predictions
+b <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = FeConc_mgPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = feconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = feconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = feconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = feconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Calcium Concentration ", bgroup("(", frac(mg, '100 g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 0.55)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+## Omega-3
+
+# GAMM for omega-3 PUFA concentration - traditional traps
+pufaconc.gamm.trad <- gamm(Omega3Conc_gPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for omega-3 PUFA concentration - gated traps
+pufaconc.gamm.gated <- gamm(Omega3Conc_gPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+pufaconc.predict.trad <- predict_gam(pufaconc.gamm.trad$gam)
+pufaconc.predict.gated <- predict_gam(pufaconc.gamm.gated$gam)
+
+# Plot data and model predictions
+c <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = Omega3Conc_gPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = pufaconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = pufaconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = pufaconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = pufaconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Omega-3 Concentration ", bgroup("(", frac(g, '100 g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 0.21)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+## Vitamin A
+
+# GAMM for vitamin A concentration - traditional traps
+vaconc.gamm.trad <- gamm(VAConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.trad)
+
+# GAMM for calcium concentration - gated traps
+vaconc.gamm.gated <- gamm(VAConc_ugPer100g ~ s(MeanLLopt),
+  random = list(Site = ~1),
+  data = TripData.sub.gated)
+
+# Generate model predictions
+vaconc.predict.trad <- predict_gam(vaconc.gamm.trad$gam)
+vaconc.predict.gated <- predict_gam(vaconc.gamm.gated$gam)
+
+# Plot data and model predictions
+d <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = VAConc_ugPer100g)) +
+  geom_point(alpha = 0.1, aes(color = TrapType)) +
+  scale_color_manual(values = cbPalette[c(2,4)]) +
+  geom_line(data = vaconc.predict.trad,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[4]) +
+  geom_ribbon(data = vaconc.predict.trad,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  geom_line(data = vaconc.predict.gated,
+    aes(x = MeanLLopt, y = fit), color = cbPalette[2]) +
+  geom_ribbon(data = vaconc.predict.gated,
+    aes(x = MeanLLopt, ymin = (fit - se.fit), ymax = (fit + se.fit)),
+    alpha = 0.2, linetype = 0,
+    inherit.aes = FALSE) +
+  xlab("") +
+  #xlab(expression(paste("Length : Optimum Length ", bgroup("(", frac(L, L[opt]), ")")))) +
+  ylab(expression(paste("Vitamin A Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")")))) +
+  labs(color = "Trap Type") +
+  guides(colour = guide_legend(override.aes = list(alpha = 1))) +
+  coord_cartesian(xlim = c(0, 2), ylim = c(0, 80)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.key = element_rect(fill = "white"),
+    axis.line = element_line(colour = "black"),
+    plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
+
+
+
+
+##### 6.13 Catch composition #####
+
+
 
 
 
