@@ -57,6 +57,9 @@ sites$lon <- c(39.72754486, NA, 39.70645155, 39.219428, 39.213766, 39.487254, 39
 
 # Map
 basemap(limits = c(39, 41, -5, -3), land.col = "gray80") +
+  annotation_scale(location = "br") +
+  annotation_north_arrow(location = "tr", which_north = "true") +
+  annotation
   labs(x = "", y = "", title = "") +
   geom_spatial_point(data = sites, aes(x = lon, y = lat))
 
