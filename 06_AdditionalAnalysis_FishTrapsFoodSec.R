@@ -36,6 +36,8 @@
 ##    6.11 LLopt and nutrient yields
 ##    6.12 LLopt and nutrient concentrations
 ##    6.13 Tables of nutrient yields and concentrations
+##    6.14 Trophic level and nutrient concentration LMs
+##    6.15 Length by trap type
 
 
 
@@ -1676,6 +1678,30 @@ ggplot(data = SpeciesData, aes(x = TrophLevel, y = Selenium_ugPer100g)) +
 ggplot(data = SpeciesData, aes(x = TrophLevel, y = Zinc_ugPer100g)) +
   geom_point() +
   geom_smooth(method = "lm")
+
+
+
+
+##### 6.15 Length by trap type #####
+
+# A density plot of length by trap type
+ggplot(data = CatchData, aes(Length_cm, fill = TrapType, color = TrapType)) +
+  geom_density(alpha = 0.2) +
+  coord_cartesian(xlim = c(0, 50)) +
+  ylab("Density") +
+  xlab("Length (cm)") +
+  labs(fill = "Trap Type", color = "Trap Type") +
+  scale_fill_manual(values = cbPalette[c(2, 4)]) +
+  scale_color_manual(values = cbPalette[c(2, 4)]) +
+  theme(panel.background = element_blank(),
+    axis.line = element_line())
+
+# Save plot
+ggsave("06_AdditionalAnalysis_Out/LengthTrapTypeDensity.jpeg", device = "jpeg")
+
+
+
+
 
 
 
