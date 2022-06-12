@@ -457,7 +457,8 @@ fviz_pca_biplot(res.nut.pca,
 df.food.pca <- TripData[, c("Site", "TrapType",
   "CPUE", "CPUE_DistFromMean", "Value",
   "Maturity",
-  "Calcium Yield", "Calcium Concentration", "Vitamin A Concentration"
+  "Calcium Yield", "Calcium Concentration",
+  "Vitamin A Concentration"
   )]
 
 # Subset df.food.pca to remove trips with mixed trap types
@@ -486,7 +487,7 @@ corrplot(var$cos2, is.corr = FALSE)
 names <- list(name = c("CPUE", "Value", "Maturity", "Calcium Yield", "Calcium Concentration", "Vitamin A Concentration"))
 
 # Prepare biplot
-fviz_pca_biplot(res.food.pca,
+plot3 <- fviz_pca_biplot(res.food.pca,
   label= "var", repel = TRUE,
   col.ind = df.food.pca$TrapType, palette = cbPalette[c(2,4)], alpha.ind = 0.6,
   col.var = "black", alpha.var = 0.5,
@@ -495,7 +496,10 @@ fviz_pca_biplot(res.food.pca,
   title = "",
   ylim = c(-4, 7),
   legend.title = "Trap Type") +
+  labs(x = "Food Security Dim. 1", y = "Food Security Dim. 2", title = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+plot3
 
 # Save biplot
 ggsave("05_PrincipalComponents_Out/Fig3_FoodSecBiplot.jpeg", device = "jpeg")
@@ -552,6 +556,7 @@ plot1 <- fviz_pca_biplot(res.cons.pca,
   addEllipses = TRUE,
   title = "",
   legend.title = "Trap Type") +
+  labs(x = "Conservation Dim. 1", y = "Conservation Dim. 2", title = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Prepare biplot for dims 1 and 3
@@ -565,6 +570,7 @@ plot2 <- fviz_pca_biplot(res.cons.pca,
   addEllipses = TRUE,
   title = "",
   legend.title = "Trap Type") +
+  labs(x = "Conservation Dim. 1", y = "Conservation Dim. 3", title = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Save plot
@@ -572,7 +578,9 @@ ggarrange(plot1, plot2, legend = "right", common.legend = TRUE)
 ggsave(filename = "05_PrincipalComponents_Out/Fig5_ConservationBiplots.jpeg", device = "jpeg",
   height = 5, width = 14, units = "in")
 
-
+# Make plot of all three biplots together
+ggarrange(plot1, plot2, plot3, legend = "none")
+ggsave(filename = "05_PrincipalComponents_Out/AllBiplots.jpeg", device = "jpeg")
 
 
 ##### 5.11 Data for modeling #####
