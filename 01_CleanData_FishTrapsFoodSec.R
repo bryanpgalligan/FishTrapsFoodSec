@@ -1188,10 +1188,10 @@ TripData$TotalSe_ug <- NA
 TripData$SePUE <- NA
 TripData$SeConc_ugPer100g <- NA
 TripData$SePrice_KSHPerug <- NA
-TripData$TotalZn_ug <- NA
+TripData$TotalZn_mg <- NA
 TripData$ZnPUE <- NA
-TripData$ZnConc_ugPer100g <- NA
-TripData$ZnPrice_KSHPerug <- NA
+TripData$ZnConc_mgPer100g <- NA
+TripData$ZnPrice_KSHPermg <- NA
 
 # Fill in TripData with the easy values
 for(i in 1:nrow(TripData)){
@@ -1467,7 +1467,7 @@ TripData$Omega3PUE <- TripData$TotalOmega3_g / TripData$TrapsFished
 TripData$ProteinPUE <- TripData$TotalProtein_g / TripData$TrapsFished
 TripData$VAPUE <- TripData$TotalVA_ug / TripData$TrapsFished
 TripData$SePUE <- TripData$TotalSe_ug / TripData$TrapsFished
-TripData$ZnPUE <- TripData$TotalZn_ug / TripData$TrapsFished
+TripData$ZnPUE <- TripData$TotalZn_mg / TripData$TrapsFished
 
 # Nutrient Concentrations
 TripData$CaConc_mgPer100g <- (TripData$TotalCa_mg / TripData$TotalCatch_g) * 100
@@ -1476,7 +1476,7 @@ TripData$Omega3Conc_gPer100g <- (TripData$TotalOmega3_g / TripData$TotalCatch_g)
 TripData$ProteinConc_gPer100g <- (TripData$TotalProtein_g / TripData$TotalCatch_g) * 100
 TripData$VAConc_ugPer100g <- (TripData$TotalVA_ug / TripData$TotalCatch_g) * 100
 TripData$SeConc_ugPer100g <- (TripData$TotalSe_ug / TripData$TotalCatch_g) * 100
-TripData$ZnConc_ugPer100g <- (TripData$TotalZn_ug / TripData$TotalCatch_g) * 100
+TripData$ZnConc_mgPer100g <- (TripData$TotalZn_mg / TripData$TotalCatch_g) * 100
 
 # Nutrient Prices
 TripData$CaPrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalCa_mg
@@ -1485,7 +1485,7 @@ TripData$Omega3Price_KSHPerg <- TripData$TotalValue_KSH / TripData$TotalOmega3_g
 TripData$ProteinPrice_KSHPerg <- TripData$TotalValue_KSH / TripData$TotalProtein_g
 TripData$VAPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalVA_ug
 TripData$SePrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalSe_ug
-TripData$ZnPrice_KSHPerug <- TripData$TotalValue_KSH / TripData$TotalZn_ug
+TripData$ZnPrice_KSHPermg <- TripData$TotalValue_KSH / TripData$TotalZn_mg
 
 # CPUE_DistFromMean
 for(i in 1:nrow(TripData)){
