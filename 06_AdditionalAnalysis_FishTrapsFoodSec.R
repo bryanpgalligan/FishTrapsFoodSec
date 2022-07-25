@@ -418,7 +418,7 @@ ggplot(prediction, aes(y = predicted, x = x)) +
     axis.line = element_line(colour = "black"))
 
 # Save the plot
-ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
+#ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
 
 
 
@@ -452,7 +452,7 @@ ggplot(prediction, aes(y = predicted, x = x)) +
     axis.line = element_line(colour = "black"))
 
 # Save the plot
-ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons1Prediction.jpeg", device = "jpeg")
+#ggsave(filename = "06_AdditionalAnalysis_Out/FoodCons2Prediction.jpeg", device = "jpeg")
 
 
 
@@ -498,7 +498,7 @@ ggplot(prediction, aes(x = x, y = predicted)) +
     axis.line = element_line(colour = "black"))
 
 # Save plot
-ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
+#ggsave("06_AdditionalAnalysis_Out/LmatCalcium.jpeg", device = "jpeg")
 
 
 
