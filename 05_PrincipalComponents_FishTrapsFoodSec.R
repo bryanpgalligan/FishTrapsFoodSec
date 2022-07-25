@@ -556,7 +556,7 @@ plot1 <- fviz_pca_biplot(res.cons.pca,
   addEllipses = TRUE,
   title = "",
   legend.title = "Trap Type") +
-  labs(x = "Conservation Dim. 1", y = "Conservation Dim. 2", title = "") +
+  labs(x = "Ecological Function Dim. 1", y = "Ecological Function Dim. 2", title = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Prepare biplot for dims 1 and 3
@@ -570,7 +570,7 @@ plot2 <- fviz_pca_biplot(res.cons.pca,
   addEllipses = TRUE,
   title = "",
   legend.title = "Trap Type") +
-  labs(x = "Conservation Dim. 1", y = "Conservation Dim. 3", title = "") +
+  labs(x = "Ecological Function Dim. 1", y = "Ecological Function Dim. 3", title = "") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
 # Save plot
