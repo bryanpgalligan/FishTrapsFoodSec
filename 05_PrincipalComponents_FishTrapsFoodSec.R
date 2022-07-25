@@ -98,7 +98,7 @@ df.famd <- TripData[, c("Site", "TrapType",
 #  "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
 #  "VAConc_ugPer100g", "VAPrice_KSHPerug",
 #  "SeConc_ugPer100g", "SePrice_KSHPerug",
-#  "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+#  "ZnConc_mgPer100g", "ZnPrice_KSHPermg"
   )]
 
 # # Empty list of rows containing infinite values in df.famd
@@ -256,7 +256,7 @@ df.pca <- TripData[, c("Site", "TrapType",
   # "ProteinConc_gPer100g", "ProteinPrice_KSHPerg",
   # "VAConc_ugPer100g", "VAPrice_KSHPerug",
   # "SeConc_ugPer100g", "SePrice_KSHPerug",
-  # "ZnConc_ugPer100g", "ZnPrice_KSHPerug"
+  # "ZnConc_mgPer100g", "ZnPrice_KSHPermg"
   )]
 
 # # Empty list of rows containing infinite values in df.famd
@@ -398,7 +398,7 @@ df.nut.pca <- TripData[, c("Site", "TrapType",
   "ProteinConc_gPer100g", "ProteinPUE",
   "Vitamin A Concentration", "VAPUE",
   "SeConc_ugPer100g", "SePUE",
-  "ZnConc_ugPer100g", "ZnPUE"
+  "ZnConc_mgPer100g", "ZnPUE"
   )]
 
 # # Empty list of rows containing infinite values in df.famd
