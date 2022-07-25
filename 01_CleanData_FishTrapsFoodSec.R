@@ -839,7 +839,7 @@ SpeciesData$VitaminA_U95 <- NA
 SpeciesData$Selenium_ugPer100g <- NA
 SpeciesData$Selenium_L95 <- NA
 SpeciesData$Selenium_U95 <- NA
-SpeciesData$Zinc_ugPer100g <- NA
+SpeciesData$Zinc_mgPer100g <- NA
 SpeciesData$Zinc_L95 <- NA
 SpeciesData$Zinc_U95 <- NA
 
@@ -1103,7 +1103,7 @@ for(i in 1:nrow(SpeciesData)){
     SpeciesData$Selenium_ugPer100g[i] <- NutrientBase$Selenium[a]
     SpeciesData$Selenium_L95[i] <- NutrientBase$Selenium_l95[a]
     SpeciesData$Selenium_U95[i] <- NutrientBase$Selenium_u95[a]
-    SpeciesData$Zinc_ugPer100g[i] <- NutrientBase$Zinc[a]
+    SpeciesData$Zinc_mgPer100g[i] <- NutrientBase$Zinc[a]
     SpeciesData$Zinc_L95[i] <- NutrientBase$Zinc_l95[a]
     SpeciesData$Zinc_U95[i] <- NutrientBase$Zinc_u95[a]
     
@@ -1405,7 +1405,7 @@ for(i in 1:nrow(TripData)){
     x$Se[j] <- SpeciesData$Selenium_ugPer100g[a] * (x$Weight_g[j] / 100)
     
     # Zinc
-    x$Zn[j] <- SpeciesData$Zinc_ugPer100g[a] * (x$Weight_g[j] / 100)
+    x$Zn[j] <- SpeciesData$Zinc_mgPer100g[a] * (x$Weight_g[j] / 100)
     
   }
   
@@ -1443,7 +1443,7 @@ for(i in 1:nrow(TripData)){
   TripData$TotalSe_ug[i] <- sum(x$Se, na.rm = TRUE)
   
   # Total Zinc
-  TripData$TotalZn_ug[i] <- sum(x$Zn, na.rm = TRUE)
+  TripData$TotalZn_mg[i] <- sum(x$Zn, na.rm = TRUE)
   
 }
 
