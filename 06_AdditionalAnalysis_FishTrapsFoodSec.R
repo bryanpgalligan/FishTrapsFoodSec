@@ -1004,7 +1004,7 @@ m <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnPUE
     plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
 # LM for LLopt and zinc
-zn.lm <- lm(Zinc_ugPer100g ~ Lopt_cm, data = SpeciesData)
+zn.lm <- lm(Zinc_mgPer100g ~ Lopt_cm, data = SpeciesData)
 summary(zn.lm)
 
 # LM prediction
@@ -1014,7 +1014,7 @@ zn.predict <- ggpredict(zn.lm, "Lopt_cm")
 n <- ggplot(zn.predict, aes(x = x, y = predicted)) +
   geom_smooth(method = "lm") +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2)+
-  geom_point(mapping = aes(x = Lopt_cm, y = Zinc_ugPer100g),
+  geom_point(mapping = aes(x = Lopt_cm, y = Zinc_mgPer100g),
     data = SpeciesData, alpha = 0.3) +
   coord_cartesian(xlim = c(0, 100), ylim = c(0, 5)) +
   labs(title = "",
@@ -1370,12 +1370,12 @@ e <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = SeCon
 ## Zinc
 
 # GAMM for zinc concentration - traditional traps
-znconc.gamm.trad <- gamm(ZnConc_ugPer100g ~ s(MeanLLopt),
+znconc.gamm.trad <- gamm(ZnConc_mgPer100g ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.trad)
 
 # GAMM for zinc concentration - gated traps
-znconc.gamm.gated <- gamm(ZnConc_ugPer100g ~ s(MeanLLopt),
+znconc.gamm.gated <- gamm(ZnConc_mgPer100g ~ s(MeanLLopt),
   random = list(Site = ~1),
   data = TripData.sub.gated)
 
@@ -1384,7 +1384,7 @@ znconc.predict.trad <- predict_gam(znconc.gamm.trad$gam)
 znconc.predict.gated <- predict_gam(znconc.gamm.gated$gam)
 
 # Plot data and model predictions
-f <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnConc_ugPer100g)) +
+f <- ggplot(data = TripData.sub.traptype, mapping = aes(x = MeanLLopt, y = ZnConc_mgPer100g)) +
   geom_point(alpha = 0.1, aes(color = TrapType)) +
   scale_color_manual(values = cbPalette[c(2,4)]) +
   geom_line(data = znconc.predict.trad,
@@ -1437,7 +1437,7 @@ GatedTrapConcentration <- c(
   mean(TripData.sub.gated$Omega3Conc_gPer100g),
   mean(TripData.sub.gated$VAConc_ugPer100g),
   mean(TripData.sub.gated$SeConc_ugPer100g),
-  mean(TripData.sub.gated$ZnConc_ugPer100g))
+  mean(TripData.sub.gated$ZnConc_mgPer100g))
 
 SE_GTC <- c(
   std.error(TripData.sub.gated$CaConc_mgPer100g),
@@ -1445,7 +1445,7 @@ SE_GTC <- c(
   std.error(TripData.sub.gated$Omega3Conc_gPer100g),
   std.error(TripData.sub.gated$VAConc_ugPer100g),
   std.error(TripData.sub.gated$SeConc_ugPer100g),
-  std.error(TripData.sub.gated$ZnConc_ugPer100g)
+  std.error(TripData.sub.gated$ZnConc_mgPer100g)
 )
 
 TraditionalTrapConcentration <- c(
@@ -1454,7 +1454,7 @@ TraditionalTrapConcentration <- c(
   mean(TripData.sub.trad$Omega3Conc_gPer100g),
   mean(TripData.sub.trad$VAConc_ugPer100g),
   mean(TripData.sub.trad$SeConc_ugPer100g),
-  mean(TripData.sub.trad$ZnConc_ugPer100g)
+  mean(TripData.sub.trad$ZnConc_mgPer100g)
 )
 
 SE_TTC <- c(
@@ -1463,7 +1463,7 @@ SE_TTC <- c(
   std.error(TripData.sub.trad$Omega3Conc_gPer100g),
   std.error(TripData.sub.trad$VAConc_ugPer100g),
   std.error(TripData.sub.trad$SeConc_ugPer100g),
-  std.error(TripData.sub.trad$ZnConc_ugPer100g)
+  std.error(TripData.sub.trad$ZnConc_mgPer100g)
 )
 
 GatedTrapYield <- c(
@@ -1527,7 +1527,7 @@ tbl.nutconc$StandardError <- NA
 tbl.nutconc$p.value <- NA
 
 # Vector of variable names to plug into model
-responses <- c("CaConc_mgPer100g", "FeConc_mgPer100g", "Omega3Conc_gPer100g", "VAConc_ugPer100g", "SeConc_ugPer100g", "ZnConc_ugPer100g")
+responses <- c("CaConc_mgPer100g", "FeConc_mgPer100g", "Omega3Conc_gPer100g", "VAConc_ugPer100g", "SeConc_ugPer100g", "ZnConc_mgPer100g")
 
 # Add linear model results to table
 for (i in 1:length(responses)){
@@ -1675,7 +1675,7 @@ ggplot(data = SpeciesData, aes(x = TrophLevel, y = VitaminA_ugPer100g)) +
 ggplot(data = SpeciesData, aes(x = TrophLevel, y = Selenium_ugPer100g)) +
   geom_point() +
   geom_smooth(method = "lm")
-ggplot(data = SpeciesData, aes(x = TrophLevel, y = Zinc_ugPer100g)) +
+ggplot(data = SpeciesData, aes(x = TrophLevel, y = Zinc_mgPer100g)) +
   geom_point() +
   geom_smooth(method = "lm")
 
