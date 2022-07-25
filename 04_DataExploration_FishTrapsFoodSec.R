@@ -183,16 +183,16 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SeConc_ugPer1
 ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = SePrice_KSHPerug)) +
   geom_boxplot()
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnConc_ugPer100g)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnConc_mgPer100g)) +
   geom_boxplot()
 
 # Some outliers, but no obvious breaks.
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPrice_KSHPerug)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = TrapType, y = ZnPrice_KSHPermg)) +
   geom_boxplot()
 
 # There is one obvious outlier, above 40 KSH per ug. Remove it.
-TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$ZnPrice_KSHPerug < 40)
+TripData_NoOutliers <- subset(TripData_NoOutliers, TripData_NoOutliers$ZnPrice_KSHPermg < 40)
 
 
 
@@ -264,7 +264,7 @@ ggplot(data = TripData_NoOutliers, mapping = aes(x = VAConc_ugPer100g, color = T
 ggplot(data = TripData_NoOutliers, mapping = aes(x = SeConc_ugPer100g, color = TrapType)) +
   geom_density(alpha = 0.4)
 
-ggplot(data = TripData_NoOutliers, mapping = aes(x = ZnConc_ugPer100g, color = TrapType)) +
+ggplot(data = TripData_NoOutliers, mapping = aes(x = ZnConc_mgPer100g, color = TrapType)) +
   geom_density(alpha = 0.4)
 
 
