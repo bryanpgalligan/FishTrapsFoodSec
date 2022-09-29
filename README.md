@@ -1,22 +1,80 @@
 # FishTrapsFoodSec
 
-## Escape gaps contribute to ecosystem health and food security in an artisanal coral reef trap fishery.
+## Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps
 
 **Authors:**
 
 -   Bryan P. Galligan, S.J. ([bgalligan\@jesuits.org](mailto:bgalligan@jesuits.org))
 
--   Austin Humphries ([humphries\@uri.edu](mailto:humphries@uri.edu))
+-   Tim R. McClanahan ([tmcclanahan\@wcs.org](mailto:tmcclanahan@wcs.org))
 
--   Maxwell Kodia Azali ([mkodia\@wcs.org](mailto:mkodia@wcs.org))
+-   Austin T. Humphries ([humphries\@uri.edu](mailto:humphries@uri.edu))
 
--   Tim McClanahan ([tmcclanahan\@wcs.org](mailto:tmcclanahan@wcs.org))
+**Data Collectors:**
+
+-   Ahmed
+
+-   Nancy Birgen ([nbirgen\@yahoo.com](mailto:nbirgen@yahoo.com))
+
+-   Michelle Condy ([michelle.condy\@jcu.edu.au](mailto:michelle.condy@jcu.edu.au))
+
+-   Mesaidi Fadhili
+
+-   Nseme Ferrunzi
+
+-   Ines Gomes ([istgomes\@gmail.com](mailto:istgomes@gmail.com))
+
+-   Valentine Jepchumba ([vlntnjepchumba503\@gmail.com](mailto:vlntnjepchumba503@gmail.com))
+
+-   Mwafitina Juma
+
+-   Jesse Kosgei ([jkosgei\@wcs.org](mailto:jkosgei@wcs.org))
+
+-   Harriet Makungu ([makunguharriet\@yahoo.com](mailto:makunguharriet@yahoo.com))
+
+-   Emmanuel Mbaru ([embaru\@kmfri.co.ke](mailto:embaru@kmfri.co.ke))
+
+-   Bakari Mchinga ([bmchinga\@yahoo.com](mailto:bmchinga@yahoo.com))
+
+-   Ali Musa
+
+-   Asenath Nyachiro ([anyachiro\@kmfri.co.ke](mailto:anyachiro@kmfri.co.ke))
+
+-   Douglas Obanyi ([douglasmaina\@gmail.com](mailto:douglasmaina@gmail.com))
+
+-   Cavin Omondi ([omondikev13\@gmail.com](mailto:omondikev13@gmail.com))
+
+-   Evyoone Ongoro ([ongoroyvonne\@gmail.com](mailto:ongoroyvonne@gmail.com))
+
+-   Maureen Otieno ([motieno\@wcs.org](mailto:motieno@wcs.org))
+
+-   Amir Shekiondo ([amosheki\@gmail.com](mailto:amosheki@gmail.com))
+
+-   Ali Shilingi
+
+-   Ramadhan Tungu
+
+-   Nina Wambiji ([nwambiji\@yahoo.com](mailto:nwambiji@yahoo.com))
+
+-   John Wanyoike ([karungoj\@yahoo.com](mailto:karungoj@yahoo.com))
+
+-   Janet Warui ([janetwarui\@gmail.com](mailto:janetwarui@gmail.com))
+
+**Recommended Citation:**
+
+Galligan, B. P., Birgen, N., Condy, M., Fadhili, M., Ferrunzi, N., Gomes, I., Jepchumba, V., Juma, M., Kosgei, J., Makungu, H., Mbaru, E., Mchinga, B., Musa, A., Nyachiro, A., Obanyi, D., Omondi, C., Ongoro, E., Otieno, M., Shekiondo, A., Shilingi, A., Tungu, R., Wambiji, N., Wanyoike, J., Warui, J., Humphries, A. T., McClanahan, T. R. (2022). Data and code for: Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps. Zenodo.
 
 ## Overview
 
-This repository is the data management and analysis workflow of a research project investigating the ecosystem and food security benefits and tradeoffs of adding escape gaps to traditional African fish traps. It includes 10 years of landings data from artisanal fishers operating in the inshore waters of Kenya and Tanzania.
+This repository is the data management and analysis workflow of a research project investigating the ecosystem and food security benefits and tradeoffs of adding escape gaps to traditional African fish traps. It includes 10 years of landings data from artisanal trap fishers operating in the inshore waters of Kenya and Tanzania.
 
 ## Instructions
+
+### For data access only:
+
+The processed data files are described later in this document. The same section contains file paths at which these data can be found. Please note that some parameters in these files are not original, but are drawn from other sources (refer to metadata). Where this is the case, please cite the original data source as well as this archived dataset.
+
+### To reproduce the analysis:
 
 R scripts should be run in numeric order, beginning with `01_CleanData_FishTrapsFoodSec.R`. Each script has two corresponding folders in the repository, one called `temp` and one called `out`. The `temp` folder contains temporary output files that are not needed for further analysis or reference. The `out` folder contains output files that will be used by subsequent scripts, kept for future reference, or formatted as data tables for publication.
 
@@ -25,7 +83,7 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 ## Repository Files
 
 | File/Folder                                                                                                                                           | Enclosed File                                                                                                                                                                         | Type            | Notes                                                                                                                                       |
-|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+|------------------|-----------------------|---------------|-----------------|
 | [00_RawData](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/00_RawData)                                                               |                                                                                                                                                                                       | Folder          | Contains raw data                                                                                                                           |
 |                                                                                                                                                       | [CombinedTrapData_2010_2019_Anonymized.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv)                      | Spreadsheet     | WCS landings data                                                                                                                           |
 |                                                                                                                                                       | [FunctionalGroupKey_DietBased_Condy2015.xlsx](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx)                  | Spreadsheet     | A key developed for previous WCS studies assigning select species to diet-based functional groups                                           |
@@ -87,55 +145,6 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 | [README.pdf](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/README.pdf)                                                               |                                                                                                                                                                                       | PDF             | This document rendered as PDF                                                                                                               |
 | [RWorkflow_FishTrapsFoodSec.Rproj](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/RWorkflow_FishTrapsFoodSec.Rproj)                   |                                                                                                                                                                                       | RStudio Project | Sets working directory, source documents, etc. in RStudio                                                                                   |
 
-## Archived Files
-
-These files have been kept for posterity, but are not used in the current analysis. They are located in the `Archive` folder.
-
-|                                                                                                                                                 |                                                                                                                                                                                        |             |                                                                                                                                                         |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **File/Folder**                                                                                                                                 | **Enclosed File**                                                                                                                                                                      | **Type**    | **Notes**                                                                                                                                               |
-| [02_Stability_FishTrapsFoodSec.R](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_FishTrapsFoodSec.R)       |                                                                                                                                                                                        | R Script    | Analysis of the stability pillar of the food security framework                                                                                         |
-| [02_Stability_Out](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/02_Stability_Out)                                     |                                                                                                                                                                                        | Folder      | Contains output files from the eponymous R script                                                                                                       |
-|                                                                                                                                                 | [CatchComposition_DietCt_ModelComparison.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietCt_ModelComparison.csv)     | Spreadsheet | Results of model comparisons for an ANOVA testing effect of trap type on catch composition (no. of fish, categorized by diet-based functional groups)   |
-|                                                                                                                                                 | [CatchComposition_DietCt_Results.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietCt_Results.csv)                     | Spreadsheet | Results of ANOVA testing effect of trap type on catch composition (no. of fish, categorized by diet-based functional groups)                            |
-|                                                                                                                                                 | [CatchComposition_DietMass_ModelComparison.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietMass_ModelComparison.csv) | Spreadsheet | Results of model comparisons for an ANOVA testing effect of trap type on catch composition (biomass ratio, categorized by diet-based functional groups) |
-|                                                                                                                                                 | [CatchComposition_DietMass_Results.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_DietMass_Results.csv)                 | Spreadsheet | Results of ANOVA testing the effect of trap type on catch composition (biomass ratio, categorized by diet-based functional groups)                      |
-|                                                                                                                                                 | [CatchComposition_FunGrDiet_Data.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Out/CatchComposition_FunGrDiet_Data.csv)                     | Spreadsheet | Datasheet used to analyze catch composition by diet-based functional group                                                                              |
-| [02_Stability_Temp](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/02_Stability_Temp)                                   |                                                                                                                                                                                        | Folder      | Contains temporary output files from the eponymous R script                                                                                             |
-|                                                                                                                                                 | [BrowserMassQQ.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/BrowserMassQQ.jpeg)                                                      | Image       | QQ plot of residuals for catch composition of browsers by mass                                                                                          |
-|                                                                                                                                                 | [GrazerMassQQ.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/GrazerMassQQ.jpeg)                                                        | Image       | QQ plot of residuals for catch composition of grazers by mass                                                                                           |
-|                                                                                                                                                 | [ScraperMassQQ.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/02_Stability_Temp/ScraperMassQQ.jpeg)                                                      | Image       | QQ plot of residuals for catch composition of scrapers by mass                                                                                          |
-| [03_Availability_FishTrapsFoodSec.R](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_FishTrapsFoodSec.R) |                                                                                                                                                                                        | R Script    | Analysis of the availability pillar of the food security framework                                                                                      |
-| [03_Availability_Out](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/03_Availability_Out)                               |                                                                                                                                                                                        | Folder      | Contains output files from the eponymous R script                                                                                                       |
-|                                                                                                                                                 | [LengthAOV_ModelComparison.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthAOV_ModelComparison.csv)                              | Spreadsheet | Comparison of four ANOVAs for finding effect of trap type on length                                                                                     |
-|                                                                                                                                                 | [LengthAOV_Results.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthAOV_Results.csv)                                              | Spreadsheet | Effect of trap type on length ANOVA results                                                                                                             |
-|                                                                                                                                                 | [LengthData.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Out/LengthData.csv)                                                            | Spreadsheet | A subset of the Trap Data spreadsheet that only includes entries with length data                                                                       |
-| [03_Availability_Temp](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/03_Availability_Temp)                             |                                                                                                                                                                                        | Folder      | Contains temporary output files from the eponymous R script                                                                                             |
-|                                                                                                                                                 | [LengthQQ.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/03_Availability_Temp/LengthQQ.jpeg)                                                             | Image       | QQ plot of residuals for length distribution by trap type                                                                                               |
-| [04_Access_FishTrapsFoodSec.R](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_FishTrapsFoodSec.R)             |                                                                                                                                                                                        | R Script    | Analysis of the access pillar of the food security framework                                                                                            |
-| [04_Access_Out](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/04_Access_Out)                                           |                                                                                                                                                                                        | Folder      | Contains output files from the eponymous R script                                                                                                       |
-|                                                                                                                                                 | [CPUEBySite_pvalues.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUEBySite_pvalues.csv)                                                  | Spreadsheet | Contains p-values for ANOVAs of effect of trap type on CPUE at each site                                                                                |
-|                                                                                                                                                 | [CPUE_Data.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_Data.csv)                                                                    | Spreadsheet | Data for CPUE by trip for trips that only used one trap type (gated or traditional)                                                                     |
-|                                                                                                                                                 | [CPUE_ModelComparison.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_ModelComparison.csv)                                              | Spreadsheet | Comparison of four ANOVAs for finding effect of trap type on CPUE                                                                                       |
-|                                                                                                                                                 | [CPUE_Results.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Out/CPUE_Results.csv)                                                              | Spreadsheet | Effect of trap type on CPUE (ANOVA results)                                                                                                             |
-| [04_Access_Temp](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/04_Access_Temp)                                         |                                                                                                                                                                                        | Folder      | Contains temporary output files from the eponymous R script                                                                                             |
-|                                                                                                                                                 | [CPUEQQ.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/04_Access_Temp/CPUEQQ.jpeg)                                                                       | Image       | QQ plot of residuals for ANOVA of CPUE by trap type                                                                                                     |
-| [06_TabsFigs_FishTrapsFoodSec.R](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_FishTrapsFoodSec.R)         |                                                                                                                                                                                        | R Script    | Assembles tables and figures                                                                                                                            |
-| [06_TabsFigs_Out](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/06_TabsFigs_Out)                                       |                                                                                                                                                                                        | Folder      | Contains figures assembled so far                                                                                                                       |
-|                                                                                                                                                 | [BrowsersScrapersGrazers.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/BrowsersScrapersGrazers.jpeg)                                    | Image       | Effect of trap type on catch composition (ratio of browsers, scrapers, and grazers by mass)                                                             |
-|                                                                                                                                                 | [CPUE.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/CPUE.jpeg)                                                                          | Image       | Effect of trap type on CPUE                                                                                                                             |
-|                                                                                                                                                 | [KeyHerbivores.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/KeyHerbivores.jpeg)                                                        | Image       | Effect of trap type on catch composition (ratio of key herbivores by mass)                                                                              |
-|                                                                                                                                                 | [Length.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/06_TabsFigs_Out/Length.jpeg)                                                                      | Image       | Effect of trap type on length                                                                                                                           |
-| 06_TabsFigs_Temp                                                                                                                                |                                                                                                                                                                                        | Folder      | Empty                                                                                                                                                   |
-| [ExploratoryPlots.R](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots.R)                                 |                                                                                                                                                                                        | R Script    | Contains code to generate some exploratory plots of the data                                                                                            |
-| [ExploratoryPlots](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive/ExploratoryPlots)                                     |                                                                                                                                                                                        | Folder      | Contains exploratory plots of the data                                                                                                                  |
-|                                                                                                                                                 | [BrowserMassRatio.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/BrowserMassRatio.jpeg)                                                 | Figure      | Density plots of catch composition of browsers (ratio by mass) across sites and trap types                                                              |
-|                                                                                                                                                 | [CPUE.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/CPUE.jpeg)                                                                         | Figure      | Density plots of CPUE across sites and trap types                                                                                                       |
-|                                                                                                                                                 | [GrazerMassRatio.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/GrazerMassRatio.jpeg)                                                   | Figure      | Density plots of catch composition of grazers (ratio by mass) across sites and trap types                                                               |
-|                                                                                                                                                 | [KeyHerbivoreMassRatio.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/KeyHerbivoreMassRatio.jpeg)                                       | Figure      | Density plots of catch composition of key herbivores (ratio by mass) across sites and trap types                                                        |
-|                                                                                                                                                 | [LengthDistributions.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/LengthDistributions.jpeg)                                           | Figure      | Density plots of fish lengths across sites and trap types                                                                                               |
-|                                                                                                                                                 | [ScraperMassRatio.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/Archive/ExploratoryPlots/ScraperMassRatio.jpeg)                                                 | Figure      | Density plots of catch composition of scrapers (ratio by mass) across sites and trap types                                                              |
-
 ## Processed Data
 
 **Date** of data collection: 2010-2019
@@ -143,8 +152,6 @@ These files have been kept for posterity, but are not used in the current analys
 Geographic **location** of data collection: southern coast of Kenya, northern coast of Tanzania
 
 Information about **funding** sources that supported the collection of the data: data were collected by Wildlife Conservation Society, Mombasa, Kenya
-
-**Restrictions** placed on the data: Please contact Tim McClanahan before using data.
 
 Portions of this data have been **used by** Condy et al. (2015), Gomes et al. (2014), Mbaru et al. (2020), and Mbaru and McClanahan (2013).
 
@@ -161,7 +168,7 @@ Number of **observations**: 2734
 #### Variable List
 
 | Variable             | Notes                                                                                                 |
-|----------------------|-------------------------------------------------------------------------------------------------------|
+|----------------|--------------------------------------------------------|
 | TripID               | Alphanumeric identifier for each fishing trip                                                         |
 | Date                 | Sampling date                                                                                         |
 | Country              | Sampling location (country)                                                                           |
@@ -243,7 +250,7 @@ Number of **observations**: 25789
 #### Variable List
 
 | Variable      | Notes                                                                       |
-|---------------|-----------------------------------------------------------------------------|
+|----------------|--------------------------------------------------------|
 | TripID        | Alphanumeric identifier for each fishing trip                               |
 | TrapType      | Type of fish trap (gated / traditional)                                     |
 | TrapLocation  | Fishing location                                                            |
@@ -269,7 +276,7 @@ Number of **observations**: 215
 #### Variable List
 
 | Variable           | Notes                                                                             |
-|--------------------|-----------------------------------------------------------------------------------|
+|-----------------|-------------------------------------------------------|
 | Species            | Species (scientific name)                                                         |
 | Family             | Taxonomic family                                                                  |
 | FishGroups         | Coarse fish groupings                                                             |
@@ -294,26 +301,26 @@ Number of **observations**: 215
 | TempPrefMean_degC  | Mean temperature preference (degrees Celsius) (FishBase)                          |
 | TempPrefMax_degC   | Maximum temperature preference (degrees Celsius) (FishBase)                       |
 | Calcium_mgPer100g  | Calcium concentration (milligrams per 100 grams) (FishBase)                       |
-| Calcium_L95        | Lower 95% confidence interval for calcium estimate (FishBase)                     |
-| Calcium_U95        | Upper 95% confidence interval for calcium estimate (FishBase)                     |
+| Calcium_L95        | Lower 95% credible interval for calcium estimate (FishBase)                       |
+| Calcium_U95        | Upper 95% credible interval for calcium estimate (FishBase)                       |
 | Iron_mgPer100g     | Iron concentration (milligrams per 100 grams) (FishBase)                          |
-| Iron_L95           | Lower 95% confidence interval for iron estimate (FishBase)                        |
-| Iron_U95           | Upper 95% confidence interval for iron estimate (FishBase)                        |
+| Iron_L95           | Lower 95% credible interval for iron estimate (FishBase)                          |
+| Iron_U95           | Upper 95% credible interval for iron estimate (FishBase)                          |
 | Omega3_gPer100g    | Omega-3 polyunsaturated fatty acid concentration (grams per 100 grams) (FishBase) |
-| Omega3_L95         | Lower 95% confidence interval for omega-3 estimate (FishBase)                     |
-| Omega3_U95         | Upper 95% confidence interval for omega-3 estimate (FishBase)                     |
+| Omega3_L95         | Lower 95% credible interval for omega-3 estimate (FishBase)                       |
+| Omega3_U95         | Upper 95% credible interval for omega-3 estimate (FishBase)                       |
 | Protein_gPer100g   | Protein concentration (grams per 100 grams) (FishBase)                            |
-| Protein_L95        | Lower 95% confidence interval for protein estimate (FishBase)                     |
-| Protein_U95        | Upper 95% confidence interval for protein estimate (FishBase)                     |
+| Protein_L95        | Lower 95% credible interval for protein estimate (FishBase)                       |
+| Protein_U95        | Upper 95% credible interval for protein estimate (FishBase)                       |
 | VitamA_ugPer100g   | Vitamin A concentration (micrograms per 100 grams) (FishBase)                     |
-| VitaminA_L95       | Lower 95% confidence interval for vitamin A estimate (FishBase)                   |
-| VitaminA_U95       | Upper 95% confidence interval for vitamin A estimate (FishBase)                   |
+| VitaminA_L95       | Lower 95% credible interval for vitamin A estimate (FishBase)                     |
+| VitaminA_U95       | Upper 95% credible interval for vitamin A estimate (FishBase)                     |
 | Selenium_ugPer100g | Selenium concentration (micrograms per 100 grams) (FishBase)                      |
-| Selenium_L95       | Lower 95% confidence interval for selenium estimate (FishBase)                    |
-| Selenium_U95       | Upper 95% confidence interval for selenium estimate (FishBase)                    |
+| Selenium_L95       | Lower 95% credible interval for selenium estimate (FishBase)                      |
+| Selenium_U95       | Upper 95% credible interval for selenium estimate (FishBase)                      |
 | Zinc_ugPer100g     | Zinc concentration (micrograms per 100 grams) (FishBase)                          |
-| Zinc_L95           | Lower 95% confidence interval for zinc estimate (FishBase)                        |
-| Zinc_U95           | Upper 95% confidence interval for zinc estimate (FishBase)                        |
+| Zinc_L95           | Lower 95% credible interval for zinc estimate (FishBase)                          |
+| Zinc_U95           | Upper 95% credible interval for zinc estimate (FishBase)                          |
 
 ## Built With
 
@@ -363,18 +370,16 @@ Number of **observations**: 215
 
 ## References
 
-Condy, M., Cinner, J. E., McClanahan, T. R., & Bellwood, D. R. (2015). Projections of the impacts of gear-modification on the recovery of fish catches and ecosystem function in an impoverished fishery. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *25*(3), 396–410. <https://doi.org/10.1002/aqc.2482>
+Condy, M., Cinner, J. E., McClanahan, T. R., & Bellwood, D. R. (2015). Projections of the impacts of gear-modification on the recovery of fish catches and ecosystem function in an impoverished fishery. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *25*(3), 396--410. <https://doi.org/10.1002/aqc.2482>
 
-FAO, IFAD, UNICEF, WFP, & WHO. (2021). *The state of food security and nutrition in the world 2021: Transforming food systems for food security, improved nutrition, and affordable healthy diets for all*. FAO. <https://doi.org/10.4060/cb4474en>
+Gomes, I., Erzini, K., & McClanahan, T. R. (2014). Trap modification opens new gates to achieve sustainable coral reef fisheries: Escape gaps in African traditional trap fisheries. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *24*(5), 680--695. <https://doi.org/10.1002/aqc.2389>
 
-Gomes, I., Erzini, K., & McClanahan, T. R. (2014). Trap modification opens new gates to achieve sustainable coral reef fisheries: Escape gaps in African traditional trap fisheries. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *24*(5), 680–695. <https://doi.org/10.1002/aqc.2389>
+Mbaru, E. K., Graham, N. A. J., McClanahan, T. R., & Cinner, J. E. (2020). Functional traits illuminate the selective impacts of different fishing gears on coral reefs. *Journal of Applied Ecology*, *57*(2), 241--252. <https://doi.org/10.1111/1365-2664.13547>
 
-Mbaru, E. K., Graham, N. A. J., McClanahan, T. R., & Cinner, J. E. (2020). Functional traits illuminate the selective impacts of different fishing gears on coral reefs. *Journal of Applied Ecology*, *57*(2), 241–252. <https://doi.org/10.1111/1365-2664.13547>
+Mbaru, E. K., & McClanahan, T. R. (2013). Escape gaps in African basket traps reduce bycatch while increasing body sizes and incomes in a heavily fished reef lagoon. *Fisheries Research*, *148*, 90--99. <https://doi.org/10.1016/j.fishres.2013.08.011>
 
-Mbaru, E. K., & McClanahan, T. R. (2013). Escape gaps in African basket traps reduce bycatch while increasing body sizes and incomes in a heavily fished reef lagoon. *Fisheries Research*, *148*, 90–99. <https://doi.org/10.1016/j.fishres.2013.08.011>
+Thorson, J. T. (2020). Predicting recruitment density dependence and intrinsic growth rate for all fishes worldwide using a data-integrated life-history model. *Fish and Fisheries*, *21*(2), 237--251. <https://doi.org/10.1111/faf.12427>
 
-Thorson, J. T. (2020). Predicting recruitment density dependence and intrinsic growth rate for all fishes worldwide using a data-integrated life-history model. *Fish and Fisheries*, *21*(2), 237–251. <https://doi.org/10.1111/faf.12427>
+Thorson, J. T., Munch, S. B., Cope, J. M., & Gao, J. (2017). Predicting life history parameters for all fishes worldwide. *Ecological Applications*, *27*(8), 2262--2276. <https://doi.org/10.1002/eap.1606>
 
-Thorson, J. T., Munch, S. B., Cope, J. M., & Gao, J. (2017). Predicting life history parameters for all fishes worldwide. *Ecological Applications*, *27*(8), 2262–2276. <https://doi.org/10.1002/eap.1606>
-
-Zuur, A. F., Ieno, E. N., & Elphick, C. S. (2010). A protocol for data exploration to avoid common statistical problems. *Methods in Ecology and Evolution*, *1*, 3–14. <https://doi.org/10.1111/j.2041-210X.2009.00001.x>
+Zuur, A. F., Ieno, E. N., & Elphick, C. S. (2010). A protocol for data exploration to avoid common statistical problems. *Methods in Ecology and Evolution*, *1*, 3--14. <https://doi.org/10.1111/j.2041-210X.2009.00001.x>
