@@ -1,9 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
 # FishTrapsFoodSec
 
 ## Escape gaps contribute to ecosystem health and food security in an artisanal coral reef trap fishery.
