@@ -62,7 +62,7 @@
 
 **Recommended Citation:**
 
-Galligan, B. P., Birgen, N., Condy, M., Fadhili, M., Ferrunzi, N., Gomes, I., Jepchumba, V., Juma, M., Kosgei, J., Makungu, H., Mbaru, E., Mchinga, B., Musa, A., Nyachiro, A., Obanyi, D., Omondi, C., Ongoro, E., Otieno, M., Shekiondo, A., Shilingi, A., Tungu, R., Wambiji, N., Wanyoike, J., Warui, J., Humphries, A. T., McClanahan, T. R. (2022). Data and code for: Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps. Zenodo.
+Galligan, B. P., Birgen, N., Condy, M., Fadhili, M., Ferrunzi, N., Gomes, I., Jepchumba, V., Juma, M., Kosgei, J., Makungu, H., Mbaru, E., Mchinga, B., Musa, A., Nyachiro, A., Obanyi, D., Omondi, C., Ongoro, E., Otieno, M., Shekiondo, A., Shilingi, A., Tungu, R., Wambiji, N., Wanyoike, J., Warui, J., Humphries, A. T., & McClanahan, T. R. (2022). Data and code for: Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps. Zenodo.
 
 ## Overview
 
