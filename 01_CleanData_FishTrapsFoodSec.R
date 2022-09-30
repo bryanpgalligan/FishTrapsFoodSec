@@ -1617,19 +1617,81 @@ TripData$CPUE_DistFromMean <- round(TripData$CPUE_DistFromMean, digits = 4)
 TripData$TotalValue_KSH <- round(TripData$TotalValue_KSH, digits = 0)
 TripData$ValuePUE <- round(TripData$ValuePUE, digits = 0)
 
-# Correct Observer Names
+
+## Correct Observer Names
 
 # Table of observer names
 table(TripData$Observer)
+
+# Make observers capital case
+TripData$Observer <- str_to_title(TripData$Observer)
 
 # Nancy Birgen
 TripData$Observer <- str_replace(TripData$Observer, "Nancy Birgen", "Birgen")
 TripData$Observer <- str_replace(TripData$Observer, "Nancy", "Birgen")
 
 # Michelle Condy
+TripData$Observer <- str_replace(TripData$Observer, "Mitchel", "Condy")
+
+# Mesaidi Fadhili
+TripData$Observer <- str_replace(TripData$Observer, "Mesaidi", "Fadhili")
+
+# Nseme Ferunzi
+
+# Ines Gomes
+TripData$Observer <- str_replace(TripData$Observer, "Ines", "Gomes")
+
+# Valentine Jepchumba
+TripData$Observer <- str_replace(TripData$Observer, "Valentine Jepchumba", "Jepchumba")
+
+# Mwafitina Juma
+TripData$Observer <- str_replace(TripData$Observer, "Mwafitina", "Juma")
+
+# Jesse Kosgei
+
+# Harriet Makungu
+TripData$Observer <- str_replace(TripData$Observer, "Harriet Makungu", "Makungu")
+
+# Emmanuel Mbaru
+
+# Bakari Mchinga
+TripData$Observer <- str_replace(TripData$Observer, "Bakari Mchinga", "Mchinga")
+
+# Ali Musa
+
+# Asenath Nyachiro
+TripData$Observer <- str_replace(TripData$Observer, "Asnath Nyachiro", "Nyachiro")
+
+# Douglas Obanyi
+TripData$Observer <- str_replace(TripData$Observer, "Douglas", "Obanyi")
+
+# Cavin Omondi
+
+# Evyonne Ongoro
+TripData$Observer <- str_replace(TripData$Observer, "Evyonne Ongoro", "Ongoro")
+
+# Maureen Otieno
+TripData$Observer <- str_replace(TripData$Observer, "Maureen", "Otieno")
+
+# Amir Shekiondo
+TripData$Observer <- str_replace(TripData$Observer, "Amir", "Shekiondo")
 
 # Ali Shilingi
 TripData$Observer <- str_replace(TripData$Observer, "Ali Shilingi", "Shilingi")
+
+# Ramadhan Tungu
+TripData$Observer <- str_replace(TripData$Observer, "Ramadhan", "Tungu")
+
+# Nina Wambiji
+TripData$Observer <- str_replace(TripData$Observer, "Nina Wambiji", "Wambiji")
+TripData$Observer <- str_replace(TripData$Observer, "Nina", "Wambiji")
+
+# John Wanyoike
+TripData$Observer <- str_replace(TripData$Observer, "John Wanyoike", "Wanyoike")
+
+# Janet Warui
+TripData$Observer <- str_replace(TripData$Observer, "Janet Warui", "Warui")
+
 
 # Save the data table
 write.csv(TripData, file = "01_CleanData_Out/TripData_GatedTraps_Galligan.csv",
