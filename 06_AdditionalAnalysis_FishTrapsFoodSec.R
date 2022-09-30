@@ -167,7 +167,7 @@ plot.1a <- ggplot(prediction, aes(y = predicted, x = x)) +
   scale_y_continuous(breaks = c(-0.34, -0.2, 0, 0.2, 0.3, 0.34, 0.38),
     labels = c("", -0.2, 0.0, 0.2, "CPUE", "Calcium Yield", "Value")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
-    label = expression("p = 2.79 x 10"^-7)) +
+    label = expression("p = 4.43 x 10"^-8)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
@@ -210,7 +210,7 @@ plot.1b <- ggplot(prediction, aes(y = predicted, x = x)) +
   scale_y_continuous(breaks = c(-0.2, 0, 0.2, 0.3, 0.34, 0.38),
     labels = c(-0.2, 0.0, 0.2, "Maturity", "Calcium Concentration", "Vitamin A Concentration")) +
   annotate(geom = "text", x = "Traditional", y = 0.25,
-    label = expression("p = 5.74 x 10"^-5)) +
+    label = expression("p = 3.39 x 10"^-5)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
     axis.line = element_line(colour = "black"),
@@ -556,7 +556,7 @@ b <- ggplot(ca.predict, aes(x = x, y = predicted)) +
     #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Calcium Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 212.5,
-    label = expression("p = 6.39 x 10"^-9)) +
+    label = expression("p = 1.16 x 10"^-7)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -631,7 +631,7 @@ d <- ggplot(fe.predict, aes(x = x, y = predicted)) +
     #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Iron Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 1.7,
-    label = "p = 0.155") +
+    label = "p = 0.297") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -706,7 +706,7 @@ f <- ggplot(pufa.predict, aes(x = x, y = predicted)) +
     #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Omega-3 Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 0.85,
-    label = "p = 0.282") +
+    label = "p = 0.602") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -781,7 +781,7 @@ h <- ggplot(protein.predict, aes(x = x, y = predicted)) +
     #x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Protein Concentration ", bgroup("(", frac('g', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 23,
-    label = "p = 0.0122") +
+    label = "p = 0.0317") +
   scale_x_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     panel.background = element_blank(),
@@ -854,7 +854,7 @@ j <- ggplot(va.predict, aes(x = x, y = predicted)) +
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Vitamin A Concentration ", bgroup("(", frac(paste("\u00b5" , 'g', sep = ""), '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 340,
-    label = "p = 0.754") +
+    label = "p = 0.583") +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -928,7 +928,7 @@ l <- ggplot(se.predict, aes(x = x, y = predicted)) +
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Selenium Concentration ", bgroup("(", frac(paste("\u00b5", g, sep = ""), '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 85,
-    label = expression("p = 5.09 x 10"^-4)) +
+    label = expression("p = 3.96 x 10"^-3)) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -1002,7 +1002,7 @@ n <- ggplot(zn.predict, aes(x = x, y = predicted)) +
     x = expression(paste("Optimum Length (", L[opt], ") (cm)", sep = "")),
     y = expression(paste("Zinc Concentration ", bgroup("(", frac('mg', '100g'), ")"), sep = ""))) +
   annotate(geom = "text", x = 80, y = 4.25,
-    label = expression("p = 8.23 x 10"^-4)) +
+    label = expression("p = 0.0106")) +
   scale_x_continuous(expand = c(0, 0)) +
   scale_y_continuous(expand = c(0, 0)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
