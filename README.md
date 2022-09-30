@@ -62,7 +62,7 @@
 
 **Recommended Citation:**
 
-Galligan, B. P., Birgen, N., Condy, M., Fadhili, M., Ferrunzi, N., Gomes, I., Jepchumba, V., Juma, M., Kosgei, J., Makungu, H., Mbaru, E., Mchinga, B., Musa, A., Nyachiro, A., Obanyi, D., Omondi, C., Ongoro, E., Otieno, M., Shekiondo, A., Shilingi, A., Tungu, R., Wambiji, N., Wanyoike, J., Warui, J., Humphries, A. T., & McClanahan, T. R. (2022). Data and code for: Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps. Zenodo.
+Galligan, B. P., Birgen, N., Condy, M., Fadhili, M., Ferrunzi, N., Gomes, I., Jepchumba, V., Juma, M., Kosgei, J., Makungu, H., Mbaru, E., Mchinga, B., Musa, A., Nyachiro, A., Obanyi, D., Omondi, C., Ongoro, E., Otieno, M., Shekiondo, A., Shilingi, A., Tungu, R., Wambiji, N., Wanyoike, J., Warui, J., Humphries, A. T., & McClanahan, T. R. (2022). FishTrapsFoodSec: Nutrient capture and sustainable yield maximized by a gear modification in artisanal fishing traps. Zenodo.
 
 ## Overview
 
@@ -80,10 +80,50 @@ R scripts should be run in numeric order, beginning with `01_CleanData_FishTraps
 
 The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history parameters for all species in the catch using Jim Thorson's `FishLife` [package](https://github.com/James-Thorson-NOAA/FishLife) (Thorson, 2020; Thorson et al., 2017). **You must restart R twice while running this script**, once after running the first line, which installs an older version of `rfishbase`, and once at the end of the script, which re-installs the newest version of `rfishbase`. This is necessary because `FishLife`is only compatible with earlier versions of `rfishbase`. These instructions are commented in the script itself.
 
+## Built With
+
+-   R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+
+-   RStudio "Spotted Wakerobin" Release (7872775e, 2022-07-22) for macOS
+
+-   The following R packages:
+
+    -   `AICcmodavg (v2.3-1)`
+
+    -   `data.table (v1.14.2)`
+
+    -   `dplyr (v1.0.9)`
+
+    -   `FishLife (v2.0.1)`
+
+    -   `ggplot2 (v3.3.6)`
+
+    -   `ggpubr (v0.4.0)`
+
+    -   `magrittr (v2.0.3)`
+
+    -   `mFD (v1.0.1)`
+
+    -   `readr (v2.1.2)`
+
+    -   `readxl (v1.4.1)`
+
+    -   `rfishbase (v4.0.0)`
+
+    -   `rstatix (v0.7.0)`
+
+    -   `strex (v1.4.3)`
+
+    -   `stringr (v1.4.1)`
+
+    -   `taxize (v0.9.100)`
+
+    -   `tidyr (v1.2.0)`
+
 ## Repository Files
 
 | File/Folder                                                                                                                                           | Enclosed File                                                                                                                                                                         | Type            | Notes                                                                                                                                       |
-|------------------|-----------------------|---------------|-----------------|
+|-----------------|----------------------|-----------------|-----------------|
 | [00_RawData](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/00_RawData)                                                               |                                                                                                                                                                                       | Folder          | Contains raw data                                                                                                                           |
 |                                                                                                                                                       | [CombinedTrapData_2010_2019_Anonymized.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv)                      | Spreadsheet     | WCS landings data                                                                                                                           |
 |                                                                                                                                                       | [FunctionalGroupKey_DietBased_Condy2015.xlsx](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx)                  | Spreadsheet     | A key developed for previous WCS studies assigning select species to diet-based functional groups                                           |
@@ -139,10 +179,7 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 |                                                                                                                                                       | [NutrientYieldLLoptGAMMs.jpeg](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/06_AdditionalAnalysis_Out/NutrientYieldLLoptGAMMs.jpeg)                                 | Figure          | Nutrient yields by trap type as response to L/Lopt for each trip (GAMMs)                                                                    |
 |                                                                                                                                                       | [NutrientYieldsTable.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/06_AdditionalAnalysis_Out/NutrientYieldsTable.csv)                                           | Spreadsheet     | Comparison of nutrient yields by trap type with RDI and GLMMs to test for significance                                                      |
 | 06_AdditionalAnalysis_Temp                                                                                                                            |                                                                                                                                                                                       | Folder          | Empty                                                                                                                                       |
-| [Archive](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/Archive)                                                                     |                                                                                                                                                                                       | Folder          | See below                                                                                                                                   |
-| [README.html](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/README.html)                                                             |                                                                                                                                                                                       | HTML            | This document rendered as HTML                                                                                                              |
 | [README.md](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/README.md)                                                                 |                                                                                                                                                                                       | Markdown        | This document                                                                                                                               |
-| [README.pdf](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/README.pdf)                                                               |                                                                                                                                                                                       | PDF             | This document rendered as PDF                                                                                                               |
 | [RWorkflow_FishTrapsFoodSec.Rproj](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/RWorkflow_FishTrapsFoodSec.Rproj)                   |                                                                                                                                                                                       | RStudio Project | Sets working directory, source documents, etc. in RStudio                                                                                   |
 
 ## Processed Data
@@ -157,7 +194,7 @@ Portions of this data have been **used by** Condy et al. (2015), Gomes et al. (2
 
 ### Trip Data
 
-**Filepath**: `03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv`
+**Filepath**: [`03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv`](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/03_FunctionalDiversity_Out/TripData_GatedTraps_Galligan.csv)
 
 Number of **variables**: 67
 
@@ -168,7 +205,7 @@ Number of **observations**: 2734
 #### Variable List
 
 | Variable             | Notes                                                                                                 |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | TripID               | Alphanumeric identifier for each fishing trip                                                         |
 | Date                 | Sampling date                                                                                         |
 | Country              | Sampling location (country)                                                                           |
@@ -232,14 +269,14 @@ Number of **observations**: 2734
 | SePUE                | Selenium per unit effort (micrograms per trap)                                                        |
 | SeConc_ugPer100g     | Selenium concentration (micrograms per 100 grams)                                                     |
 | SePrice_KSHPerug     | Value of selenium (Kenya Shillings per microgram)                                                     |
-| TotalZn_ug           | Total zinc (micrograms)                                                                               |
-| ZnPUE                | Zinc per unit effort (micrograms per trap)                                                            |
-| ZnConc_ugPer100g     | Zinc concentration (micrograms per 100 grams)                                                         |
-| ZnPrice_KSHPerug     | Value of zinc (Kenya Shillings per microgram)                                                         |
+| TotalZn_mg           | Total zinc (milligrams)                                                                               |
+| ZnPUE                | Zinc per unit effort (milligrams per trap)                                                            |
+| ZnConc_ugPer100g     | Zinc concentration (milligrams per 100 grams)                                                         |
+| ZnPrice_KSHPerug     | Value of zinc (Kenya Shillings per milligram)                                                         |
 
 ### Catch Data
 
-**Filepath**: `02_FishLife_Out/CatchData_GatedTraps_Galligan.csv`
+**Filepath**: [`02_FishLife_Out/CatchData_GatedTraps_Galligan.csv`](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_Out/CatchData_GatedTraps_Galligan.csv)
 
 Number of **variables**: 11
 
@@ -250,7 +287,7 @@ Number of **observations**: 25789
 #### Variable List
 
 | Variable      | Notes                                                                       |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | TripID        | Alphanumeric identifier for each fishing trip                               |
 | TrapType      | Type of fish trap (gated / traditional)                                     |
 | TrapLocation  | Fishing location                                                            |
@@ -265,7 +302,7 @@ Number of **observations**: 25789
 
 ### Species Data
 
-**Filepath**: `02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv`
+**Filepath**: [`02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv`](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/02_FishLife_Out/SpeciesData_GatedTraps_Galligan.csv)
 
 Number of **variables**: 44
 
@@ -276,7 +313,7 @@ Number of **observations**: 215
 #### Variable List
 
 | Variable           | Notes                                                                             |
-|-----------------|-------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | Species            | Species (scientific name)                                                         |
 | Family             | Taxonomic family                                                                  |
 | FishGroups         | Coarse fish groupings                                                             |
@@ -322,64 +359,64 @@ Number of **observations**: 215
 | Zinc_L95           | Lower 95% credible interval for zinc estimate (FishBase)                          |
 | Zinc_U95           | Upper 95% credible interval for zinc estimate (FishBase)                          |
 
-## Built With
-
--   R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-
--   RStudio 2021.09.1+372 "Ghost Orchid" Release (8b9ced188245155642d024aa3630363df611088a, 2021-11-08) for macOS
-
--   The following R packages:
-
-    -   `AICcmodavg`
-
-    -   `data.table`
-
-    -   `dplyr`
-
-    -   `FishLife`
-
-    -   `ggplot2`
-
-    -   `ggpubr`
-
-    -   `magrittr`
-
-    -   `mFD`
-
-    -   `rcurl`
-
-    -   `readr`
-
-    -   `readxl`
-
-    -   `rfishbase`
-
-    -   `rstatix`
-
-    -   `strex`
-
-    -   `stringr`
-
-    -   `taxize`
-
-    -   `tidyr`
-
 ## Links
 
 -   The GitHub [repository](https://github.com/bryanpgalligan/FishTrapsFoodSec) for this project
 
 ## References
 
+Bache, S., & Wickham, H. (2022). magrittr: A forward-pipe operator for R. R package version 2.0.3. <https://CRAN.R-project.org/package=magrittr>
+
+Boettiger, C., Lang, D. T., & Wainwright, P. C. (2012). rfishbase: Exploring, manipulation, and visualizing FishBase data from R. *Journal of Fish Biology*, *81*(6): 2030-2039. <https://doi.org/10.1111/j.1095-8649.2012.03464.x>
+
+Chamberlain, S., & Szocs, E. (2013). taxize: Taxonomic search and retrieval in R. *F1000Research*, *2*:191. <https://f1000research.com/articles/2-191/v2>
+
+Chamberlain, S., Szoecs, E., Foster, Z., Arendsee, Z., Boettiger, C., Ram, K., Bartomeus, I., Baumgartner, J., O'Donnell, J., Oksanen, J., Tzovaras, B. G., Marchand, P., Tran, V., Salmon, M., Li, G., & Grenié, M. (2020). taxize: Taxonomic information from around the web. R package version 0.9.98. <https://github.com/ropensci/taxize>
+
 Condy, M., Cinner, J. E., McClanahan, T. R., & Bellwood, D. R. (2015). Projections of the impacts of gear-modification on the recovery of fish catches and ecosystem function in an impoverished fishery. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *25*(3), 396--410. <https://doi.org/10.1002/aqc.2482>
 
+Dowle, M., & Srinivasan, A. (2021). data.table: Extension of "data.frame." R package version 1.14.2. <https://CRAN.R-project.org/package=data.table>
+
+Froese, R., & Pauly, D. (Eds.). (2022). FishBase. Online Publication. <https://fishbase.org>
+
 Gomes, I., Erzini, K., & McClanahan, T. R. (2014). Trap modification opens new gates to achieve sustainable coral reef fisheries: Escape gaps in African traditional trap fisheries. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *24*(5), 680--695. <https://doi.org/10.1002/aqc.2389>
+
+Kassambara, A. (2020). ggpubr: "ggplot2" based publication ready plots. R package version 0.4.0. <https://CRAN.R-project.org/package=ggpubr>
+
+Kassambara, A. (2021). rstatix: Pipe-friendly framework for basic statistical tests. R package version 0.7.0. <https://CRAN.R-project.org/package=rstatix>
+
+Magneville, C., Loiseau, N., Albouy, C., Casajus, N., Claverie, T., Escalas, A., Leprieur, F., Maire, E., Mouillot, D., & Villéger, S. (2021). mFD: A computation of functional spaces and functional indices. R package version 1.0.1. <https://github.com/CmlMagneville/mFD>
+
+Magneville, C., Loiseau, N., Albouy, C., Casajus, N., Claverie, T., Escalas, A., Leprieur, F., Maire, E., Mouillot, D., & Villéger, S. (2022). mFD: An R package to compute and illustrate the multiple facets of functional diversity. *Ecography*, *2022*(1). <https://doi.org/10.1111/ecog.05904>
+
+Mazerolle, M. J. (2020). AICcmodavg: Model selection and multimodel inference based on (Q)AIC(c). R package version 2.3-1. <https://cran.r-project.org/package=AICcmodavg>
 
 Mbaru, E. K., Graham, N. A. J., McClanahan, T. R., & Cinner, J. E. (2020). Functional traits illuminate the selective impacts of different fishing gears on coral reefs. *Journal of Applied Ecology*, *57*(2), 241--252. <https://doi.org/10.1111/1365-2664.13547>
 
 Mbaru, E. K., & McClanahan, T. R. (2013). Escape gaps in African basket traps reduce bycatch while increasing body sizes and incomes in a heavily fished reef lagoon. *Fisheries Research*, *148*, 90--99. <https://doi.org/10.1016/j.fishres.2013.08.011>
 
+Nolan, R. (2022). strex: Extra string manipulation functions. R package version 1.4.3. <https://CRAN.R-project.org/package=strex>
+
+R Core Team. (2022). R: A language and environment for statistical computing. R Foundation for Statistical Computing. [https://www.R-project.org/](https://www.R-project.org/https://www.R-project.org/)
+
+RStudio Team. (2022). RStudio: Integrated development for R. RStudio. <https://www.rstudio.com>
+
 Thorson, J. T. (2020). Predicting recruitment density dependence and intrinsic growth rate for all fishes worldwide using a data-integrated life-history model. *Fish and Fisheries*, *21*(2), 237--251. <https://doi.org/10.1111/faf.12427>
 
 Thorson, J. T., Munch, S. B., Cope, J. M., & Gao, J. (2017). Predicting life history parameters for all fishes worldwide. *Ecological Applications*, *27*(8), 2262--2276. <https://doi.org/10.1002/eap.1606>
+
+Thorson, J. T. (2022). FishLife: Predict life history parameters for any fish. R Package version 2.0.1. <http://github.com/James-Thorson-NOAA/FishLife>
+
+Wickham, H. (2016). *ggplot2: Elegant graphics for data analysis*. Springer. <https://ggplot2.tidyverse.org>
+
+Wickham, H. (2022). stringr: Simple, consistent wrappers for common string operations. R package version 1.4.1. <https://CRAN.R-project.org/package=stringr>
+
+Wickham, H., & Bryan, J. (2022). readxl: Read Excel files. R package version 1.4.1. <https://CRAN.R-project.org/package=readxl>
+
+Wickham, H., Francois, R., Henry, L., & Müller, K. (2022). dplyr: A grammar of data manipulation. R package version 1.0.9. <https://CRAN.R-project.org/package=dplyr>
+
+Wickham, H., & Girlich, M. (2022). tidyr: Tidy messy data. R package version 1.2.0. <https://CRAN.R-project.org/package=tidyr>
+
+Wickham, H., Hester, J., & Bryan, J. (2022). readr: Read rectangular text data. R package version 2.1.2. <https://CRAN.R-project.org/package=readr>
 
 Zuur, A. F., Ieno, E. N., & Elphick, C. S. (2010). A protocol for data exploration to avoid common statistical problems. *Methods in Ecology and Evolution*, *1*, 3--14. <https://doi.org/10.1111/j.2041-210X.2009.00001.x>
