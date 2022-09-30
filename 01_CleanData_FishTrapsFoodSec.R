@@ -1092,6 +1092,124 @@ for(i in 1:nrow(SpeciesData)){
   
 }
 
+
+## Estimate nutrient concentrations for missing species
+
+# Delete octopus because they are not fish
+SpeciesData <- subset(SpeciesData, SpeciesData$Species != "Callistoctopus macropus")
+
+# List of species with no nutrient estimates (9 of 12 are genuses)
+problem.species <- which(is.na(SpeciesData$Calcium_mgPer100g) == TRUE)
+
+# Estimate missing nutrient concentrations based on genus- or family-level averages
+for (i in 1:length(problem.species)){
+  
+  # Extract index
+  n <- problem.species[i]
+  
+  # Extract problem species genus
+  genus <- str_split(string = SpeciesData$Species[n],
+    pattern = " ")[[1]][1]
+  
+  # Extract problem species family
+  family <- SpeciesData$Family[n]
+  
+  # Subset SpeciesData for this genus
+  df_Genus <- SpeciesData[
+    str_detect(string = SpeciesData$Species,
+    pattern = genus),]
+  
+  # If there is more than one occurrence of this genus
+  if(nrow(df_Genus) > 1){
+    
+    # Replace nutrient estimates in species data with genus-level averages
+    
+    # Calcium
+    SpeciesData$Calcium_mgPer100g[n] <- mean(df_Genus$Calcium_mgPer100g, na.rm = TRUE)
+    SpeciesData$Calcium_U95[n] <- mean(df_Genus$Calcium_U95, na.rm = TRUE)
+    SpeciesData$Calicum_L95[n] <- mean(df_Genus$Calicum_L95, na.rm = TRUE)
+    
+    # Iron
+    SpeciesData$Iron_mgPer100g[n] <- mean(df_Genus$Iron_mgPer100g, na.rm = TRUE)
+    SpeciesData$Iron_U95[n] <- mean(df_Genus$Iron_U95, na.rm = TRUE)
+    SpeciesData$Iron_L95[n] <- mean(df_Genus$Iron_L95, na.rm = TRUE)
+    
+    # Omega-3
+    SpeciesData$Omega3_gPer100g[n] <- mean(df_Genus$Omega3_gPer100g, na.rm = TRUE)
+    SpeciesData$Omega3_U95[n] <- mean(df_Genus$Omega3_U95, na.rm = TRUE)
+    SpeciesData$Omega3_L95[n] <- mean(df_Genus$Omega3_L95, na.rm = TRUE)
+    
+    # Protein
+    SpeciesData$Protein_gPer100g[n] <- mean(df_Genus$Protein_gPer100g, na.rm = TRUE)
+    SpeciesData$Protein_U95[n] <- mean(df_Genus$Protein_U95, na.rm = TRUE)
+    SpeciesData$Protein_L95[n] <- mean(df_Genus$Protein_L95, na.rm = TRUE)
+    
+    # Vitamin A
+    SpeciesData$VitaminA_ugPer100g[n] <- mean(df_Genus$VitaminA_ugPer100g, na.rm = TRUE)
+    SpeciesData$VitaminA_U95[n] <- mean(df_Genus$VitaminA_U95, na.rm = TRUE)
+    SpeciesData$VitaminA_L95[n] <- mean(df_Genus$VitaminA_L95, na.rm = TRUE)
+    
+    # Selenium
+    SpeciesData$Selenium_ugPer100g[n] <- mean(df_Genus$Selenium_ugPer100g, na.rm = TRUE)
+    SpeciesData$Selenium_U95[n] <- mean(df_Genus$Selenium_U95, na.rm = TRUE)
+    SpeciesData$Selenium_L95[n] <- mean(df_Genus$Selenium_L95, na.rm = TRUE)
+    
+    # Zinc
+    SpeciesData$Zinc_mgPer100g[n] <- mean(df_Genus$Zinc_mgPer100g, na.rm = TRUE)
+    SpeciesData$Zinc_U95[n] <- mean(df_Genus$Zinc_U95, na.rm = TRUE)
+    SpeciesData$Zinc_L95[n] <- mean(df_Genus$Zinc_L95, na.rm = TRUE)
+    
+  } else{
+    
+    # Otherwise, take the family-level average
+    
+    # Subset SpeciesData for this family
+    df_Family <- subset(SpeciesData, SpeciesData$Family == family)
+    
+    # Replace nutrient estimates in species data with family-level averages
+    
+    # Calcium
+    SpeciesData$Calcium_mgPer100g[n] <- mean(df_Family$Calcium_mgPer100g, na.rm = TRUE)
+    SpeciesData$Calcium_U95[n] <- mean(df_Family$Calcium_U95, na.rm = TRUE)
+    SpeciesData$Calicum_L95[n] <- mean(df_Family$Calicum_L95, na.rm = TRUE)
+    
+    # Iron
+    SpeciesData$Iron_mgPer100g[n] <- mean(df_Family$Iron_mgPer100g, na.rm = TRUE)
+    SpeciesData$Iron_U95[n] <- mean(df_Family$Iron_U95, na.rm = TRUE)
+    SpeciesData$Iron_L95[n] <- mean(df_Family$Iron_L95, na.rm = TRUE)
+    
+    # Omega-3
+    SpeciesData$Omega3_gPer100g[n] <- mean(df_Family$Omega3_gPer100g, na.rm = TRUE)
+    SpeciesData$Omega3_U95[n] <- mean(df_Family$Omega3_U95, na.rm = TRUE)
+    SpeciesData$Omega3_L95[n] <- mean(df_Family$Omega3_L95, na.rm = TRUE)
+    
+    # Protein
+    SpeciesData$Protein_gPer100g[n] <- mean(df_Family$Protein_gPer100g, na.rm = TRUE)
+    SpeciesData$Protein_U95[n] <- mean(df_Family$Protein_U95, na.rm = TRUE)
+    SpeciesData$Protein_L95[n] <- mean(df_Family$Protein_L95, na.rm = TRUE)
+    
+    # Vitamin A
+    SpeciesData$VitaminA_ugPer100g[n] <- mean(df_Family$VitaminA_ugPer100g, na.rm = TRUE)
+    SpeciesData$VitaminA_U95[n] <- mean(df_Family$VitaminA_U95, na.rm = TRUE)
+    SpeciesData$VitaminA_L95[n] <- mean(df_Family$VitaminA_L95, na.rm = TRUE)
+    
+    # Selenium
+    SpeciesData$Selenium_ugPer100g[n] <- mean(df_Family$Selenium_ugPer100g, na.rm = TRUE)
+    SpeciesData$Selenium_U95[n] <- mean(df_Family$Selenium_U95, na.rm = TRUE)
+    SpeciesData$Selenium_L95[n] <- mean(df_Family$Selenium_L95, na.rm = TRUE)
+    
+    # Zinc
+    SpeciesData$Zinc_mgPer100g[n] <- mean(df_Family$Zinc_mgPer100g, na.rm = TRUE)
+    SpeciesData$Zinc_U95[n] <- mean(df_Family$Zinc_U95, na.rm = TRUE)
+    SpeciesData$Zinc_L95[n] <- mean(df_Family$Zinc_L95, na.rm = TRUE)
+    
+  }
+  
+}
+
+
+
+
 # Save SpeciesData
 write.csv(SpeciesData, file = "01_CleanData_Out/SpeciesData_GatedTraps_Galligan.csv",
   row.names = FALSE)
