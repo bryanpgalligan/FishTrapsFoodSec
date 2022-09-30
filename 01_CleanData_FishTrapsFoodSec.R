@@ -416,11 +416,13 @@ TrapData <- subset(TrapData, TrapData$Site != "Reef")
   
   # Remove rows of TrapData with NA for species
   TrapData <- TrapData[!is.na(TrapData$SPECIES) == TRUE,]
+  
+  # Remove any entry for octopus
+  TrapData <- TrapData[TrapData$SPECIES != "Callistoctopus macropus",]
+
 
 
     
- 
-
 ##### 1.6 FunGr_Diet Column #####
 
 # First, using the key from Condy et al. 2015  
