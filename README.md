@@ -229,7 +229,7 @@ Number of **observations**: 2734
 #### Variable List
 
 | Variable             | Notes                                                                                                 |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | TripID               | Alphanumeric identifier for each fishing trip                                                         |
 | Date                 | Sampling date                                                                                         |
 | Country              | Sampling location (country)                                                                           |
@@ -311,7 +311,7 @@ Number of **observations**: 25789
 #### Variable List
 
 | Variable      | Notes                                                                       |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | TripID        | Alphanumeric identifier for each fishing trip                               |
 | TrapType      | Type of fish trap (gated / traditional)                                     |
 | TrapLocation  | Fishing location                                                            |
@@ -337,7 +337,7 @@ Number of **observations**: 215
 #### Variable List
 
 | Variable           | Notes                                                                             |
-|---------------------|---------------------------------------------------|
+|----------------------|--------------------------------------------------|
 | Species            | Species (scientific name)                                                         |
 | Family             | Taxonomic family                                                                  |
 | FishGroups         | Coarse fish groupings                                                             |
