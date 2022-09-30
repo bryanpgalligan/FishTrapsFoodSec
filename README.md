@@ -123,7 +123,7 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 ## Repository Files
 
 | File/Folder                                                                                                                                           | Enclosed File                                                                                                                                                                         | Type            | Notes                                                                                                                                       |
-|-----------------|----------------------|-----------------|-----------------|
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [00_RawData](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/00_RawData)                                                               |                                                                                                                                                                                       | Folder          | Contains raw data                                                                                                                           |
 |                                                                                                                                                       | [CombinedTrapData_2010_2019_Anonymized.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv)                      | Spreadsheet     | WCS landings data                                                                                                                           |
 |                                                                                                                                                       | [FunctionalGroupKey_DietBased_Condy2015.xlsx](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx)                  | Spreadsheet     | A key developed for previous WCS studies assigning select species to diet-based functional groups                                           |
@@ -205,7 +205,7 @@ Number of **observations**: 2734
 #### Variable List
 
 | Variable             | Notes                                                                                                 |
-|------------------|------------------------------------------------------|
+|----------------------|-------------------------------------------------------------------------------------------------------|
 | TripID               | Alphanumeric identifier for each fishing trip                                                         |
 | Date                 | Sampling date                                                                                         |
 | Country              | Sampling location (country)                                                                           |
@@ -287,7 +287,7 @@ Number of **observations**: 25789
 #### Variable List
 
 | Variable      | Notes                                                                       |
-|------------------|------------------------------------------------------|
+|---------------|-----------------------------------------------------------------------------|
 | TripID        | Alphanumeric identifier for each fishing trip                               |
 | TrapType      | Type of fish trap (gated / traditional)                                     |
 | TrapLocation  | Fishing location                                                            |
@@ -313,7 +313,7 @@ Number of **observations**: 215
 #### Variable List
 
 | Variable           | Notes                                                                             |
-|------------------|------------------------------------------------------|
+|--------------------|-----------------------------------------------------------------------------------|
 | Species            | Species (scientific name)                                                         |
 | Family             | Taxonomic family                                                                  |
 | FishGroups         | Coarse fish groupings                                                             |
