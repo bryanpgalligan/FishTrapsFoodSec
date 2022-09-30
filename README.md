@@ -94,19 +94,37 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 
     -   `AICcmodavg (v2.3-1)`
 
+    -   `corrplot (v0.92)`
+
     -   `data.table (v1.14.2)`
+
+    -   `DHARMa (v0.4.6)`
 
     -   `dplyr (v1.0.9)`
 
+    -   `factoextra (v1.0.7)`
+
+    -   `FactoMineR (v2.6)`
+
     -   `FishLife (v2.0.1)`
+
+    -   `ggeffects (v1.1.3)`
 
     -   `ggplot2 (v3.3.6)`
 
     -   `ggpubr (v0.4.0)`
 
+    -   `glmmTMB (v1.1.4)`
+
     -   `magrittr (v2.0.3)`
 
     -   `mFD (v1.0.1)`
+
+    -   `mgcv (v1.8-40)`
+
+    -   `moments (v0.14.1)`
+
+    -   `plotrix (v3.8-2)`
 
     -   `readr (v2.1.2)`
 
@@ -122,12 +140,14 @@ The R script `02_FishLife_FishTrapsFoodSec.R` retrieves estimated life history p
 
     -   `taxize (v0.9.100)`
 
+    -   `tidymv (v3.3.2)`
+
     -   `tidyr (v1.2.0)`
 
 ## Repository Files
 
 | File/Folder                                                                                                                                           | Enclosed File                                                                                                                                                                         | Type            | Notes                                                                                                                                       |
-|------------------|-----------------------|---------------|-----------------|
+|-----------------|---------------------|-----------------|-----------------|
 | [00_RawData](https://github.com/bryanpgalligan/FishTrapsFoodSec/tree/master/00_RawData)                                                               |                                                                                                                                                                                       | Folder          | Contains raw data                                                                                                                           |
 |                                                                                                                                                       | [CombinedTrapData_2010_2019_Anonymized.csv](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/CombinedTrapData_2010_2019_Anonymized.csv)                      | Spreadsheet     | WCS landings data                                                                                                                           |
 |                                                                                                                                                       | [FunctionalGroupKey_DietBased_Condy2015.xlsx](https://github.com/bryanpgalligan/FishTrapsFoodSec/blob/master/00_RawData/FunctionalGroupKey_DietBased_Condy2015.xlsx)                  | Spreadsheet     | A key developed for previous WCS studies assigning select species to diet-based functional groups                                           |
@@ -209,7 +229,7 @@ Number of **observations**: 2734
 #### Variable List
 
 | Variable             | Notes                                                                                                 |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | TripID               | Alphanumeric identifier for each fishing trip                                                         |
 | Date                 | Sampling date                                                                                         |
 | Country              | Sampling location (country)                                                                           |
@@ -291,7 +311,7 @@ Number of **observations**: 25789
 #### Variable List
 
 | Variable      | Notes                                                                       |
-|----------------|--------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | TripID        | Alphanumeric identifier for each fishing trip                               |
 | TrapType      | Type of fish trap (gated / traditional)                                     |
 | TrapLocation  | Fishing location                                                            |
@@ -317,7 +337,7 @@ Number of **observations**: 215
 #### Variable List
 
 | Variable           | Notes                                                                             |
-|-----------------|-------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | Species            | Species (scientific name)                                                         |
 | Family             | Taxonomic family                                                                  |
 | FishGroups         | Coarse fish groupings                                                             |
@@ -371,13 +391,17 @@ Number of **observations**: 215
 
 Bache, S., & Wickham, H. (2022). magrittr: A forward-pipe operator for R. R package version 2.0.3. <https://CRAN.R-project.org/package=magrittr>
 
-Boettiger, C., Lang, D. T., & Wainwright, P. C. (2012). rfishbase: Exploring, manipulation, and visualizing FishBase data from R. *Journal of Fish Biology*, *81*(6): 2030-2039. <https://doi.org/10.1111/j.1095-8649.2012.03464.x>
+Boettiger, C., Lang, D. T., & Wainwright, P. C. (2012). rfishbase: Exploring, manipulation, and visualizing FishBase data from R. *Journal of Fish Biology*, *81*(6), 2030-2039. <https://doi.org/10.1111/j.1095-8649.2012.03464.x>
 
-Chamberlain, S., & Szocs, E. (2013). taxize: Taxonomic search and retrieval in R. *F1000Research*, *2*:191. <https://f1000research.com/articles/2-191/v2>
+Brooks, M. E., Kristensen, K., van Benthem, K. J., Magnusson, A., Berg, C. W., Nielsen, A., Skaug, H. J., Maechler, M., & Bolker, B. M. (2017). glmmTMB balances speed and flexibility among packages for zero-inflated generalized linear mixed modeling. *The R Journal*, *9*(2), 378-400. <https://doi.org/10.32614/RJ-2017-066>
+
+Chamberlain, S., & Szocs, E. (2013). taxize: Taxonomic search and retrieval in R. *F1000Research*, *2*, 191. <https://f1000research.com/articles/2-191/v2>
 
 Chamberlain, S., Szoecs, E., Foster, Z., Arendsee, Z., Boettiger, C., Ram, K., Bartomeus, I., Baumgartner, J., O'Donnell, J., Oksanen, J., Tzovaras, B. G., Marchand, P., Tran, V., Salmon, M., Li, G., & Grenié, M. (2020). taxize: Taxonomic information from around the web. R package version 0.9.98. <https://github.com/ropensci/taxize>
 
 Condy, M., Cinner, J. E., McClanahan, T. R., & Bellwood, D. R. (2015). Projections of the impacts of gear-modification on the recovery of fish catches and ecosystem function in an impoverished fishery. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *25*(3), 396--410. <https://doi.org/10.1002/aqc.2482>
+
+Coretta, S. (2022). tidymv: Tidy model visualization for generalized additive models. R package version 3.3.2. <https://CRAN.R-project.org/package=tidymv>
 
 Dowle, M., & Srinivasan, A. (2021). data.table: Extension of "data.frame." R package version 1.14.2. <https://CRAN.R-project.org/package=data.table>
 
@@ -385,9 +409,21 @@ Froese, R., & Pauly, D. (Eds.). (2022). FishBase. Online Publication. <https://f
 
 Gomes, I., Erzini, K., & McClanahan, T. R. (2014). Trap modification opens new gates to achieve sustainable coral reef fisheries: Escape gaps in African traditional trap fisheries. *Aquatic Conservation: Marine and Freshwater Ecosystems*, *24*(5), 680--695. <https://doi.org/10.1002/aqc.2389>
 
+Hartig, F. (2022). DHARMa: Residual diagnostics for hierarchical (multi-level/mixed) regression models. R package version 0.4.6. <https://CRAN.R-project.org/package=DHARMa>
+
 Kassambara, A. (2020). ggpubr: "ggplot2" based publication ready plots. R package version 0.4.0. <https://CRAN.R-project.org/package=ggpubr>
 
 Kassambara, A. (2021). rstatix: Pipe-friendly framework for basic statistical tests. R package version 0.7.0. <https://CRAN.R-project.org/package=rstatix>
+
+Kassambara, A., & Mundt, F. (2020). factoextra: Extract and visualize the results of multivariate data analyses. R package version 1.0.7. <https://CRAN.R-project.org/package=factoextra>
+
+Komsta, L., & Novomestky, F. (2022). moments: Moments, cumulants, skewness, kurtosis, and related tests. R package version 0.14.1. <https://CRAN.R-project.org/package=moments>
+
+Le, S., Josse, J., & Husson, F. (2008). FactoMineR: An R package for multivariate analysis. *Journal of Statistical Software*, *25*(1), 1-18. <https://doi.org/10.18637/jss.v025.i01>
+
+Lemon, J. (2006). plotrix: A package in the red light district of R. *R-News*, *64*(4), 8-12.
+
+Lüdecke, D. (2018). ggeffects: Tidy data frames of marginal effects from regression models. *Journal of Open Source Software*, *3*(26), 772. <https://doi.org/10.21105/joss.00772>
 
 Magneville, C., Loiseau, N., Albouy, C., Casajus, N., Claverie, T., Escalas, A., Leprieur, F., Maire, E., Mouillot, D., & Villéger, S. (2021). mFD: A computation of functional spaces and functional indices. R package version 1.0.1. <https://github.com/CmlMagneville/mFD>
 
@@ -411,6 +447,8 @@ Thorson, J. T., Munch, S. B., Cope, J. M., & Gao, J. (2017). Predicting life his
 
 Thorson, J. T. (2022). FishLife: Predict life history parameters for any fish. R Package version 2.0.1. <http://github.com/James-Thorson-NOAA/FishLife>
 
+Wei, T., & Simko, V. (2021). R package "corrplot:" Visualization of a correlation matrix (Version 0.92). <https://github.com/taiyun/corrplot>
+
 Wickham, H. (2016). *ggplot2: Elegant graphics for data analysis*. Springer. <https://ggplot2.tidyverse.org>
 
 Wickham, H. (2022). stringr: Simple, consistent wrappers for common string operations. R package version 1.4.1. <https://CRAN.R-project.org/package=stringr>
@@ -422,5 +460,7 @@ Wickham, H., Francois, R., Henry, L., & Müller, K. (2022). dplyr: A grammar of 
 Wickham, H., & Girlich, M. (2022). tidyr: Tidy messy data. R package version 1.2.0. <https://CRAN.R-project.org/package=tidyr>
 
 Wickham, H., Hester, J., & Bryan, J. (2022). readr: Read rectangular text data. R package version 2.1.2. <https://CRAN.R-project.org/package=readr>
+
+Wood, S. N. (2017). *Generalized additive models: An introduction with R* (2nd edition). Chapman and Hall/CRC.
 
 Zuur, A. F., Ieno, E. N., & Elphick, C. S. (2010). A protocol for data exploration to avoid common statistical problems. *Methods in Ecology and Evolution*, *1*, 3--14. <https://doi.org/10.1111/j.2041-210X.2009.00001.x>
