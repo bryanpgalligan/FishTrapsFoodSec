@@ -260,7 +260,7 @@ write.csv(TripData_NoOutliers, "04_DataExploration_Out/TripDataForAnalysis_Gated
 
 # Find mean effort (site-days per month) and SE of mean
 
-# you have 105 months and 840 site days
+# you have 105 months and 841 site days
 
 # List of all site days in study
 site.days <- unique(TripData_NoOutliers[c("Date", "Site")])
