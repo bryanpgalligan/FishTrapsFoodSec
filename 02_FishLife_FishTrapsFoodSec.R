@@ -1,26 +1,7 @@
-##  Escape gaps contribute to ecosystem health and food security in an artisanal coral
-##    reef trap fishery.
-
-##  Bryan P. Galligan, S.J. (JENA)
-##  Austin Humphries (URI)
-##  Maxwell Kodia Azali (WCS)
-##  Tim McClanahan (WCS)
-
-## Project TOC:
-##    01 Data Cleaning
-##    02 Adding Life History Values Using FishLife
-##    03 Calculating Functional Diversity Indices
-##    04 Data Exploration
-##    05 Principal Components Analysis
-##    06 Additional Analysis
-##    07 Mapping
-
 ## Script Title:
 ##    02 Adding Life History Values Using FishLife
 
-## Last update: 15 Apr 22
-
-# This code uses Jim Thorsen's FishLife package to provide the most accurate estimates available
+# This code uses Jim Thorson's FishLife package to provide the most accurate estimates available
 #   for life history parameters. Unfortunately, it relies on an old version of rfishbase. First,
 #   restart R. Then install the old version of fishbase as below. You can then run this code. Once
 #   you've run the code, detach rfishbase, update the package back to v. 4 or higher, and restart
