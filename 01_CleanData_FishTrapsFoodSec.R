@@ -1617,6 +1617,20 @@ TripData$CPUE_DistFromMean <- round(TripData$CPUE_DistFromMean, digits = 4)
 TripData$TotalValue_KSH <- round(TripData$TotalValue_KSH, digits = 0)
 TripData$ValuePUE <- round(TripData$ValuePUE, digits = 0)
 
+# Correct Observer Names
+
+# Table of observer names
+table(TripData$Observer)
+
+# Nancy Birgen
+TripData$Observer <- str_replace(TripData$Observer, "Nancy Birgen", "Birgen")
+TripData$Observer <- str_replace(TripData$Observer, "Nancy", "Birgen")
+
+# Michelle Condy
+
+# Ali Shilingi
+TripData$Observer <- str_replace(TripData$Observer, "Ali Shilingi", "Shilingi")
+
 # Save the data table
 write.csv(TripData, file = "01_CleanData_Out/TripData_GatedTraps_Galligan.csv",
   row.names = FALSE)
