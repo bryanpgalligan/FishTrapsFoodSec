@@ -1673,6 +1673,9 @@ TripData$Observer <- str_replace(TripData$Observer, "Evyonne Ongoro", "Ongoro")
 # Maureen Otieno
 TripData$Observer <- str_replace(TripData$Observer, "Maureen", "Otieno")
 
+# Ahmed Omar Saidi
+TripData$Observer <- str_replace(TripData$Observer, "Ahmed", "Saidi")
+
 # Amir Shekiondo
 TripData$Observer <- str_replace(TripData$Observer, "Amir", "Shekiondo")
 
